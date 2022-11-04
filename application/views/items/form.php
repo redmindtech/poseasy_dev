@@ -555,7 +555,7 @@
 		
 				$check_null_flag =1;
 			}
-			echo $check_item_id_null;
+			
 			
 
 
