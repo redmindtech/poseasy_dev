@@ -602,6 +602,13 @@ class Item extends CI_Model
 	}
 
 	/*
+	Deletes a list of items_customer_category_price
+	*/
+
+
+	
+
+	/*
 	Deletes one item
 	*/
 	public function delete($item_id)
@@ -632,35 +639,7 @@ class Item extends CI_Model
 		return $this->db->update('items', array('deleted'=>0));
 	}
 
-	/*
-	Deletes a list of items_customer_category_price
-	*/
-
-
-	public function delete_list_of_cus_cat_price($item_ids)
-	{
-		//Run these queries as a transaction, we want to make sure we do all or nothing
-		$this->db->trans_start();
-
-		// set to 0 quantities
-		
-		$this->db->where_in('item_id', $item_ids);
-		$this->db->delete('item_customer_category_price');
-		//$success = $this->db->update('items', array('deleted'=>1));
-
-		// foreach($item_ids as $item_id)
-		// {
-		// 	$success &= $this->Inventory->reset_quantity($item_id);
-		// }
-
-		$this->db->trans_complete();
-
-		// $success &= $this->db->trans_status();
-		// $success = TRUE;
-
-		return TRUE;
-	}
-
+	
 	/*
 	Deletes a list of items
 	*/
@@ -684,6 +663,23 @@ class Item extends CI_Model
 		$success &= $this->db->trans_status();
 
 		return $success;
+	}
+	public function delete_list_of_cus_cat_price($item_ids)
+	{
+		//Run these queries as a transaction, we want to make sure we do all or nothing
+		$this->db->trans_start();
+
+			
+		$this->db->where_in('item_id', $item_ids);
+		$this->db->delete('item_customer_category_price');
+		
+
+		$this->db->trans_complete();
+
+		 $success &= $this->db->trans_status();
+		// $success = TRUE;
+
+		 return  TRUE;
 	}
 
 	function get_search_suggestion_format($seed = NULL)

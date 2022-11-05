@@ -78,7 +78,7 @@ $(document).ready(function()
                     $(this).find('th').eq(-1).after('<th style=display:none;>Less Quantity</th>');
                     $(this).find('th').eq(7).after('<th class=""  style=display:none;><div class="th-inner sortable both">&nbsp;Current Qty &nbsp;</div><div class="fht-cell"></div></th>');
                     $(this).find('td').eq(6).after('<td style=width:100px;height:50px;><input type="number" id="items_add_quantity" name="'+item_id+'" class="form-control input-sm" min="null" max="null" step="0.50" value="" placeholder="0.00" required></td>');			
-                    $(this).find('td').eq(-1).after('<td><a href id="submit_qty" name="'+item_id+'" title="Save Quantity" class="btn btn-info btn-sm disabled"><span class="glyphicon glyphicon-ok id="submit_span"></span></a></td>');
+                    $(this).find('td').eq(-1).after('<td><a href id="submit_qty" name="'+item_id+'" title="Save Quantity" class="btn btn-success btn-sm disabled"><span class="glyphicon glyphicon-ok id="submit_span"></span></a></td>');
                     $(this).find('td').eq(-1).after('<td><input type="hidden" id="items_less_quantity" class="form-control input-sm" value="0"></td>');
                     $(this).find('td').eq(7).after('<td style=width:100px;height:50px;><input type="text" name="supplier_name" id="supplier_name" class="form-control input-sm" placeholder="Type Supplier Name" value="" style=width:150px; required></td>');	
                         row.find("td:eq(3)").hide();
@@ -108,12 +108,18 @@ $(document).ready(function()
                         window.location.reload();
                         console.log('[data-type="pdf"]');
                 });
+                $('[data-type="delete"]').click(function(event) {
+                        window.location.reload();
+                        alert('hi')
+                        console.log('[data-type="delete"]');
+                });
+
                 
             $(document).on("change", '#items_add_quantity',  function(e){
                console.log($(this).attr("name"));
                 var current_row = $(this).attr("name");
                // alert('input[name='+current_row+']');
-                $('a[name='+current_row+']').removeClass('btn btn-info btn-sm disabled').addClass( "btn btn-info btn-sm" );
+                $('a[name='+current_row+']').removeClass('btn btn-success btn-sm disabled').addClass( "btn btn-success btn-sm" );
                 var valid= RegExp(/^[+-]?\d*(\.5\d{0,0})?(\.0\d{0,0})?$/);
                 var quantity_reg = e.target.value ;        
                 if(status = valid.test(parseFloat(e.target.value))){

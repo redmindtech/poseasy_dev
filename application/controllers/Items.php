@@ -910,20 +910,27 @@ class Items extends Secure_Controller
 	}
 
 	public function delete()
-	{
+	{ 
 		$items_to_delete = $this->input->post('ids');
+		//log_message('deleted_items',"CSV Item import failed on line $items_to_delete. This item was not imported.");
+
+		//$this->Item->delete_list_of_cus_cat_price($items_to_delete);
+		
 		
 
 		if($this->Item->delete_list($items_to_delete))
-		{
-			$message = $this->lang->line('items_successful_deleted') . ' ' . count($items_to_delete) . ' ' . $this->lang->line('items_one_or_multiple');
-			echo json_encode(array('success' => TRUE, 'message' => $message));
-		}
+			
+			{
+				
+				$message = $this->lang->line('items_successful_deleted') . ' ' . count($items_to_delete) . ' ' . $this->lang->line('items_one_or_multiple');
+				echo json_encode(array('success' => TRUE, 'message' => $message));
+			}
 		else
-		{
-			echo json_encode(array('success' => FALSE, 'message' => $this->lang->line('items_cannot_be_deleted')));
-		}
-		//$this->Item->delete_list_of_cus_cat_price($items_to_delete);
+			{
+				echo json_encode(array('success' => FALSE, 'message' => $this->lang->line('items_cannot_be_deleted')));
+			}
+	
+		
 	}
 
 	public function generate_csv_file()

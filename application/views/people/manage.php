@@ -14,6 +14,7 @@ $(document).ready(function()
 		{
 			var email_disabled = $("td input:checkbox:checked").parents("tr").find("td a[href^='mailto:']").length == 0;
 			$("#email").prop('disabled', email_disabled);
+		
 			var count=-1;
 		$('#table').find('tr').each(function(){ 
 		

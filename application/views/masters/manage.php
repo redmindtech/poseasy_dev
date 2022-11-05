@@ -10,18 +10,17 @@ $(document).ready(function()
 		headers: <?php echo $table_headers; ?>,
 		pageSize: <?php echo $this->config->item('lines_per_page'); ?>,
 		uniqueId: 'item_master_id',
-		
-	});
-	count=-1,
-            $('#table').find('tr').each(function(){ 
-		
-		count = count+1;
-				
-				$(this).find('td').eq(1).html('<td>'+count+'</td>'); 
-		
-	
+		enableActions: function()
+		{
+			var count=-1;
+			$('#table').find('tr').each(function(){ 
+			count = count+1;
+			$(this).find('td').eq(1).html('<td>'+count+'</td>'); 
 			}); 
-		 
+			
+		} 
+	});
+	
 
 	// when any filter is clicked and the dropdown window is closed
 	$('#filters').on('hidden.bs.select', function(e)

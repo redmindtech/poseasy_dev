@@ -19,4 +19,5 @@ $lang["customer_category_confirm_delete"] = "Are you sure you want to delete the
 $lang["customer_category_one_or_multiple"]="Customer Category";
 $lang["customer_category_cannot_be_deleted"]="Could not delete Category customer(s)";
 $lang["customer_category_discount"]="Discount";
+$lang["customer_category_price_required"]="Enter a discount value";
  

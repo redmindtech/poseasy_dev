@@ -155,7 +155,7 @@
 		</div>
 
 		<div class="form-group form-group-sm">
-			<?php echo form_label($this->lang->line('items_supplier'), 'supplier', array('class'=>'requiredcontrol-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('items_supplier'), 'supplier', array('class'=>'required control-label col-xs-3')); ?>
 			<div class='col-xs-8'>
 				<?php echo form_dropdown('supplier_id', $suppliers, $selected_supplier, array('class'=>'form-control')); ?>
 			</div>
@@ -167,9 +167,7 @@
 			<?php echo form_label($this->lang->line('items_cost_price'), 'cost_price', array('class'=>'required control-label col-xs-3')); ?>
 			<div class="col-xs-4">
 				<div class="input-group input-group-sm">
-					<?php if (!currency_side()): ?>
-						<span class="input-group-addon input-sm"><b><?php echo $this->config->item('currency_symbol'); ?></b></span>
-					<?php endif; ?>
+					
 					<?php echo form_input(array(
 							'name'=>'cost_price',
 							'id'=>'cost_price',
@@ -212,7 +210,7 @@
 
 		</div>		
 			<div class="form-group form-group-sm">
-				<?php echo form_label($this->lang->line('items_hsn_code'), 'category', array('class'=>'control-label col-xs-3')); ?>
+				<?php echo form_label($this->lang->line('items_hsn_code'), 'category', array('class'=>' required control-label col-xs-3')); ?>
 				<div class='col-xs-8'>
 					<div class="input-group">
 						<?php echo form_input(array(
@@ -617,7 +615,7 @@ function addFields()
 			if(flag == 0)
 			{
 				//addmode
-				 $("#salespricediv").after('<div class="form-group form-group-sm"><label class=" control-label col-xs-3">'+string1 + '</label><div class="col-xs-4"><div class="input-group input-group-sm"><?php if (!currency_side()): ?><span class="input-group-addon input-sm"><b><?php echo "₹"; ?></b></span><?php endif; ?><input type="text" name="customer_category_price_'+i+'" value="" id="customer_category_price_'+i+'" class="form-control input-sm" value="<?php echo $item_info->location; ?>" onclick="this.select(); "></div></div></div>');
+				 $("#salespricediv").after('<div class="form-group form-group-sm"><label class=" control-label col-xs-3">'+string1 + '</label><div class="col-xs-4"><div class="input-group input-group-sm"><?php if (!currency_side()): ?><span class="input-group-addon input-sm"><b><?php echo "₹"; ?></b></span><?php endif; ?><input type="text" name="customer_category_price_'+i+'" value="0" id="customer_category_price_'+i+'" class="form-control input-sm" value="<?php echo $item_info->location; ?>" onclick="this.select(); "></div></div></div>');
 				 
 			 }
 			 if(flag==1)
