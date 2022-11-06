@@ -57,7 +57,7 @@ $(document).ready(function()
 				distanceFromCursor: { top:10, left:-210 }
 			})
          
-            var count=-1;
+            var count= -1;
                     
                     $('table').find('tr').each(function(){ 
                     var row = $(this).closest("tr");

@@ -61,8 +61,44 @@ class Item extends CI_Model
 				return "false";
 			}			
 		 }
-		 return "true";
+		 return "true";		 
 	}
+	public function supplier_name_exists($name_supplier)
+	{
+		$this->db->select('lower(REPLACE(company_name," ","")) as company_name');
+		 $this->db->from('	suppliers ');
+		 $this->db->where('deleted',0);
+		 $query=$this->db->get();
+		 $supplier_name=$query->result();
+		 foreach($supplier_name as $supplier_name)
+		 { 		
+			$supplier_name=$supplier_name->company_name;
+			if($supplier_name == $name_supplier)
+			{
+				return "false";
+			}			
+		 }
+		 return "true";
+		 
+	}
+	public function customer_category_name_exists($name_category)
+	{
+		$this->db->select('lower(REPLACE(customer_category_name," ","")) as customer_category_name');
+		 $this->db->from('	customer_category ');
+		 $this->db->where('deleted',0);
+		 $query=$this->db->get();
+		 $category_name=$query->result();
+		 foreach($category_name as $category_name)
+		 { 		
+			$category_name=$category_name->customer_category_name;
+			if($category_name == $name_category)
+			{
+				return "false";
+			}			
+		 }
+		 return "true";
+	}	
+	
 	public function delete_customer_catagory($id)
 	{
 
@@ -589,6 +625,25 @@ class Item extends CI_Model
 		$this->db->where('item_name', $item_name);
 
 		return $this->db->update('items', $item_data);
+	}
+	public function csv_customer_category_id()
+	{
+		$this->db->select('lower(REPLACE(customer_category_name," ","")) as customer_category_name,customer_category_id ');
+		 $this->db->from('customer_category');
+		 $this->db->where('deleted',0);
+		 $query=$this->db->get();
+		 $customer_category_id=$query->result();
+		 return $customer_category_id;
+	}
+	public function csv_save_supplier_id()
+	{
+
+   		$this->db->select('lower(REPLACE(company_name," ","")) as company_name,person_id');
+		 $this->db->from('suppliers');
+		 $this->db->where('deleted',0);
+		 $query=$this->db->get();
+		 $item_name=$query->result();
+		 return $item_name;
 	}
 
 	/*

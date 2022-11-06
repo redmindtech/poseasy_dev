@@ -952,123 +952,185 @@ class Items extends Secure_Controller
 	 * Imports items from CSV formatted file.
 	 */
 	public function import_csv_file()
-	{ 
-		if($_FILES['file_path']['error'] !== UPLOAD_ERR_OK)
-		{   
-			echo json_encode(array('success' => FALSE, 'message' => $this->lang->line('items_csv_import_failed')));
-		}
-		else
-		{
-		
-			if(file_exists($_FILES['file_path']['tmp_name']))
-			{
-				set_time_limit(240);
-
-				$failCodes = [];
-				$csv_rows = get_csv_file($_FILES['file_path']['tmp_name']);
-				
-				$employee_id = $this->Employee->get_logged_in_employee_info()->person_id;
-				
-				$allowed_stock_locations = $this->Stock_location->get_allowed_locations();
-				
-				$attribute_definition_names	= $this->Attribute->get_definition_names();					
-
-				unset($attribute_definition_names[-1]);	//Removes the common_none_selected_text from the array
-				
-				foreach($attribute_definition_names as $definition_name)
-				{
-					$attribute_data[$definition_name] = $this->Attribute->get_definition_by_name($definition_name)[0];
-					
-
-					if($attribute_data[$definition_name]['definition_type'] === DROPDOWN)
-					{
-						$attribute_data[$definition_name]['dropdown_values'] = $this->Attribute->get_definition_values($attribute_data[$definition_name]['definition_id']);
-					}
-				}
-			
-				
-				$this->db->trans_begin();
-			
-				
-				foreach($csv_rows as $key => $row)
-				{ 
-					$is_failed_row = FALSE;
-					$item_name= $row['Item Name'];
-					$is_update = !empty($item_name);
-					
-					$item_data = array(												
-						'name' => $row['Item Name'],						
-						'category' => $row['Category'],
-						'stock_type'=>$row['Stock type'],
-						'item_type'=>$row['Item type'],
-						'cost_price' => $row['Cost Price'],
-						'unit_price' => $row['Unit Price'],
-						'receiving_quantity'=>$row['Stock Qty'],
-						'branch'=>$row['Branch'],
-						'location'=>$row['Location'],
-						'rack'=>$row['Rack'],
-						'bin'=>$row['Bin'],
-						'pack_type'=>$row['Pack type'],						
-						'reorder_level' => $row['Reorder Level'],
-						'deleted' => FALSE	
-
-					);						
-																						
-				    if(!$is_failed_row)
-					{ 
-						$is_failed_row = $this->data_error_check($row, $item_data, $allowed_stock_locations, $attribute_definition_names);
-						
-					}
-
-					//Remove FALSE, NULL, '' and empty strings but keep 0
-					$item_data = array_filter($item_data, 'strlen');
-					
-
-					if(!$is_failed_row && $this->Item->csvsave($item_data, $item_name))
-					{   						
-												
-						$this->csvsave_inventory_quantities($row, $item_data, $allowed_stock_locations, $employee_id);
-
-						//$is_failed_row = $this->save_attribute_data($row, $item_data,$attribute_data);
-
-						if($is_update)
-						{
-							$item_data = array_merge($item_data, get_object_vars($this->Item->get_info_by_id_or_name($item_name )));
-						}
-					}
-					else
-					{
-						$failed_row = $key+2;
-						$failCodes[] = $failed_row;
-						log_message('ERROR',"CSV Item import failed on line $failed_row. This item was not imported.");
-					}
-					
-					unset($csv_rows[$key]);
-				}
-
-				$csv_rows = NULL;
-				
-
-				if(count($failCodes) > 0)
-				{
-					$message = $this->lang->line('items_csv_import_partially_failed', count($failCodes), implode(', ', $failCodes));
-					$this->db->trans_rollback();
-					echo json_encode(array('success' => FALSE, 'message' => $message));
-				}
-				else
-				{
-					
-					$this->db->trans_commit();
-					
-					echo json_encode(array('success' => TRUE, 'message' => $this->lang->line('items_csv_import_success')));
-				}
+		{ 
+			if($_FILES['file_path']['error'] !== UPLOAD_ERR_OK)
+			{   
+				echo json_encode(array('success' => FALSE, 'message' => $this->lang->line('items_csv_import_failed')));
 			}
 			else
 			{
-				echo json_encode(array('success' => FALSE, 'message' => $this->lang->line('items_csv_import_nodata_wrongformat')));
+			
+				if(file_exists($_FILES['file_path']['tmp_name']))
+				{
+					set_time_limit(240);
+	
+					$failCodes = [];
+					$csv_rows = get_csv_file($_FILES['file_path']['tmp_name']);
+					
+					$employee_id = $this->Employee->get_logged_in_employee_info()->person_id;
+					
+					$allowed_stock_locations = $this->Stock_location->get_allowed_locations();
+					
+					$attribute_definition_names	= $this->Attribute->get_definition_names();					
+	
+					unset($attribute_definition_names[-1]);	//Removes the common_none_selected_text from the array
+					
+					foreach($attribute_definition_names as $definition_name)
+					{
+						$attribute_data[$definition_name] = $this->Attribute->get_definition_by_name($definition_name)[0];
+						
+	
+						if($attribute_data[$definition_name]['definition_type'] === DROPDOWN)
+						{
+							$attribute_data[$definition_name]['dropdown_values'] = $this->Attribute->get_definition_values($attribute_data[$definition_name]['definition_id']);
+						}
+					}
+				
+					
+					$this->db->trans_begin();
+				
+					
+					foreach($csv_rows as $key => $row)
+					{ 
+						$is_failed_row = FALSE;
+						$item_name= $row['ITEM NAME'];
+						$is_update = !empty($item_name);					
+						$item_data = array(												
+							'name' => $row['ITEM NAME'],						
+							'category' => $row['Category'],
+							'stock_type'=>$row['Stock type'],
+							'item_type'=>$row['Item type'],
+							'cost_price' => $row['Cost Price'],
+							'unit_price' => $row['Unit Price'],
+							'supplier_id'=>$row['SUPPLIER NAME'],
+							'receiving_quantity'=>$row['Stock Qty'],
+							'branch'=>$row['Branch'],
+							'hsn_code'=>$row['HSN CODE'],
+							'location'=>$row['Location'],
+							'rack'=>$row['Rack'],
+							'bin'=>$row['Bin'],
+							'pack_type'=>$row['Pack type'],						
+							'reorder_level' => $row['Reorder Level'],
+							'deleted' => FALSE				
+	
+						);	
+						$counter_flag=0;	
+	
+						for($i=1; $i<=4 ;$i++){
+							$a = 'Sales price ';
+							$b = $i;
+							$c = $a.$b;						
+							$customer_category_price[$i] = $row[$c];
+							// print_r($customer_category_price[$i]);
+						}
+						
+						$j =0;
+						for($i=1; $i<=4 ;$i++)
+						{   
+							$counter_flag=4;
+							$a = 'Customer Category ';
+							$b = $i;
+							$c = $a.$b;
+							if($row[$c]==NULL)
+							{			
+								$j++;						
+								$counter_flag = 4-$j;
+							}
+							
+							$customer_category_name[$i] = $row[$c];
+						}
+												
+						$str_category_name=$this->Item->csv_customer_category_id();
+						
+						for($i=1;$i<=$counter_flag;$i++)
+						{					
+							$category_name=strtolower(str_replace(" ","",$customer_category_name[$i]));
+						
+						foreach($str_category_name as $csv)
+						{ 
+							if($csv->customer_category_name == $category_name)
+							{
+								$customer_category_name[$i] = $csv->customer_category_id;
+								// print_r($customer_category_name[$i]);
+							}
+						}
+						}
+						if(!$is_failed_row)
+						{ 
+							$is_failed_row = $this->data_error_check($row, $item_data, $allowed_stock_locations, $attribute_definition_names);
+							
+						}
+						$str_supplier_name=$this->Item->csv_save_supplier_id();
+						
+						$supplier_name=strtolower(str_replace(" ","",$item_data['supplier_id']));
+																  
+						foreach($str_supplier_name as $row)
+						{  						
+							if($row->company_name == $supplier_name)
+							{
+								$item_data['supplier_id']=$row->person_id;
+								
+							}
+							
+						}
+						//Remove FALSE, NULL, '' and empty strings but keep 0
+						$item_data = array_filter($item_data, 'strlen');
+						
+						if(!$is_failed_row && $this->Item->csvsave($item_data, $item_name))
+						{    
+							
+							for($i=1; $i<=$counter_flag;$i++)
+							{				
+								$customer_category_data = array(
+									'sales_price'=> $customer_category_price[$i] ,
+									'customer_category_id' =>$customer_category_name[$i],
+									'item_id' => $item_data['item_id']
+			
+								);
+								
+								$result = $this->Item->save_customer_category_price_slab($customer_category_data, $item_data['item_id']);
+							}
+									
+							$this->csvsave_inventory_quantities($row, $item_data, $allowed_stock_locations, $employee_id);
+	
+							//$is_failed_row = $this->save_attribute_data($row, $item_data,$attribute_data);
+	
+							if($is_update)
+							{
+								$item_data = array_merge($item_data, get_object_vars($this->Item->get_info_by_id_or_name($item_name )));
+							}
+						}
+						else
+						{
+							$failed_row = $key+2;
+							$failCodes[] = $failed_row;
+							log_message('ERROR',"CSV Item import failed on line $failed_row. This item was not imported.");
+						}
+						
+						unset($csv_rows[$key]);
+					}
+	
+					$csv_rows = NULL;
+					
+					if(count($failCodes) > 0)
+					{
+						$message = $this->lang->line('items_csv_import_partially_failed', count($failCodes), implode(', ', $failCodes));
+						$this->db->trans_rollback();
+						echo json_encode(array('success' => FALSE, 'message' => $message));
+					}
+					else
+					{					
+						$this->db->trans_commit();
+						echo json_encode(array('success' => TRUE, 'message' => $this->lang->line('items_csv_import_success')));
+					}
+				}
+				else
+				{
+					echo json_encode(array('success' => FALSE, 'message' => $this->lang->line('items_csv_import_nodata_wrongformat')));
+				}
 			}
 		}
-	}
+
 
 	/**
 	 * Checks the entire line of data in an import file for errors
@@ -1080,46 +1142,92 @@ class Items extends Secure_Controller
 	 */
 	private function data_error_check($row, $item_data, $allowed_locations, $definition_names )
 	{   
-		$item_name =$row['Item Name'];
-		$is_update = $item_name ? TRUE : FALSE;	
+		$item_name =$row['ITEM NAME'];		
 
+		$is_update = $item_name ? TRUE : FALSE;	
+		
 		//Check for empty required fields
 		$check_for_empty = array(
 			'name' => $item_data['name'],			
-			'category' => $item_data['category'],
-						
-		);              
+			'hsn_code' => $item_data['hsn_code'],
+			'supplier_id'=>$item_data['supplier_id']					
+		);        
+				 
 		foreach($check_for_empty as $key => $val)
-		{
-			if (empty($val) && !$is_update)
+		{   					
+			if ( $val=="" )
+			{   
+				log_message('Error',"Empty required value in $key.");
+				return TRUE;
+			}
+			if($is_update==FALSE)
 			{
 				log_message('Error',"Empty required value in $key.");
 				return TRUE;
-				
 			}
-		}		
-				
+		}	
+		$item_name_check=strtolower(str_replace(" ","",$item_data['name']));	
+		
+		$str_category_name=$this->Item->item_name_exists($item_name_check);
+		
+		if($str_category_name =="false")
+		{
+			log_message('Error',"$item_name already is the Item table.");
+			return TRUE;
+		}	
+				 	
+	    $check_supplier_name=strtolower(str_replace(" ","",$item_data['supplier_id']));
+		
+		$supplier_name_db=$this->Item->supplier_name_exists( $check_supplier_name);
+		
+		if($supplier_name_db == "true")
+		{
+			log_message('Error',"supplier name doesn't exist in supplier table.");
+			return TRUE;
+		}
+		$j =0;
+		for($i=1; $i<=4 ;$i++)
+		{   
+			$counter_flag=4;
+			$a = 'Customer Category ';
+			$b = $i;
+			$c = $a.$b;
+			if($row[$c]==NULL)
+			{			
+				$j++;						
+				$counter_flag = 4-$j;
+			}			
+			$customer_category_name[$i] = $row[$c];
+		}
+			for($i=1;$i<=$counter_flag;$i++)
+			{					
+			  	$category_name=strtolower(str_replace(" ","",$customer_category_name[$i]));
+				$category_name_db=$this->Item->customer_category_name_exists($category_name);
+				if($category_name_db == "true")
+				{
+					log_message('Error',"category name doesn't exist in customer category table.");
+					return TRUE;
+				}
+					
+			}	
 		if($is_update)
 		{ 
 			$item_data['cost_price'] = empty($item_data['cost_price']) ? 0 : $item_data['cost_price'];	//Allow for zero wholesale price
-			
-			}
+		}
 		else
 		{
-			if(!$this->Item->exists($item_id))
+			if(!$this->Item->item_name_exists($item_name))
 			{ 
-				log_message('Error',"non-existent item_id: '$item_id' when either existing item_id or no item_id is required.");
+				log_message('Error',"non-existent item_id: '$item_name' when either existing item_name or no item_name is required.");
 				return TRUE;
-						
 			}
-			
 		}
 		//Build array of fields to check for numerics
 		$check_for_numeric_values = array(
 			'cost_price' => $item_data['cost_price'],
 			'unit_price' => $item_data['unit_price'],
 			'reorder_level' => $item_data['reorder_level'],
-			'receiving_quantity'=>$item_data['receiving_quantity']								
+			'receiving_quantity'=>$item_data['receiving_quantity'],
 			);
 			
 		// foreach($allowed_locations as $location_name)
@@ -1136,7 +1244,6 @@ class Items extends Secure_Controller
 				return TRUE;
 			}
 		}
-
 		//Check Attribute Data
 		foreach($definition_names as $definition_name)
 		{
@@ -1177,7 +1284,6 @@ class Items extends Secure_Controller
 
 		return FALSE;
 	}
-
 	/**
 	 * Saves attribute data found in the CSV import.
 	 *
