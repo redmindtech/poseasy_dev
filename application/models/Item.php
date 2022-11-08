@@ -56,6 +56,10 @@ class Item extends CI_Model
 		 foreach($item_name as $item_name)
 		 { 		
 			$item_name=$item_name->name;
+
+			$name_item = preg_replace('/\s*/', '', $name_item);
+			$name_item = strtolower($name_item);
+			
 			if($item_name ==$name_item)
 			{
 				return "false";

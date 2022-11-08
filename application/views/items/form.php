@@ -552,6 +552,7 @@
 					
 		
 				$check_null_flag =1;
+				
 			}
 			
 			
@@ -562,10 +563,10 @@
 <?php echo form_close(); ?>
 
 <script type="text/javascript">
+	
 
-
-function receiving_quantity_display_fun(){
-	var receiving_quantity_display = document.getElementById("receiving_quantity_display");
+function stock_quantity_editable_fun(){
+	var stock_quantity_editable = document.getElementById("quantity_1");
 	var flag = <?php echo $check_null_flag; ?>;
 
 	if(flag == 0){
@@ -573,6 +574,24 @@ function receiving_quantity_display_fun(){
 	}
 	if(flag == 1){
 		//alert("edit");
+		stock_quantity_editable.setAttribute('readonly',true);
+		
+	}
+
+}
+
+
+
+
+function receiving_quantity_display_fun(){
+	var receiving_quantity_display = document.getElementById("receiving_quantity_display");
+	var flag = <?php echo $check_null_flag; ?>;
+
+	if(flag == 0){
+		
+	}
+	if(flag == 1){
+		
 		receiving_quantity_display.style.display = "none";
 	}
 
@@ -648,8 +667,10 @@ function addFields()
 $(document).ready(function()
 { 
 
+	stock_quantity_editable_fun();
 	receiving_quantity_display_fun();
 	addFields();
+	
 
 	$('#new').click(function() {
 		

@@ -1964,8 +1964,7 @@
                 "url": "https://github.com/sebastianbergmann",
                 "type": "github"
             }
-        ],
-        "abandoned": true
+        ]
     },
     {
         "name": "sebastian/version",

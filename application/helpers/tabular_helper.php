@@ -399,10 +399,10 @@ function get_supplier_data_row($supplier)
 	return array (
 		'people.person_id' => $supplier->person_id,
 		'company_name' => anchor($controller_name."/suppliers_details", $supplier->company_name,
-			array('class'=>"modal-dlg", 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update'))),
+			array('class'=>"modal-dlg", 'title'=>$CI->lang->line($controller_name.'_update'))),
 		'agency_name' => $supplier->agency_name,
 		'category' => $supplier->category,
-		'last_name' => $supplier->last_name . " " . $supplier->first_name ,
+		'last_name' => $supplier->first_name . " " . $supplier->last_name ,
 		'first_name' => $supplier->first_name,
 		'email' => empty($supplier->email) ? '' : mailto($supplier->email, $supplier->email),
 		'phone_number' => $supplier->phone_number,
@@ -424,18 +424,20 @@ function get_items_manage_table_headers()
 	$definition_names = $CI->Attribute->get_definitions_by_flags(Attribute::SHOW_IN_ITEMS);
 
 	$headers = array(
-		array('serial_number' => $CI->lang->line('common_serial_number')),
-	 array('items.item_id' => $CI->lang->line('common_id')),
+		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
+		
+		array('items.item_id' => $CI->lang->line('common_id')),
 		//array('item_number' => $CI->lang->line('items_item_number')),
 		//array('company_name' => $CI->lang->line('suppliers_company_name')),
 		array('name' => $CI->lang->line('items_name')),
 		array('category' => $CI->lang->line('items_category')),
-	//  array('cost_price' => $CI->lang->line('items_cost_price')),
-	//  array('unit_price' => $CI->lang->line('items_unit_price')),
-	 array('quantity' => $CI->lang->line('items_quantity')),
-		array('add_quantity' => $CI->lang->line('items_add_quantity')),
+		//  array('cost_price' => $CI->lang->line('items_cost_price')),
+		//  array('unit_price' => $CI->lang->line('items_unit_price')),
+	 	array('quantity' => $CI->lang->line('items_quantity')),
+		array('add_quantity' => $CI->lang->line('items_add_quantity'), 'sortable' => FALSE),
 		// array('current_quantity' => $CI->lang->line('items_current_quantity')),
-		array('items_supplier_name' => $CI->lang->line('items_supplier_name'))
+		array('items_supplier_name' => $CI->lang->line('items_supplier_name'), 'sortable' => FALSE)
+		
 		// array('branch' => $CI->lang->line('items_branch')),
 		// array('location' => $CI->lang->line('items_location')),
 		// array('rack' => $CI->lang->line('items_rack')),
