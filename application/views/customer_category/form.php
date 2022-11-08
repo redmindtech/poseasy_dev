@@ -154,12 +154,26 @@ input:checked + .slider .off
 		</div>
 		
 	</fieldset>
+
+<?php
+		$check_name = $category_info->customer_category_name;	
+		$check_null_flag = 2;
+		if($check_name == ""){
+			$check_null_flag = 0;
+		}else{
+			$check_null_flag = 1;
+		}
+
+
+?>
 <?php echo form_close(); ?>
 
 <script type='text/javascript'>
 //validation and submit handling
 $(document).ready(function()
 {
+
+	
 	$("#off").on('click change',function()
 	   {
 
@@ -193,7 +207,25 @@ $(document).ready(function()
 
 		rules:
 		{
-			customer_category_name: 'required',
+			customer_category_name: 
+			{
+				required: true,
+				remote:
+				{
+			
+				url: "<?php echo site_url($controller_name . '/customer_name_stringcmp/'.$check_null_flag)?>",
+				type: 'POST',
+				data:{
+					
+					'customer_category_name' : function()
+						{
+					
+						return  $('#customer_category_name').val();
+						},
+					}
+				}
+
+			},
 			customer_category_price:
 			{	
 			min:1,
@@ -205,7 +237,12 @@ $(document).ready(function()
 
 		messages:
 		{
-			customer_category_name: "<?php echo $this->lang->line('customer_category_name_required'); ?>",
+			customer_category_name:
+			{
+				required:"<?php echo $this->lang->line('customer_category_name_required'); ?>",
+				remote:"<?php echo $this->lang->line('customer_category_name_exits'); ?>",
+
+			}, 
 			customer_category_price:
 			{
 				required:"<?php echo $this->lang->line('customer_category_price_required'); ?>",

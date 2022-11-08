@@ -39,6 +39,18 @@ class Customer_category extends Secure_Controller
 		echo json_encode(array('total' => $total_rows, 'rows' => $data_rows));
 	}
 
+	public function customer_name_stringcmp($flag)
+	{  if($flag==0)
+		{
+	     $exists = $this->Customers_category->customer_name_exists($this->input->post('customer_category_name'));
+		 echo $exists ;
+		}
+		else
+		{
+			echo "true";
+		}
+	}
+
 	public function get_row($row_id)
 	{
 		$data_row = $this->xss_clean(get_customer_category_data_row($this->Customers_category->get_info($row_id)));

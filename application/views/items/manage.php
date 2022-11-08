@@ -183,7 +183,7 @@ $(document).ready(function()
             //evt.preventDefault();
            // return FALSE;
         }else if(item_id==0){
-            //alert("Please enter a value in Add Quantity");
+            alert("Please enter a value in Add Quantity");
             
         }
         else{

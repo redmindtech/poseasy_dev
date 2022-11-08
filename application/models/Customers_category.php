@@ -27,6 +27,62 @@ class Customers_category extends CI_Model
 
 		return $this->db->count_all_results();
 	}
+
+	public function customer_name_exists($name_item)
+	{
+		$this->db->select('lower(REPLACE(customer_category_name," ","")) as customer_category_name');
+		 $this->db->from('customer_category');
+		 $this->db->where('deleted',0);
+		 $query=$this->db->get();
+		 $item_name=$query->result();
+		 foreach($item_name as $item_name)
+		 { 		
+			$item_name=$item_name->customer_category_name;
+
+			$name_item = preg_replace('/\s*/', '', $name_item);
+			$name_item = strtolower($name_item);
+
+						
+			if($item_name ==$name_item)
+			{
+				return "false";
+			}			
+		 }
+		 return "true";		 
+	}
+
+	public function customer_name_exists_edit($name_item)
+	{
+		$this->db->select('lower(REPLACE(customer_category_name," ","")) as customer_category_name');
+		 $this->db->from('customer_category');
+		 $this->db->where('deleted',0);
+		 $query=$this->db->get();
+		 $item_name=$query->result();
+		 $counter = 0;
+		// var_dump($counter);
+		 foreach($item_name as $item_name)
+		 { 		
+			$item_name=$item_name->customer_category_name;
+
+			$name_item = preg_replace('/\s*/', '', $name_item);
+			$name_item = strtolower($name_item);
+
+						
+			if($item_name ==$name_item)
+			{
+				//return "false";
+				$counter++;
+			}			
+		 }
+		 //var_dump($counter);
+		 
+		 if($counter>1){
+			return "false";
+		 }else{
+		 return "true";	
+		 }	 
+	}
+
 	public function customer_category_inform()
 	{
 		$this->db->select('customer_category_name');

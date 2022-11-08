@@ -154,7 +154,7 @@
 			</div>
 		</div>
 
-		<div class="form-group form-group-sm">
+		<div class="form-group form-group-sm" id="supplierdiv">
 			<?php echo form_label($this->lang->line('items_supplier'), 'supplier', array('class'=>'required control-label col-xs-3')); ?>
 			<div class='col-xs-8'>
 				<?php echo form_dropdown('supplier_id', $suppliers, $selected_supplier, array('class'=>'form-control')); ?>
@@ -314,15 +314,15 @@
 		foreach($stock_locations as $key=>$location_detail)
 		{
 		?>
-			<div class="form-group form-group-sm">
-				<?php echo form_label($this->lang->line('items_quantity').' '.$location_detail['location_name'], 'quantity_' . $key, array('class'=>'required control-label col-xs-3')); ?>
+			<div class="form-group form-group-sm" id="stock_qty">
+				<?php echo form_label($this->lang->line('items_quantity'), 'quantity_' . $key, array('class'=>'required control-label col-xs-3')); ?>
 				<div class='col-xs-4'>
 					<?php echo form_input(array(
 							'name'=>'quantity_' . $key,
 							'id'=>'quantity_' . $key,
 							'class'=>'required quantity form-control',
 							'onClick'=>'this.select();',
-							'value'=>isset($item_info->item_id) ? to_quantity_decimals($location_detail['quantity']) : to_quantity_decimals(0))
+							'value'=>isset($item_info->item_id) ? to_quantity_decimals($item_info->receiving_quantity) : to_quantity_decimals(0))
 							);?>
 				</div>
 			</div>
@@ -526,7 +526,7 @@
 			//echo $item_customer_category_price_fetch;
 
 
-			
+			$one = 0;
 			$check_name = $item_info->name;	
 			$check_null_flag = 2;
 			$check_item_id_null = 2;
@@ -554,6 +554,8 @@
 				$check_null_flag =1;
 				
 			}
+
+			
 			
 			
 
@@ -563,18 +565,24 @@
 <?php echo form_close(); ?>
 
 <script type="text/javascript">
+
+
 	
 
 function stock_quantity_editable_fun(){
+	var stk_qty = document.getElementById("stock_qty");
+	var sup_disp = document.getElementById("supplierdiv");
 	var stock_quantity_editable = document.getElementById("quantity_1");
 	var flag = <?php echo $check_null_flag; ?>;
 
 	if(flag == 0){
 		//alert("new");
+		stk_qty.style.display = "none";
 	}
 	if(flag == 1){
 		//alert("edit");
 		stock_quantity_editable.setAttribute('readonly',true);
+		sup_disp.style.display = "none";
 		
 	}
 
@@ -641,8 +649,16 @@ function addFields()
 			 {
 				//editmode
 				
-				//alert(check_itemid_null);
+				
 				if(check_itemid_null == 2){
+
+					if(typeof jQueryArray3[i] === 'undefined'){
+						jQueryArray3[i] = 0;
+					}
+
+					// if(typeof myVar !== 'undefined'){
+					// 	console.log(jQueryArray3[i]);
+					// }
 								
 				 $("#salespricediv").after('<div class="form-group form-group-sm"><label class=" control-label col-xs-3">'+string1 + '</label><div class="col-xs-4"><div class="input-group input-group-sm"><?php if (!currency_side()): ?><span class="input-group-addon input-sm"><b><?php echo "₹"; ?></b></span><?php endif; ?><input type="text" name="customer_category_price_'+i+'" value="'+jQueryArray3[i]+'" id="customer_category_price_'+i+'" class="form-control input-sm" value="<?php echo $item_info->location; ?>" onclick="this.select(); "></div></div></div>');
 				}
@@ -666,7 +682,7 @@ function addFields()
 //validation and submit handling
 $(document).ready(function()
 { 
-
+	
 	stock_quantity_editable_fun();
 	receiving_quantity_display_fun();
 	addFields();
@@ -797,7 +813,29 @@ rules:
 	},
 	
 	 
-	category: 'required',
+	category:
+	{
+		required: true,
+		remote: 
+		{
+			
+			url: "<?php echo site_url($controller_name . '/category_name_stringcmp/'.$one)?>",
+			type: 'POST',
+			data: {
+				
+				'category' : function()
+				{
+				
+					//alert($('#category').val());
+					 return  $('#category').val();
+				},
+		}
+	}
+		
+
+
+	},
+
 	item_number:
 	{
 		required: false,
@@ -865,11 +903,16 @@ messages:
 	},
 	name:
 	{ 
-		  required:  "<?php echo $this->lang->line('items_name_required'); ?>",
+		required:  "<?php echo $this->lang->line('items_name_required'); ?>",
 		remote: "<?php echo $this->lang->line('item_name_message'); ?>",
 	},
 	item_number: "<?php echo $this->lang->line('items_item_number_duplicate'); ?>",
-	category: "<?php echo $this->lang->line('items_category_required'); ?>",
+	category:{
+		required: "<?php echo $this->lang->line('items_category_required'); ?>",
+		remote: "<?php echo $this->lang->line('items_category_exits'); ?>",
+
+	},
+	 
 	cost_price:
 	{
 		required: "<?php echo $this->lang->line('items_cost_price_required'); ?>",

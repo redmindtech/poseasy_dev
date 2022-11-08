@@ -67,6 +67,27 @@ class Item extends CI_Model
 		 }
 		 return "true";		 
 	}
+	public function category_name_exists($name_item)
+	{
+		$this->db->select('item_master_name as item_master_name');
+		 $this->db->from('master_category');
+		 $this->db->where('deleted',0);
+		 $query=$this->db->get();
+		 $item_name=$query->result();
+		 foreach($item_name as $item_name)
+		 { 		
+			$item_name=$item_name->item_master_name;
+
+			// $name_item = preg_replace('/\s*/', '', $name_item);
+			// $name_item = strtolower($name_item);
+			
+			if($item_name ==$name_item)
+			{
+				return "true";
+			}			
+		 }
+		 return "false";		 
+	}
 	public function supplier_name_exists($name_supplier)
 	{
 		$this->db->select('lower(REPLACE(company_name," ","")) as company_name');

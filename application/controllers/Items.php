@@ -534,6 +534,19 @@ class Items extends Secure_Controller
 			echo "true";
 		}
 	}
+
+	public function category_name_stringcmp($flag)
+	{  
+		if($flag==0)
+		{
+	     $exists = $this->Item->category_name_exists($this->input->post('category'));
+		 echo $exists ;
+		}
+		else
+		{
+			echo "true";
+		}
+	}
 	
 
 	public function save($item_id = NEW_ITEM)
