@@ -107,7 +107,7 @@
 			</div>
 		</div>
 
-		<div class="form-group form-group-sm">
+		<div class="form-group form-group-sm" id="category_dropdown">
 			<?php echo form_label($this->lang->line('expenses_categories_name'), 'category', array('class'=>'control-label col-xs-3')); ?>
 			<div class='col-xs-6'>
 				<?php echo form_dropdown('expense_category_id', $expense_categories, $expenses_info->expense_category_id, array('class'=>'form-control', 'id'=>'category')); ?>
@@ -156,8 +156,15 @@
 
 <script type='text/javascript'>
 //validation and submit handling
+
+
 $(document).ready(function()
 {
+
+	var supplier_id_txt = document.getElementById("supplier_id");
+	var category_dropdown = document.getElementById("category_dropdown");
+	supplier_id_txt.style.display = "none";
+	category_dropdown.style.display = "none";
 	<?php $this->load->view('partial/datepicker_locale'); ?>
 
 	var amount_validator = function(field) {

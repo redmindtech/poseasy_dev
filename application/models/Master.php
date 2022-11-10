@@ -68,7 +68,7 @@ class Master extends CI_Model
 			$this->db->where('deleted', 0);
 		}
 
-		$this->db->order_by('item_master_name', 'asc');
+		$this->db->order_by('item_category_name', 'asc');
 
 		if($rows > 0)
 		{
@@ -85,7 +85,7 @@ class Master extends CI_Model
 	{
 		$this->db->from('master_category');
 		$this->db->where_in('item_master_id ', $item_master_id );
-		$this->db->order_by('item_master_name', 'asc');
+		$this->db->order_by('item_category_name', 'asc');
 
 		return $this->db->get();
 	}
@@ -127,13 +127,13 @@ class Master extends CI_Model
 	*/
 	public function get_found_rows($search)
 	{
-		return $this->search($search, 0, 0, 'item_master_name', 'asc', TRUE);
+		return $this->search($search, 0, 0, 'item_category_name', 'asc', TRUE);
 	}
 
 	/*
 	Perform a search on item_category
 	*/
-	public function search($search, $rows = 0, $limit_from = 0, $sort = 'item_master_name', $order='asc', $count_only = FALSE)
+	public function search($search, $rows = 0, $limit_from = 0, $sort = 'item_category_name', $order='asc', $count_only = FALSE)
 	{
 		// get_found_rows case
 		if($count_only == TRUE)
@@ -143,8 +143,8 @@ class Master extends CI_Model
 
 		$this->db->from('master_category AS master_category');
 		$this->db->group_start();
-			$this->db->like('item_master_name', $search);
-			$this->db->or_like('item_master_disc', $search);
+			$this->db->like('item_category_name', $search);
+			$this->db->or_like('item_category_description', $search);
 		$this->db->group_end();
 		$this->db->where('deleted', 0);
 

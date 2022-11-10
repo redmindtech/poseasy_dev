@@ -43,6 +43,7 @@ class Items extends Secure_Controller
 		$offset = $this->input->get('offset');
 		$sort = $this->input->get('sort');
 		$order = $this->input->get('order');
+		
 
 		$this->item_lib->set_item_location($this->input->get('stock_location'));
 
@@ -67,10 +68,12 @@ class Items extends Secure_Controller
 		$items = $this->Item->search($search, $filters, $limit, $offset, $sort, $order);
 		$total_rows = $this->Item->get_found_rows($search, $filters);
 		$data_rows = [];
+		$count = $offset + 1;
 
 		foreach($items->result() as $item)
 		{
-			$data_rows[] = $this->xss_clean(get_item_data_row($item));
+			$data_rows[] = $this->xss_clean(get_item_data_row($item,$count));
+			$count++;
 			
 			if($item->pic_filename !== NULL)
 			{
@@ -524,10 +527,17 @@ class Items extends Secure_Controller
 
 	}
 	public function item_name_stringcmp($flag)
-	{  if($flag==0)
+	{ 
+		$strings=explode('..',$flag);
+		$strings[1] = preg_replace('/\s*/', '', $strings[1]);
+		$strings[1]  = strtolower($strings[1]);
+		if($strings[0]==0)
 		{
 	     $exists = $this->Item->item_name_exists($this->input->post('name'));
 		 echo $exists ;
+		}elseif($strings[0]==1){
+			$exists = $this->Item->item_name_exists_edit($this->input->post('name'),$strings[1]);
+			echo $exists ;
 		}
 		else
 		{

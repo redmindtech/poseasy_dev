@@ -62,17 +62,22 @@
 			</div>
 		</div>
 	</fieldset>
+	<?php
+	$check_null_flag = 0; 
+	?>
 <?php echo form_close(); ?>
 
 <script type="text/javascript">
 //validation and submit handling
 $(document).ready(function()
 {
+	
 	$('#supplier_form').validate($.extend({
 		submitHandler: function(form) {
 			$(form).ajaxSubmit({
 				success: function(response)
 				{
+					
 					dialog_support.hide();
 					table_support.handle_submit("<?php echo site_url($controller_name); ?>", response);
 				},
@@ -87,7 +92,25 @@ $(document).ready(function()
 			company_name: 'required',
 			first_name: 'required',
 			last_name: 'required',
-			email: 'email'
+			email: 'email',
+			phone_number:{
+				remote:
+				{
+			
+				url: "<?php echo site_url($controller_name . '/customer_name_stringcmp/'.$check_null_flag)?>",
+				type: 'POST',
+				data:{
+					
+					'phone_number' : function()
+						{
+					
+						return  $('#phone_number').val();
+						},
+					}
+				}
+
+			}
+
    		},
 
 		messages: 
@@ -95,7 +118,8 @@ $(document).ready(function()
 			company_name: "<?php echo $this->lang->line('suppliers_company_name_required'); ?>",
 			first_name: "<?php echo $this->lang->line('common_first_name_required'); ?>",
 			last_name: "<?php echo $this->lang->line('common_last_name_required'); ?>",
-			email: "<?php echo $this->lang->line('common_email_invalid_format'); ?>"
+			email: "<?php echo $this->lang->line('common_email_invalid_format'); ?>",
+			phone_number:"<?php echo $this->lang->line('invalid_phone_number'); ?>"
 		}
 	}, form_support.error));
 });

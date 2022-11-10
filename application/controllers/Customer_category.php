@@ -40,10 +40,19 @@ class Customer_category extends Secure_Controller
 	}
 
 	public function customer_name_stringcmp($flag)
-	{  if($flag==0)
+	{ 
+
+		//$assume = 'b';
+		
+		$strings=explode('..',$flag);
+		$strings[1]  = strtolower($strings[1]);
+		 if($strings[0]==0)
 		{
 	     $exists = $this->Customers_category->customer_name_exists($this->input->post('customer_category_name'));
 		 echo $exists ;
+		}elseif($strings[0]==1){
+			$exists = $this->Customers_category->customer_name_exists_edit($this->input->post('customer_category_name'),$strings[1]);
+			echo $exists ;
 		}
 		else
 		{

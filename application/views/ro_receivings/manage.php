@@ -6,40 +6,32 @@ $(document).ready(function()
 	<?php $this->load->view('partial/bootstrap_tables_locale'); ?>
 
 	table_support.init({
-
 		resource: '<?php echo site_url($controller_name);?>',
 		headers: <?php echo $table_headers; ?>,
 		pageSize: <?php echo $this->config->item('lines_per_page'); ?>,
-		uniqueId: 'item_master_id',
-		enableActions: function()
-		{
-			
-			
-			$('#table').find('tr').each(function(){ 
-				
-			
-			$(this).find('td').eq(2).hide();
-			$(this).find('th').eq(2).hide();
-			
-			//$(this).find('td').eq(1).html('<td>'+serial_no+'</td>'); 
-			}); 
-			
-		} 
+		uniqueId: 'id',
+		
 	});
+	// $('table').find('tr').each(function(){ 
 	
+	// row.find("tr:eq(15)").hide();
+	// });
 
 	// when any filter is clicked and the dropdown window is closed
 	$('#filters').on('hidden.bs.select', function(e)
 	{
+		
 		table_support.refresh();
 	});
-				$('ul li:contains(JSON)').first().remove();
-                $('ul li:contains(XML)').first().remove();
-                $('ul li:contains(TXT)').first().remove();
-                $('ul li:contains(CSV)').first().remove();
-                $('ul li:contains(SQL)').first().remove();
-});
+	$('table').find('tr').each(function(){ 
+		
+		var row = $(this).closest("tr");
+	//  row.find("th:eq(15)").hide();
 
+	row.find("th:eq(-1)").hide();
+	row.find("td:eq(-1)").hide();
+	});
+});
 </script>
 
 <div id="title_bar" class="btn-toolbar">
@@ -49,13 +41,13 @@ $(document).ready(function()
 	</button>
 </div>
 
-<div id="toolbar">
+<!-- <div id="toolbar">
 	<div class="pull-left form-inline" role="toolbar">
 		<button id="delete" class="btn btn-default btn-sm print_hide">
 			<span class="glyphicon glyphicon-trash">&nbsp</span><?php echo $this->lang->line("common_delete");?>
 		</button>
 	</div>
-</div>
+</div> -->
 
 <div id="table_holder">
 	<table id="table"></table>

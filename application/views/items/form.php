@@ -555,6 +555,8 @@
 				
 			}
 
+			$arg_fun = $check_null_flag."..".$check_name;
+
 			
 			
 			
@@ -799,7 +801,7 @@ rules:
 		remote: 
 		{
 			
-			url: "<?php echo site_url($controller_name . '/item_name_stringcmp/'.$check_null_flag)?>",
+			url: "<?php echo site_url($controller_name . '/item_name_stringcmp/'.$arg_fun)?>",
 			type: 'POST',
 			data: {
 				

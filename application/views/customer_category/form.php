@@ -156,6 +156,8 @@ input:checked + .slider .off
 	</fieldset>
 
 <?php
+		$dandi[0] = 0;
+		$dandi[1] = 1;
 		$check_name = $category_info->customer_category_name;	
 		$check_null_flag = 2;
 		if($check_name == ""){
@@ -163,6 +165,11 @@ input:checked + .slider .off
 		}else{
 			$check_null_flag = 1;
 		}
+
+		#arriving argument for name compare
+		$arg_fun = $check_null_flag."..".$check_name;
+		
+
 
 
 ?>
@@ -213,7 +220,7 @@ $(document).ready(function()
 				remote:
 				{
 			
-				url: "<?php echo site_url($controller_name . '/customer_name_stringcmp/'.$check_null_flag)?>",
+				url: "<?php echo site_url($controller_name . '/customer_name_stringcmp/'.$arg_fun)?>",
 				type: 'POST',
 				data:{
 					

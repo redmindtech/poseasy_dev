@@ -369,7 +369,8 @@ function get_suppliers_manage_table_headers()
 	$CI =& get_instance();
 
 	$headers = array(
-		array('people.person_id' => $CI->lang->line('common_id ')),
+		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
+		array('people.person_id' => $CI->lang->line('supplier_id_header')),
 		array('company_name' => $CI->lang->line('suppliers_company_name'),'escape' => FALSE),
 		array('agency_name' => $CI->lang->line('suppliers_agency_name')),
 		array('category' => $CI->lang->line('suppliers_category')),
@@ -390,13 +391,14 @@ function get_suppliers_manage_table_headers()
 /*
 Get the html data row for the supplier
 */
-function get_supplier_data_row($supplier)
+function get_supplier_data_row($supplier,$count)
 {
 	$CI =& get_instance();
 
 	$controller_name = strtolower(get_class($CI));
 
 	return array (
+		'serial_number' => $count,
 		'people.person_id' => $supplier->person_id,
 		'company_name' => anchor($controller_name."/suppliers_details", $supplier->company_name,
 			array('class'=>"modal-dlg", 'title'=>$CI->lang->line($controller_name.'_update'))),
@@ -404,7 +406,7 @@ function get_supplier_data_row($supplier)
 		'category' => $supplier->category,
 		'last_name' => $supplier->first_name . " " . $supplier->last_name ,
 		'first_name' => $supplier->first_name,
-		'email' => empty($supplier->email) ? '' : mailto($supplier->email, $supplier->email),
+		'email' => $supplier->email,
 		'phone_number' => $supplier->phone_number,
 		'messages' => empty($supplier->phone_number) ? '' : anchor("Messages/view/$supplier->person_id", '<span class="glyphicon glyphicon-phone"></span>',
 			array('class'=>"modal-dlg", 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line('messages_sms_send'))),
@@ -464,7 +466,7 @@ function get_items_manage_table_headers()
 /*
 Get the html data row for the item
 */
-function get_item_data_row($item)
+function get_item_data_row($item,$count)
 {
 	$CI =& get_instance();
 
@@ -524,7 +526,7 @@ function get_item_data_row($item)
 	$definition_names = $CI->Attribute->get_definitions_by_flags(Attribute::SHOW_IN_ITEMS);
 
 	$columns = array (
-		'serial_number'=>$item->item_id,
+		'serial_number'=>$count,
 		'items.item_id' => $item->item_id,
 		'item_number' => $item->item_number,
 		'name' => $item->name,
@@ -561,89 +563,7 @@ function get_item_data_row($item)
 
 }
 
-function get_ro_receivings_manage_table_headers()
-{
-	$CI =& get_instance();
 
-	$headers = array(
-		array('id' => $CI->lang->line('ro_id')),
-		// array('category' => $CI->lang->line('ro_receiving_category')),
-		// array('invoice_no' => $CI->lang->line('invoice_no')),
-		array('company_name' => $CI->lang->line('company_name')),
-		array('supplier_name' => $CI->lang->line('supplier_name')),
-		array('opening_balance' => $CI->lang->line('opening_balance')),
-		array('purchase_amount' => $CI->lang->line('purchase_amount')),
-		array('paid_amount' => $CI->lang->line('paid_amount')),
-		array('payment_mode' => $CI->lang->line('payment_mode')),
-		array('purchase_return_amount' => $CI->lang->line('purchase_return_amount')),
-		array('closing_balance' => $CI->lang->line('closing_balance')),
-		array('purchase_return_qty' => $CI->lang->line('purchase_return_qty')),
-		array('discount' => $CI->lang->line('discount')),
-		array('pending_payables' => $CI->lang->line('pending_payables')),
-		array('last_purchase_qty' => $CI->lang->line('last_purchase_qty')),
-		// array('rate_difference' => $CI->lang->line('rate_difference')),
-		array('total_stock' => $CI->lang->line('total_stock')),
-		// array('gst_slab' => $CI->lang->line('gst_slab')),
-		// array('gst_amount' => $CI->lang->line('gst_amount')),
-		// array('purchase_date' => $CI->lang->line('purchase_date')),
-		// array('receiving_time' => $CI->lang->line('receiving_time')),
-		);
-
-	return transform_headers($headers);
-}
-
-/*
-Gets the html data row for the Ro Receivings
-*/
-function get_ro_receivings_data_row($ro_receivings_accounts,$data)
-{
-	$CI =& get_instance();
-	
-	if(empty($data))
-	{
-		$data = array(
-			'company_name'  => 'none',
-			'agency_name' => 'none',
-					
-		);
-		$company_name=$data['company_name'];
-		$agency_name=$data['agency_name'];
-	}
-	else
-	{
-		$company_name=$data[0]->company_name;
-		$agency_name=$data[0]->agency_name;
-	}
- 
-	$controller_name = strtolower(get_class($CI));
-
-	return array (
-		'id' => $ro_receivings_accounts->id ,
-		// 'category' => $ro_receivings_accounts->category,
-		// 'invoice_no' => $ro_receivings_accounts->invoice_no,
-		'company_name' =>$company_name,
-		'supplier_name' =>$agency_name,
-		'opening_balance' => $ro_receivings_accounts->opening_balance,
-		'purchase_amount' => $ro_receivings_accounts->purchase_amount,
-		'paid_amount' => $ro_receivings_accounts->paid_amount,
-		'payment_mode' => $ro_receivings_accounts->payment_mode,
-		'closing_balance' => $ro_receivings_accounts->closing_balance,
-		'purchase_return_amount' => $ro_receivings_accounts->purchase_return_amount,
-		'purchase_return_qty' => $ro_receivings_accounts->purchase_return_qty,
-		'discount' => $ro_receivings_accounts->discount,
-		'pending_payables' => $ro_receivings_accounts->pending_payables,
-		'last_purchase_qty' => $ro_receivings_accounts->last_purchase_qty,
-		'rate_difference' => $ro_receivings_accounts->rate_difference,
-		'total_stock' => $ro_receivings_accounts->total_stock,
-		'gst_slab' => $ro_receivings_accounts->gst_slab,
-		'gst_amount' => $ro_receivings_accounts->gst_amount,
-		'purchase_date' => $ro_receivings_accounts->purchase_date,
-		'receiving_time' => $ro_receivings_accounts->receiving_time,
-		'edit' => anchor($controller_name."/view/$ro_receivings_accounts->id", '<span class="glyphicon glyphicon-edit"></span>',
-			array('class'=>'modal-dlg', 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update'))
-		)
-	);
-}
 
 /*
 Get the header for the giftcard tabular view
@@ -851,6 +771,7 @@ function get_master_manage_table_headers()
 	$CI =& get_instance();
 
 	$headers = array(
+		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
 		array('item_master_id' => $CI->lang->line('item_category_id')),
 		array('item_category_name' => $CI->lang->line('item_category_name')),
 		array('item_category_description' => $CI->lang->line('item_category_description')),
@@ -863,16 +784,17 @@ function get_master_manage_table_headers()
 /*
 Gets the html data row for the master category
 */
-function get_master_data_row($master)
+function get_master_data_row($master,$count)
 {
 	$CI =& get_instance();
 
 	$controller_name = strtolower(get_class($CI));
 
 	return array (
+		'serial_number'=>$count,
 		'item_master_id' => $master->item_master_id ,
-		'item_category_name' => $master->item_master_name,
-		'item_category_description' => $master->item_master_disc,
+		'item_category_name' => $master->item_category_name,
+		'item_category_description' => $master->item_category_description,
 		// 'item_category_date' => $master->category_date,
 		'edit' => anchor($controller_name."/view/$master->item_master_id", '<span class="glyphicon glyphicon-edit"></span>',
 			array('class'=>'modal-dlg', 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update'))
@@ -1071,6 +993,176 @@ function get_cash_up_data_row($cash_up)
 		'edit' => anchor($controller_name."/view/$cash_up->cashup_id", '<span class="glyphicon glyphicon-edit"></span>',
 			array('class'=>'modal-dlg', 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update'))
 		)
+	);
+}
+
+
+function get_ro_receivings_manage_table_headers()
+{
+	$CI =& get_instance();
+
+	$headers = array(
+		array('id' => $CI->lang->line('ro_id')),
+		// array('category' => $CI->lang->line('ro_receiving_category')),
+		// array('invoice_no' => $CI->lang->line('invoice_no')),
+		 array('company_name' => $CI->lang->line('company_name'),'escape' => FALSE),
+		//  array('company_name' => $CI->lang->line('company_name')),
+		array('supplier_name' => $CI->lang->line('supplier_name')),
+		array('opening_balance' => $CI->lang->line('ro_receivings_opening_balance')),
+		array('purchase_amount' => $CI->lang->line('ro_receivings_purchase_amount')),
+		array('paid_amount' => $CI->lang->line('ro_receivings_paid_amount')),
+		array('payment_mode' => $CI->lang->line('ro_receivings_payment_mode')),
+		array('purchase_return_amount' => $CI->lang->line('ro_receivings_purchase_return_amount')),
+		array('closing_balance' => $CI->lang->line('ro_receivings_closing_balance')),
+		array('purchase_return_qty' => $CI->lang->line('purchase_return_qty')),
+		array('discount' => $CI->lang->line('discount')),
+		array('pending_payables' => $CI->lang->line('pending_payables')),
+		array('last_purchase_qty' => $CI->lang->line('last_purchase_qty')),
+		// array('rate_difference' => $CI->lang->line('rate_difference')),
+		// array('total_stock' => $CI->lang->line('total_stock')),
+		// array('gst_slab' => $CI->lang->line('gst_slab')),
+		// array('gst_amount' => $CI->lang->line('gst_amount')),
+		// array('purchase_date' => $CI->lang->line('purchase_date')),
+		// array('receiving_time' => $CI->lang->line('receiving_time')),
+		);
+
+	return transform_headers($headers);
+}
+
+/*
+Gets the html data row for the Ro Receivings
+*/
+
+
+function get_ro_receivings_data_row($ro_receivings_accounts,$data)
+{
+	$CI =& get_instance();
+	
+	if(empty($data))
+	{
+		$data = array(
+			'company_name'  => 'none',
+			'agency_name' => 'none',
+					
+		);
+		$company_name=$data['company_name'];
+		$agency_name=$data['agency_name'];
+	}
+	else
+	{
+		$company_name=$data[0]->company_name;
+		$agency_name=$data[0]->agency_name;
+		
+	}
+	// var_dump($ro_receivings_accounts->id);
+	//  var_dump($ro_receivings_accounts);
+	$supplier_id=$ro_receivings_accounts['supplier_id'];
+	 $id=$ro_receivings_accounts['id'];
+	 $opening_balance=$ro_receivings_accounts['opening_balance'];
+	 $purchase_amount=$ro_receivings_accounts['purchase_amount'];
+	 $paid_amount=$ro_receivings_accounts['paid_amount'];
+	 $payment_mode= $ro_receivings_accounts['payment_mode'];
+	$closing_balance =$ro_receivings_accounts['closing_balance'];
+	$purchase_return_amount=$ro_receivings_accounts['purchase_return_amount'];
+	$purchase_return_qty=$ro_receivings_accounts['purchase_return_qty'];
+	$discount=$ro_receivings_accounts['discount'];
+	$pending_payables=$ro_receivings_accounts['pending_payables'];
+	$last_purchase_qty=$ro_receivings_accounts['last_purchase_qty'];
+	$total_stock=$ro_receivings_accounts['total_stock'];
+	// var_dump($id,$opening_balance,$purchase_amount, $paid_amount,$payment_mode,$closing_balance,$purchase_return_amount,$purchase_return_qty,$discount,$pending_payables,$last_purchase_qty,$total_stock);
+	// $id=$ro_receivings_accounts['id']->id;
+//   var_dump($id);
+//  var_dump($ro_receivings_accounts,);
+// /var_dump('###############################################');
+	$controller_name = strtolower(get_class($CI));
+    
+	return array (
+		'id' => $id,
+		// 'category' => $ro_receivings_accounts->category,
+		// 'invoice_no' => $ro_receivings_accounts->invoice_no,
+		// 'company_name' => anchor($controller_name."/suppliers_details", $company_name,
+		// 	array('class'=>"modal-dlg", 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update'))),
+		'company_name' => anchor($controller_name."/suppliers_details/$supplier_id/$id", $company_name,
+			array('class'=>"modal-dlg", 'title'=>$company_name)),
+		// 'company_name' =>$company_name,
+		'supplier_name' =>$agency_name,
+		'opening_balance' =>  $opening_balance,
+		'purchase_amount' => $purchase_amount,
+		'paid_amount' => $paid_amount,
+		'payment_mode' => $payment_mode,
+		'closing_balance' =>$closing_balance,
+		'purchase_return_amount' => $purchase_return_amount,
+		'purchase_return_qty' => $purchase_return_qty,
+		'discount' => $discount,
+		'pending_payables' => $pending_payables,
+		'last_purchase_qty' => $last_purchase_qty,
+		// 'rate_difference' => $ro_receivings_accounts->rate_difference,
+		// 'total_stock' => $total_stock
+		// 'gst_slab' => $ro_receivings_accounts->gst_slab,
+		// 'gst_amount' => $ro_receivings_accounts->gst_amount,
+		// 'purchase_date' => $ro_receivings_accounts->purchase_date,
+		// 'receiving_time' => $ro_receivings_accounts->receiving_time,
+	// 	 'edit' => anchor($controller_name."/view/$id", '<span class="glyphicon glyphicon-edit"></span>',
+	// 		 array('class'=>'modal-dlg', 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update'))
+	//	)
+	 );
+}
+function get_ro_receivings_data_row_search($ro_receivings_accounts,$data)
+{
+	$CI =& get_instance();
+	
+	if(empty($data))
+	{
+		$data = array(
+			'company_name'  => 'none',
+			'agency_name' => 'none',
+					
+		);
+		$company_name=$data['company_name'];
+		$agency_name=$data['agency_name'];
+	}
+	else
+	{
+		$company_name=$data[0]->company_name;
+		$agency_name=$data[0]->agency_name;
+		
+	}
+	// $id=$ro_receivings_accounts['id'];
+	// $id=$ro_receivings_accounts['id']->id;
+//   var_dump($id);
+//   var_dump($ro_receivings_accounts,);
+// /var_dump('###############################################');
+	$controller_name = strtolower(get_class($CI));
+
+	return array (
+		'supplier_id'=>$ro_receivings_accounts->supplier_id,
+		'id' => $ro_receivings_accounts->id,
+		// 'category' => $ro_receivings_accounts->category,
+		// 'invoice_no' => $ro_receivings_accounts->invoice_no,
+		'company_name' => anchor($controller_name."/suppliers_details/$ro_receivings_accounts->supplier_id/$ro_receivings_accounts->id", $company_name,
+			array('class'=>"modal-dlg", 'title'=>$company_name)),
+		// 'company_name' =>$company_name,
+		// 'company_name' =>$company_name,
+		'supplier_name' =>$agency_name,
+		'opening_balance' => $ro_receivings_accounts->opening_balance,
+		'purchase_amount' => $ro_receivings_accounts->purchase_amount,
+		'paid_amount' => $ro_receivings_accounts->paid_amount,
+		'payment_mode' => $ro_receivings_accounts->payment_mode,
+		'closing_balance' => $ro_receivings_accounts->closing_balance,
+		'purchase_return_amount' => $ro_receivings_accounts->purchase_return_amount,
+		'purchase_return_qty' => $ro_receivings_accounts->purchase_return_qty,
+		'discount' => $ro_receivings_accounts->discount,
+		'pending_payables' => $ro_receivings_accounts->pending_payables,
+		'last_purchase_qty' => $ro_receivings_accounts->last_purchase_qty,
+		// 'rate_difference' => $ro_receivings_accounts->rate_difference,
+		// 'total_stock' => $ro_receivings_accounts->total_stock,
+		// 'gst_slab' => $ro_receivings_accounts->gst_slab,
+		// 'gst_amount' => $ro_receivings_accounts->gst_amount,
+		// 'purchase_date' => $ro_receivings_accounts->purchase_date,
+		// 'receiving_time' => $ro_receivings_accounts->receiving_time,
+		// 'edit' => anchor($controller_name."/view/$ro_receivings_accounts->id", '<span class="glyphicon glyphicon-edit"></span>',
+		// 	array('class'=>'modal-dlg', 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update'))
+		// )
 	);
 }
 ?>

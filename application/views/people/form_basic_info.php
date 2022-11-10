@@ -165,6 +165,7 @@
 //validation and submit handling
 $(document).ready(function()
 {
+	
 	nominatim.init({
 		fields : {
 			postcode : {

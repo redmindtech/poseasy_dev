@@ -29,10 +29,15 @@ class Masters extends Secure_Controller
 		$master_category = $this->Master->search($search, $limit, $offset, $sort, $order);
 		$total_rows = $this->Master->get_found_rows($search);
 
+		//var_dump($offset);
+
+		$count = $offset+1;
+
 		$data_rows = array();
 		foreach($master_category->result() as $master_category)
 		{
-			$data_rows[] = $this->xss_clean(get_master_data_row($master_category));
+			$data_rows[] = $this->xss_clean(get_master_data_row($master_category,$count));
+			$count++;
 		}
 
 		echo json_encode(array('total' => $total_rows, 'rows' => $data_rows));

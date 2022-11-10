@@ -51,7 +51,7 @@ $lang["module_timeclocks"] = "";
 $lang["module_timeclocks_categories"] = "";
 $lang["module_timeclocks_categories_desc"] = "";
 $lang["module_timeclocks_desc"] = "";
-$lang["module_masters"]="Category Master";
+$lang["module_masters"]="Item Category";
 $lang["module_customer_category"]="Customer Category";
 
 

@@ -3,6 +3,7 @@
 <script type="text/javascript">
 $(document).ready(function()
 {
+	
 	<?php $this->load->view('partial/bootstrap_tables_locale'); ?>
 
 	table_support.init({
@@ -12,18 +13,28 @@ $(document).ready(function()
 		uniqueId: 'people.person_id',
 		enableActions: function()
 		{
+			
 			var email_disabled = $("td input:checkbox:checked").parents("tr").find("td a[href^='mailto:']").length == 0;
 			$("#email").prop('disabled', email_disabled);
+
+			var serial_no;
 		
 			var count=-1;
 		$('#table').find('tr').each(function(){ 
+
+				var row = $(this).closest("tr");
+                   
+                serial_no = row.find("td:eq(1)").text();
 		
-		count = count+1;
+				count = count+1;
 				
-				$(this).find('td').eq(1).html('<td>'+count+'</td>'); 
+				
+				$(this).find('td').eq(1).html('<td>'+serial_no+'</td>'); 
+				$(this).find('td').eq(10).hide(); 
 		
 	
 			}); 
+			
 			// $('td:nth-of-type(3)').each(function(index){
 			// 	var val=$(this).text();
 			// 	$(this).html("<a href= >"+val+"</a>");
@@ -66,9 +77,7 @@ $(document).ready(function()
 		<button id="delete" class="btn btn-default btn-sm">
 			<span class="glyphicon glyphicon-trash">&nbsp</span><?php echo $this->lang->line("common_delete");?>
 		</button>
-		<button id="email" class="btn btn-default btn-sm">
-			<span class="glyphicon glyphicon-envelope">&nbsp</span><?php echo $this->lang->line("common_email");?>
-		</button>
+		
 	</div>
 </div>
 

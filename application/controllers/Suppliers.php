@@ -26,6 +26,18 @@ class Suppliers extends Persons
 
 		echo json_encode($data_row);
 	}
+	public function customer_name_stringcmp($flag)
+	{
+
+		$phone_no = $this->input->post('phone_number');
+		 
+		if(preg_match("/^([0-9]{10})$/",$phone_no)){
+			echo "true";
+		}else{
+			echo "false";
+		}
+		
+	}
 	
 	/*
 	Returns Supplier table data rows. This will be called with AJAX.
@@ -41,10 +53,13 @@ class Suppliers extends Persons
 		$suppliers = $this->Supplier->search($search, $limit, $offset, $sort, $order);
 		$total_rows = $this->Supplier->get_found_rows($search);
 
+		$count = $offset + 1;
+
 		$data_rows = array();
 		foreach($suppliers->result() as $supplier)
 		{
-			$row = $this->xss_clean(get_supplier_data_row($supplier));
+			$row = $this->xss_clean(get_supplier_data_row($supplier,$count));
+			$count++;
 			$row['category'] = $this->Supplier->get_category_name($row['category']);
 			$data_rows[] = $row;
 		}

@@ -31,6 +31,28 @@ class Supplier extends Person
 
 		return $this->db->count_all_results();
 	}
+
+	// public function category_name_exists(){
+	// 	$this->db->select('lower(REPLACE(name," ","")) as name');
+	// 	 $this->db->from('items');
+	// 	 $this->db->where('deleted',0);
+	// 	 $query=$this->db->get();
+	// 	 $item_name=$query->result();
+	// 	 foreach($item_name as $item_name)
+	// 	 { 		
+	// 		$item_name=$item_name->name;
+
+	// 		$name_item = preg_replace('/\s*/', '', $name_item);
+	// 		$name_item = strtolower($name_item);
+			
+	// 		if($item_name ==$name_item)
+	// 		{
+	// 			return "false";
+	// 		}			
+	// 	 }
+	// 	 return "true";	
+
+	// }
 	
 	/*
 	Returns all the suppliers

@@ -23,5 +23,7 @@ $lang["suppliers_tax_id"] = "GST No";
 $lang["suppliers_update"] = "Supplier Summary";
 $lang["suppliers_name"] = "Supplier Name";
 $lang["common_id "] = "S.No";
+$lang["invalid_phone_number"] = "Enter a valid 10-digit contact number";
+$lang["supplier_id_header"] = "Supplier ID";
 
     

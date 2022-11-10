@@ -51,15 +51,14 @@ class Customers_category extends CI_Model
 		 return "true";		 
 	}
 
-	public function customer_name_exists_edit($name_item)
+	public function customer_name_exists_edit($name_item,$assume)
 	{
-		$this->db->select('lower(REPLACE(customer_category_name," ","")) as customer_category_name');
+		//$assume = 'b';
+		 $this->db->select('lower(REPLACE(customer_category_name," ","")) as customer_category_name');
 		 $this->db->from('customer_category');
 		 $this->db->where('deleted',0);
 		 $query=$this->db->get();
 		 $item_name=$query->result();
-		 $counter = 0;
-		// var_dump($counter);
 		 foreach($item_name as $item_name)
 		 { 		
 			$item_name=$item_name->customer_category_name;
@@ -70,17 +69,15 @@ class Customers_category extends CI_Model
 						
 			if($item_name ==$name_item)
 			{
-				//return "false";
-				$counter++;
+				if($name_item == $assume){
+					return "true";
+				}
+				else{
+				return "false";
+				}
 			}			
 		 }
-		 //var_dump($counter);
-		 
-		 if($counter>1){
-			return "false";
-		 }else{
-		 return "true";	
-		 }	 
+		 return "true";		 
 	}
 
 	public function customer_category_inform()
