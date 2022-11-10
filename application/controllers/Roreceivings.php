@@ -34,15 +34,6 @@ class Roreceivings extends Secure_Controller
 		echo $pending;
    	 }
 
-	 public function purchase_amount_validate($flag){
-		$purchase_amount = $this->input->post('purchase_amount');
-		if($purchase_amount == 0){
-			return "true";
-		}else{
-			return "false";
-		}
-	 }
-
 	/*
 	Returns Item_category_manage table data rows. This will be called with AJAX.
 	*/

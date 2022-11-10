@@ -339,8 +339,9 @@ $("form").on("change", "input","click", function(e)
 		});	
 	$('#ro_receivings_edit_form').validate($.extend({
 		submitHandler: function(form,event) {
+			
+			if($('#purchase_amount').val()==0 && $('#purchase_return_amount').val()==0){
 
-			if($('#purchase_amount').val()==0||$('purchase_return_amount').val()==0){
 				alert("Please enter puchase amount or purchase return amount");
 				dialog_support.show();
 				event.preventDefault();
