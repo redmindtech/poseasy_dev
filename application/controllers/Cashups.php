@@ -42,6 +42,7 @@ class Cashups extends Secure_Controller
 		foreach($cash_ups->result() as $cash_up)
 		{
 			$data_rows[] = $this->xss_clean(get_cash_up_data_row($cash_up,$count));
+			$count++;
 		}
 
 		echo json_encode(array('total' => $total_rows, 'rows' => $data_rows));
