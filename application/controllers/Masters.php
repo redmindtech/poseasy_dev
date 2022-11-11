@@ -60,8 +60,8 @@ class Masters extends Secure_Controller
 	{
 		
 		$master_category_data = array(
-			'item_master_name' => $this->input->post('item_master_name'),
-			'item_master_disc' => $this->input->post('item_master_disc'),
+			'item_category_name' => $this->input->post('item_category_name'),
+			'item_category_description' => $this->input->post('item_category_description'),
 		);
 		
 		if($this->Master->save($master_category_data, $item_master_id))

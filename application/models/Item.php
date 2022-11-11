@@ -95,14 +95,14 @@ class Item extends CI_Model
 	}
 	public function category_name_exists($name_item)
 	{
-		$this->db->select('item_master_name as item_master_name');
+		$this->db->select('item_category_name as item_category_name');
 		 $this->db->from('master_category');
-		 $this->db->where('deleted',0);
+		 
 		 $query=$this->db->get();
 		 $item_name=$query->result();
 		 foreach($item_name as $item_name)
 		 { 		
-			$item_name=$item_name->item_master_name;
+			$item_name=$item_name->item_category_name;
 
 			// $name_item = preg_replace('/\s*/', '', $name_item);
 			// $name_item = strtolower($name_item);
@@ -1184,14 +1184,14 @@ class Item extends CI_Model
 	{
 		$suggestions = [];
 		$this->db->distinct();
-		$this->db->select('item_master_name');
+		$this->db->select('item_category_name');
 		$this->db->from('master_category');
-		$this->db->like('item_master_name', $search);
-		$this->db->where('deleted', 0);
-		$this->db->order_by('item_master_name', 'asc');
+		$this->db->like('item_category_name', $search);
+		
+		$this->db->order_by('item_category_name', 'asc');
 		foreach($this->db->get()->result() as $row)
 		{
-			$suggestions[] = array('label' => $row->item_master_name);
+			$suggestions[] = array('label' => $row->item_category_name);
 		}
 
 		return $suggestions;

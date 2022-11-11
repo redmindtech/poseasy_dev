@@ -252,7 +252,7 @@ class Customers extends Persons
 			'address_2' => $this->input->post('address_2'),
 			'city' => $this->input->post('city'),
 			'state' => $this->input->post('state'),
-			'zip' => $this->input->post('zip'),
+			'zip' => $this->input->post('postcode'),
 			'country' => $this->input->post('country'),
 			'comments' => $this->input->post('comments')
 		);

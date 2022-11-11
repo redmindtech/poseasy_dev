@@ -29,11 +29,14 @@ class Customer_category extends Secure_Controller
 		$customer_category = $this->Customers_category->search($search, $limit, $offset, $sort, $order);
 		$total_rows = $this->Customers_category->get_found_rows($search);
 
+		$count = $offset+1;
+
 		$data_rows = array();
 		
 		foreach($customer_category->result() as $customer_category)
 		{
-			$data_rows[] = $this->xss_clean(get_customer_category_data_row($customer_category));
+			$data_rows[] = $this->xss_clean(get_customer_category_data_row($customer_category,$count));
+			$count++;
 		}
 
 		echo json_encode(array('total' => $total_rows, 'rows' => $data_rows));

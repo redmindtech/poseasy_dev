@@ -23,6 +23,9 @@ $(document).ready(function()
 			
 			//$(this).find('td').eq(1).html('<td>'+serial_no+'</td>'); 
 			}); 
+			var myClasses = document.querySelectorAll('.btn.btn-default.btn-sm.dropdown-toggle');
+               
+                myClasses[0].style.display = 'none';
 			
 		} 
 	});

@@ -321,6 +321,7 @@ $(document).ready(function()
 		{
 			success: function(response)
 			{
+				window.location.reload();
 				dialog_support.hide();
 				table_support.handle_submit('<?php echo site_url('cashups'); ?>', response);
 			},

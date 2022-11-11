@@ -34,6 +34,9 @@ $(document).ready(function()
 		
 	
 			}); 
+			var myClasses = document.querySelectorAll('.btn.btn-default.btn-sm.dropdown-toggle');
+               
+                myClasses[0].style.display = 'none';
 			
 			// $('td:nth-of-type(3)').each(function(index){
 			// 	var val=$(this).text();

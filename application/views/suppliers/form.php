@@ -16,7 +16,7 @@
 			</div>
 		</div>
 
-		<div class="form-group form-group-sm">
+		<div class="form-group form-group-sm" id ="suppliers_category_visibility">
 			<?php echo form_label($this->lang->line('suppliers_category'), 'category', array('class'=>'required control-label col-xs-3')); ?>
 			<div class='col-xs-6'>
 		
@@ -68,16 +68,20 @@
 <?php echo form_close(); ?>
 
 <script type="text/javascript">
+	
 //validation and submit handling
 $(document).ready(function()
 {
+
+	var suppliers_category_visibility = document.getElementById("suppliers_category_visibility");
+	suppliers_category_visibility.style.display = "none";
 	
 	$('#supplier_form').validate($.extend({
 		submitHandler: function(form) {
 			$(form).ajaxSubmit({
 				success: function(response)
 				{
-					
+					window.location.reload();
 					dialog_support.hide();
 					table_support.handle_submit("<?php echo site_url($controller_name); ?>", response);
 				},
@@ -89,6 +93,7 @@ $(document).ready(function()
  
 		rules:
 		{
+			
 			company_name: 'required',
 			first_name: 'required',
 			last_name: 'required',
@@ -109,7 +114,59 @@ $(document).ready(function()
 					}
 				}
 
+			},
+			account_number :{
+				remote:
+				{
+			
+				url: "<?php echo site_url($controller_name . '/acc_no_validate/'.$check_null_flag)?>",
+				type: 'POST',
+				data:{
+					
+					'account_number' : function()
+						{
+					
+						return  $('#account_number').val();
+						},
+					}
+				}
+
+			},
+			postcode : {
+				remote:
+				{
+			
+				url: "<?php echo site_url($controller_name . '/post_code_validate/'.$check_null_flag)?>",
+				type: 'POST',
+				data:{
+					
+					'postcode' : function()
+						{
+					
+						return  $('#postcode').val();
+						},
+					}
+				}
+
+			},
+			tax_id : {
+				remote:
+				{
+			
+				url: "<?php echo site_url($controller_name . '/gst_validate/'.$check_null_flag)?>",
+				type: 'POST',
+				data:{
+					
+					'tax_id' : function()
+						{
+					
+						return  $('#tax_id').val();
+						},
+					}
+				}
+
 			}
+
 
    		},
 
@@ -119,7 +176,10 @@ $(document).ready(function()
 			first_name: "<?php echo $this->lang->line('common_first_name_required'); ?>",
 			last_name: "<?php echo $this->lang->line('common_last_name_required'); ?>",
 			email: "<?php echo $this->lang->line('common_email_invalid_format'); ?>",
-			phone_number:"<?php echo $this->lang->line('invalid_phone_number'); ?>"
+			phone_number:"<?php echo $this->lang->line('invalid_phone_number'); ?>",
+			account_number:"<?php echo $this->lang->line('invalid_account_number'); ?>",
+			postcode:"<?php echo $this->lang->line('invalid_postcode'); ?>",
+			tax_id:"<?php echo $this->lang->line('invalid_gst_number'); ?>"
 		}
 	}, form_support.error));
 });

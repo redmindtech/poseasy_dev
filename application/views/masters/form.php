@@ -5,25 +5,25 @@
 
 <fieldset id="master_category">
 		<div class="form-group form-group-sm">
-			<?php echo form_label($this->lang->line('item_categories_name'), 'item_master_name', array('class'=>'required control-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('item_categories_name'), 'item_category_name', array('class'=>'required control-label col-xs-3')); ?>
 			<div class='col-xs-8'>
 				<?php echo form_input(array(
-						'name'=>'item_master_name',
-						'id'=>'item_master_name',
+						'name'=>'item_category_name',
+						'id'=>'item_category_name',
 						'class'=>'form-control input-sm',
-						'value'=>$Master_category_info->item_master_name)
+						'value'=>$Master_category_info->item_category_name)
 						);?>
 			</div>
 		</div>
 
 		<div class="form-group form-group-sm">
-			<?php echo form_label($this->lang->line('item_master_disc'), 'item_master_disc', array('class'=>'control-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('item_category_description'), 'item_category_description', array('class'=>'control-label col-xs-3')); ?>
 			<div class='col-xs-8'>
 				<?php echo form_textarea(array(
-						'name'=>'item_master_disc',
-						'id'=>'item_master_disc',
+						'name'=>'item_category_description',
+						'id'=>'item_category_description',
 						'class'=>'form-control input-sm',
-						'value'=>$Master_category_info->item_master_disc)
+						'value'=>$Master_category_info->item_category_description)
 						);?>
 			</div>
 		</div>
@@ -57,12 +57,12 @@ $(document).ready(function()
 
 		rules:
 		{
-			item_master_name: 'required'
+			item_category_name: 'required'
 		},
 
 		messages:
 		{
-			item_master_name: "<?php echo $this->lang->line('category_name_required'); ?>"
+			item_category_name: "<?php echo $this->lang->line('category_name_required'); ?>"
 		}
 	}, form_support.error));
 });

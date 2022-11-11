@@ -54,6 +54,13 @@ $(document).ready(function()
             });
         },
         onLoadSuccess: function(response) {
+
+            var myClasses = document.querySelectorAll('.btn.btn-default.btn-sm.dropdown-toggle');
+               
+                myClasses[0].style.display = 'none';
+
+
+                
             $('a.rollover').imgPreview({
 				imgCSS: { width: 200 },
 				distanceFromCursor: { top:10, left:-210 }
@@ -98,9 +105,7 @@ $(document).ready(function()
                         row.find("th:eq(2)").hide();
                    
                 });
-                var myClasses = document.querySelectorAll('.btn.btn-default.btn-sm.dropdown-toggle');
-               
-                myClasses[0].style.display = 'none';
+                
             
                 //myExportOptions.eq(1).remove();
                 $('ul li:contains(JSON)').first().remove();

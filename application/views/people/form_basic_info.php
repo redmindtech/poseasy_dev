@@ -129,7 +129,7 @@
 	<?php echo form_label($this->lang->line('common_zip'), 'zip', array('class'=>'control-label col-xs-3')); ?>
 	<div class='col-xs-8'>
 		<?php echo form_input(array(
-				'name'=>'zip',
+				'name'=>'postcode',
 				'id'=>'postcode',
 				'class'=>'form-control input-sm',
 				'value'=>$person_info->zip)

@@ -115,7 +115,7 @@ input:checked + .slider .off
 						'value'=>$category_info->customer_category_price)
 						);?>
 						<?php if (!currency_side()): ?>
-						<span name = "toggle" id = "toggle" class="input-group-addon input-sm"><b></b></span>
+						<span name = "toggle" id = "toggle" class="input-group-addon input-sm">₹</span>
 					<?php endif; ?>
 			
 			</div>
@@ -125,7 +125,7 @@ input:checked + .slider .off
         
 			
 
-		<div class="col-xs-4">
+		<div class="col-xs-4" id = "toggle_switch">
 					<div class="input-group input-group-sm">
 					<label class="switch">
 						<input type="checkbox" id="togBtn" class="ipclear">
@@ -179,6 +179,9 @@ input:checked + .slider .off
 //validation and submit handling
 $(document).ready(function()
 {
+
+	var toggle_switch = document.getElementById("toggle_switch");
+	toggle_switch.style.display = "none";
 
 	
 	$("#off").on('click change',function()

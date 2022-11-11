@@ -22,14 +22,38 @@ $(document).ready(function()
 		headers: <?php echo $table_headers; ?>,
 		pageSize: <?php echo $this->config->item('lines_per_page'); ?>,
 		uniqueId: 'cashup_id',
+		
 		queryParams: function() {
-			return $.extend(arguments[0], {
+			var myClasses = document.querySelectorAll('.btn.btn-default.btn-sm.dropdown-toggle');
+               
+			   myClasses[0].style.display = 'none';
+				return $.extend(arguments[0], {
 				start_date: start_date,
 				end_date: end_date,
 				filters: $("#filters").val() || [""]
 			});
-		}
+		},
+		enableActions: function()
+		{
+			
+			
+			$('#table').find('tr').each(function(){ 
+				
+			
+			$(this).find('td').eq(2).hide();
+			$(this).find('th').eq(2).hide();
+			
+			//$(this).find('td').eq(1).html('<td>'+serial_no+'</td>'); 
+			}); 
+			
+			
+		} 
 	});
+	$('ul li:contains(JSON)').first().remove();
+                $('ul li:contains(XML)').first().remove();
+                $('ul li:contains(TXT)').first().remove();
+                $('ul li:contains(CSV)').first().remove();
+                $('ul li:contains(SQL)').first().remove();
 });
 </script>
 

@@ -26,6 +26,44 @@ class Suppliers extends Persons
 
 		echo json_encode($data_row);
 	}
+	public function post_code_validate($flag)
+	{
+
+		
+
+		$postcode= $this->input->post('postcode');
+		 
+		if(preg_match("/^([0-9]{7})*$/",$postcode)){
+			echo "true";
+		}else{
+			echo "false";
+		}
+		
+	}
+	public function acc_no_validate($flag)
+	{
+
+		$account_number= $this->input->post('account_number');
+		 
+		if(preg_match("/^[0-9]*$/",$account_number)){
+			echo "true";
+		}else{
+			echo "false";
+		}
+		
+	}
+	public function gst_validate($flag)
+	{
+
+		$tax= $this->input->post('tax_id');
+		 
+		if(preg_match("/^[a-zA-Z0-9]+$/",$tax)){
+			echo "true";
+		}else{
+			echo "false";
+		}
+		
+	}
 	public function customer_name_stringcmp($flag)
 	{
 
@@ -123,7 +161,7 @@ class Suppliers extends Persons
 			'address_2' => $this->input->post('address_2'),
 			'city' => $this->input->post('city'),
 			'state' => $this->input->post('state'),
-			'zip' => $this->input->post('zip'),
+			'zip' => $this->input->post('postcode'),
 			'country' => $this->input->post('country'),
 			'comments' => $this->input->post('comments')
 		);

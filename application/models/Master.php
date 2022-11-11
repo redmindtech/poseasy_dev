@@ -143,8 +143,8 @@ class Master extends CI_Model
 
 		$this->db->from('master_category AS master_category');
 		$this->db->group_start();
-			$this->db->like('item_category_name', $search);
-			$this->db->or_like('item_category_description', $search);
+		$this->db->like('item_category_name', $search);
+		$this->db->or_like('item_category_description', $search);
 		$this->db->group_end();
 		$this->db->where('deleted', 0);
 

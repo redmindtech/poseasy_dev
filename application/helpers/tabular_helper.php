@@ -810,6 +810,7 @@ function get_customer_category_manage_table_headers()
 	$CI =& get_instance();
 
 	$headers = array(
+		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
 		array('customer_category_id' => $CI->lang->line('customer_category_id')),
 		array('customer_category_name' => $CI->lang->line('customer_category_name')),
 		array('customer_category_disc' => $CI->lang->line('customer_category_disc')),
@@ -825,13 +826,14 @@ function get_customer_category_manage_table_headers()
 /*
 Gets the html data row for the customer category
 */
-function get_customer_category_data_row($customer_category)
+function get_customer_category_data_row($customer_category,$count)
 {
 	$CI =& get_instance();
 
 	$controller_name = strtolower(get_class($CI));
 
 	return array (
+		'serial_number'=>$count,
 		'customer_category_id' => $customer_category->customer_category_id,
 		'customer_category_name' => $customer_category->customer_category_name,
 		'customer_category_disc' => $customer_category->customer_category_disc,
@@ -854,6 +856,7 @@ function get_expenses_manage_table_headers()
 	$CI =& get_instance();
 
 	$headers = array(
+		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
 		array('expense_id' => $CI->lang->line('expenses_expense_id')),
 		array('date' => $CI->lang->line('expenses_date')),
 		array('supplier_name' => $CI->lang->line('expenses_supplier_name')),
@@ -872,13 +875,14 @@ function get_expenses_manage_table_headers()
 /*
 Gets the html data row for the expenses
 */
-function get_expenses_data_row($expense)
+function get_expenses_data_row($expense,$count)
 {
 	$CI =& get_instance();
 
 	$controller_name = strtolower(get_class($CI));
 
 	return array (
+		'serial_number'=>$count,
 		'expense_id' => $expense->expense_id,
 		'date' => to_datetime(strtotime($expense->date)),
 		'supplier_name' => $expense->supplier_name,
@@ -949,6 +953,7 @@ function get_cashups_manage_table_headers()
 	$CI =& get_instance();
 
 	$headers = array(
+		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
 		array('cashup_id' => $CI->lang->line('cashups_id')),
 		array('open_date' => $CI->lang->line('cashups_opened_date')),
 		array('open_employee_id' => $CI->lang->line('cashups_open_employee')),
@@ -970,13 +975,14 @@ function get_cashups_manage_table_headers()
 /*
 Gets the html data row for the cashups
 */
-function get_cash_up_data_row($cash_up)
+function get_cash_up_data_row($cash_up,$count)
 {
 	$CI =& get_instance();
 
 	$controller_name = strtolower(get_class($CI));
 
 	return array (
+		'serial_number'=>$count,
 		'cashup_id' => $cash_up->cashup_id,
 		'open_date' => to_datetime(strtotime($cash_up->open_date)),
 		'open_employee_id' => $cash_up->open_first_name . ' ' . $cash_up->open_last_name,
@@ -985,7 +991,7 @@ function get_cash_up_data_row($cash_up)
 		'close_date' => to_datetime(strtotime($cash_up->close_date)),
 		'close_employee_id' => $cash_up->close_first_name . ' ' . $cash_up->close_last_name,
 		'closed_amount_cash' => to_currency($cash_up->closed_amount_cash),
-		'note' => $cash_up->note ? '<span class="glyphicon glyphicon-ok"></span>' : '<span class="glyphicon glyphicon-remove"></span>',
+		'note' => $cash_up->note,
 		'closed_amount_due' => to_currency($cash_up->closed_amount_due),
 		'closed_amount_card' => to_currency($cash_up->closed_amount_card),
 		'closed_amount_check' => to_currency($cash_up->closed_amount_check),

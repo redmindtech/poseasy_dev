@@ -49,10 +49,13 @@ class Expenses extends Secure_Controller
 		$total_rows = $this->Expense->get_found_rows($search, $filters);
 		$payments = $this->Expense->get_payments_summary($search, $filters);
 		$payment_summary = get_expenses_manage_payments_summary($payments, $expenses);
+
+		$count = $offset+1;
 		$data_rows = array();
 		foreach($expenses->result() as $expense)
 		{
-			$data_rows[] = $this->xss_clean(get_expenses_data_row($expense));
+			$data_rows[] = $this->xss_clean(get_expenses_data_row($expense,$count));
+			$count++;
 		}
 
 		if($total_rows > 0)

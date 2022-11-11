@@ -15,8 +15,13 @@ $(document).ready(function()
 			var count=-1;
 			$('#table').find('tr').each(function(){ 
 			count = count+1;
-			$(this).find('td').eq(1).html('<td>'+count+'</td>'); 
+			$(this).find('td').eq(2).hide();
+			$(this).find('th').eq(2).hide();
+			
 			}); 
+			var myClasses = document.querySelectorAll('.btn.btn-default.btn-sm.dropdown-toggle');
+               
+                myClasses[0].style.display = 'none';
 			
 		}
 	});

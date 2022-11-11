@@ -528,6 +528,7 @@ class Items extends Secure_Controller
 	}
 	public function item_name_stringcmp($flag)
 	{ 
+		
 		$strings=explode('..',$flag);
 		$strings[1] = preg_replace('/\s*/', '', $strings[1]);
 		$strings[1]  = strtolower($strings[1]);
@@ -547,6 +548,7 @@ class Items extends Secure_Controller
 
 	public function category_name_stringcmp($flag)
 	{  
+		
 		if($flag==0)
 		{
 	     $exists = $this->Item->category_name_exists($this->input->post('category'));
