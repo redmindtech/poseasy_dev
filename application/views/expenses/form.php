@@ -24,7 +24,7 @@
 			</div>
 		</div>
 
-		<div class="form-group form-group-sm">
+		<div class="form-group form-group-sm" id="supplier_name_disp">
 			<?php echo form_label($this->lang->line('expenses_supplier_name'), 'supplier_name', array('class'=>'control-label col-xs-3')); ?>
 			<div class='col-xs-6'>
 				<?php echo form_input(array(
@@ -48,7 +48,7 @@
 		</div>
 		
 
-		<div class="form-group form-group-sm">
+		<div class="form-group form-group-sm" id="tax_code_disp">
 			<?php echo form_label($this->lang->line('expenses_supplier_tax_code'), 'supplier_tax_code', array('class'=>'control-label col-xs-3')); ?>
 			<div class='col-xs-6'>
 				<?php echo form_input(array(
@@ -163,8 +163,12 @@ $(document).ready(function()
 
 	var supplier_id_txt = document.getElementById("supplier_id");
 	var category_dropdown = document.getElementById("category_dropdown");
+	var supplier_name_disp = document.getElementById("supplier_name_disp");
+	var tax_code_disp = document.getElementById("tax_code_disp");
 	supplier_id_txt.style.display = "none";
 	category_dropdown.style.display = "none";
+	supplier_name_disp.style.display = "none";
+	tax_code_disp.style.display = "none";
 	<?php $this->load->view('partial/datepicker_locale'); ?>
 
 	var amount_validator = function(field) {
