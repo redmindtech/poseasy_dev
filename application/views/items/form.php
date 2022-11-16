@@ -557,8 +557,7 @@
 
 			$arg_fun = $check_null_flag."..".$check_name;
 
-			var_dump($arg_fun);
-
+			
 			
 			
 			
