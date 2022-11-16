@@ -26,6 +26,6 @@ $lang["common_id "] = "S.No";
 $lang["invalid_phone_number"] = "Enter a valid 10-digit contact number";
 $lang["supplier_id_header"] = "Supplier ID";
 $lang["invalid_account_number"] = "Please enter a valid account number";
-$lang["invalid_postcode"] = "Please enter a valid seven digit postal code";
+$lang["invalid_postcode"] = "Please enter a valid six digit postal code";
 $lang["invalid_gst_number"] = "Please enter a valid GST number";
     
