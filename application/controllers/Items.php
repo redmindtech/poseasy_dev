@@ -526,24 +526,28 @@ class Items extends Secure_Controller
 		 $this->Item->save_supplier_details($item_id,$supplier_id,$items_add_quantity );
 
 	}
-	public function item_name_stringcmp($flag)
+	public function item_name_stringcmp()
 	{ 
+		var_dump($this->input->post('name_old'));
+		log_message('error_debug',$this->input->post('name_old'));
+		// $strings=explode('..',$flag);
 		
-		$strings=explode('..',$flag);
-		$strings[1] = preg_replace('/\s*/', '', $strings[1]);
-		$strings[1]  = strtolower($strings[1]);
-		if($strings[0]==0)
-		{
-	     $exists = $this->Item->item_name_exists($this->input->post('name'));
-		 echo $exists ;
-		}elseif($strings[0]==1){
-			$exists = $this->Item->item_name_exists_edit($this->input->post('name'),$strings[1]);
-			echo $exists ;
-		}
-		else
-		{
-			echo "true";
-		}
+		// $strings[1] = preg_replace('/\s*/', '', $strings[1]);
+		// $strings[1]  = strtolower($strings[1]);
+		// $strings[1] = preg_replace('/%20/', '', $strings[1]);
+		// //var_dump($strings[1]);
+		// if($strings[0]==0)
+		// {
+	    //  $exists = $this->Item->item_name_exists($this->input->post('name'));
+		//  echo $exists ;
+		// }elseif($strings[0]==1){
+		// 	$exists = $this->Item->item_name_exists_edit($this->input->post('name'),$strings[1]);
+		// 	echo $exists ;
+		// }
+		// else
+		// {
+		 	echo "true";
+		// }
 	}
 
 	public function category_name_stringcmp($flag)

@@ -54,6 +54,11 @@ $(document).ready(function()
 		});
 		location.href = "mailto:" + recipients.join(",");
 	});
+	$('ul li:contains(JSON)').first().remove();
+                $('ul li:contains(XML)').first().remove();
+                $('ul li:contains(TXT)').first().remove();
+                $('ul li:contains(CSV)').first().remove();
+                $('ul li:contains(SQL)').first().remove();
 });
 </script>
 

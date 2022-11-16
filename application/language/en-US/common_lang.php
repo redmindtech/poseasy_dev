@@ -104,3 +104,4 @@ $lang["common_supplier_required"]="Supplier is a required field";
 $lang["common_pick_no"]="Picklist Number";
 $lang["common_item_delivery_expectation"] = "Item Delivery Expectation";
 $lang["common_serial_number"]="S.No";
+$lang["dashboard_message"] = "POSEasy Dashboard";

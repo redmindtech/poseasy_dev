@@ -87,7 +87,11 @@ class Ro_receiving extends CI_Model
 				'pending_payables' =>$row->pending_payables,
 				'last_purchase_qty' =>$row->last_purchase_qty,				
 				'total_stock' => $row->total_stock,
-				'payment_mode'=>$row->payment_mode				
+				'payment_mode'=>$row->payment_mode,
+				'cheque_number'=>$row->cheque_number,
+				'cheque_date'=>$row->cheque_date,
+				'receiving_time'=>$row->receiving_time,
+				'voucher_no'=>$row->voucher_no				
 				);				
 			}			
 			
@@ -113,6 +117,63 @@ class Ro_receiving extends CI_Model
 
 		return $this->db->get();
 	}
+
+
+	public function cheque_get_info()
+	{
+		$this->db->select('*');
+	 	$this->db->from('ro_receivings_accounts');
+	 	$this->db->where('payment_mode',"Cheque");
+		
+	 	// $this->db->where('deleted', 0);
+	 	$query = $this->db->get()->result();
+		return $query;
+
+	 	// if($query->num_rows()==1)
+	 	// {
+	 	// 	return $query->row();
+	 	// }
+	 	// else
+	 	// {
+	 	// 	//Get empty base parent object, as $item_kit_id is NOT an item kit
+	 	// 	$ro_receivings_obj = new stdClass();
+
+	 	// 	//Get all the fields from items table
+	 	// 	foreach($this->db->list_fields('ro_receivings_accounts') as $field)
+	 	// 	{
+	 	// 		$ro_receivings_obj->$field = '';
+	 	// 	}
+
+	 	// 	return $ro_receivings_obj;
+	 	// }
+	}
+
+	public function get_cheque_info($id )
+	{
+		$this->db->from('ro_receivings_accounts');
+		$this->db->where('id ', $id );
+		$this->db->where('deleted', 0);
+		$query = $this->db->get();
+
+		if($query->num_rows()==1)
+		{
+			return $query->row();
+		}
+		else
+		{
+			//Get empty base parent object, as $item_kit_id is NOT an item kit
+			$ro_receivings_accounts_obj = new stdClass();
+
+			//Get all the fields from items table
+			foreach($this->db->list_fields('ro_receivings_accounts') as $field)
+			{
+				$ro_receivings_accounts_obj->$field = '';
+			}
+
+			return $ro_receivings_accounts_obj;
+		}
+	}
+
 
 	public function companyname()
 	{ 
@@ -209,7 +270,7 @@ class Ro_receiving extends CI_Model
 			$this->db->group_by('supplier_id');
 			
 			$sub_query = $this->db->get_compiled_select();
-			$this->db->select('id,supplier_id,opening_balance,purchase_amount,payment_mode,paid_amount,purchase_return_amount,closing_balance,purchase_return_qty,discount,pending_payables,last_purchase_qty,total_stock, receiving_time');
+			$this->db->select('id,supplier_id,opening_balance,cheque_number,voucher_no,cheque_date,receiving_time,purchase_amount,payment_mode,paid_amount,purchase_return_amount,closing_balance,purchase_return_qty,discount,pending_payables,last_purchase_qty,total_stock, receiving_time');
 			$this->db->from('ro_receivings_accounts');
 			$this->db->where("Id IN ($sub_query)");		
 			$query = $this->db->get()->result();					
@@ -221,7 +282,7 @@ class Ro_receiving extends CI_Model
 			$this->db->from('ro_receivings_accounts');
 			$this->db->group_by('supplier_id');
 			$sub_query = $this->db->get_compiled_select();
-			$this->db->select('id,supplier_id,opening_balance,purchase_amount,payment_mode,paid_amount,purchase_return_amount,closing_balance,purchase_return_qty,discount,pending_payables,last_purchase_qty,total_stock, receiving_time');
+			$this->db->select('id,supplier_id,opening_balance,cheque_number,voucher_no,cheque_date,receiving_time,purchase_amount,payment_mode,paid_amount,purchase_return_amount,closing_balance,purchase_return_qty,discount,pending_payables,last_purchase_qty,total_stock, receiving_time');
 			$this->db->from('ro_receivings_accounts');
 			$this->db->where("Id IN ($sub_query)");						
 			$this->db->group_start();
@@ -251,7 +312,7 @@ class Ro_receiving extends CI_Model
 	//  FROM ospos_ro_receivings_accounts WHERE supplier_id=10;
 	public function supplier_info($id)
 	{ 
-		$this->db->select('supplier_id,receiving_time,opening_balance,purchase_amount,paid_amount,rate_difference,payment_mode,purchase_return_amount,discount,closing_balance');
+		$this->db->select('supplier_id,receiving_time,opening_balance,cheque_number,voucher_no,cheque_date,receiving_time,purchase_amount,paid_amount,rate_difference,payment_mode,purchase_return_amount,discount,closing_balance');
 		$this->db->from('ro_receivings_accounts');
 		$this->db->where('supplier_id',$id );
 		$query = $this->db->get();			

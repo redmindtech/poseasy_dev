@@ -187,6 +187,7 @@ $(document).ready(function()
         // console.log(receiving_quantity);
         // console.log(items_add_quantity);
         // console.log(final_val);
+        
        
         if(supplier_id == 0){
             alert("Please select supplier name");

@@ -164,7 +164,9 @@ $autoload['model'] = array(
 	'Tax_jurisdiction',
 	'Master',
 	'Customers_category',
-	'Ro_receiving'
+	'Ro_receiving',
+	'Roreceivings_cheques',
+	'Dashboard'
 	
 
 );

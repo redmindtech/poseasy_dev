@@ -33,7 +33,7 @@ class Suppliers extends Persons
 
 		$postcode= $this->input->post('postcode');
 		 
-		if(preg_match("/^([0-9]{7})*$/",$postcode)){
+		if(preg_match("/^([0-9]{6})*$/",$postcode)){
 			echo "true";
 		}else{
 			echo "false";

@@ -53,33 +53,10 @@ function transform_headers($array, $readonly = FALSE, $editable = TRUE)
 }
 
 
-/*
-Get the header for the sales tabular view
-*/
-function get_sales_manage_table_headers()
-{
-	$CI =& get_instance();
 
-	$headers = array(
-		array('sale_id' => $CI->lang->line('common_id')),
-		array('sale_time' => $CI->lang->line('sales_sale_time')),
-		array('customer_name' => $CI->lang->line('customers_customer')),
-		array('amount_due' => $CI->lang->line('sales_amount_due')),
-		array('amount_tendered' => $CI->lang->line('sales_amount_tendered')),
-		array('change_due' => $CI->lang->line('sales_change_due')),
-		array('payment_type' => $CI->lang->line('sales_payment_type'))
-	);
 
-	if($CI->config->item('invoice_enable') == TRUE)
-	{
-		$headers[] = array('invoice_number' => $CI->lang->line('sales_invoice_number'));
-		$headers[] = array('invoice' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
-	}
 
-	$headers[] = array('receipt' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
 
-	return transform_headers($headers);
-}
 
 /*
 Get the html data row for the sales
@@ -1170,5 +1147,69 @@ function get_ro_receivings_data_row_search($ro_receivings_accounts,$data)
 		// 	array('class'=>'modal-dlg', 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update'))
 		// )
 	);
+}
+
+
+function get_ro_cheque_manage_table_headers()
+{
+	$CI =& get_instance();
+
+	$headers = array(
+		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
+		array('id' =>  $CI->lang->line('ro_id') ),
+		array('date_of_transaction_pur' => $CI->lang->line('date_of_transaction')),
+		array('cheque_no_pur' => $CI->lang->line('cheque_no')),
+		array('cheque_post_date_pur' => $CI->lang->line('cheque_post_date')),
+		array('purchase_amt_pur' => $CI->lang->line('purchase_amount')),
+		array('paid_amt_pur' => $CI->lang->line('paid_amount')),
+		array('return_amount_pur' => $CI->lang->line('return_amount')),
+		array('return_quantity_pur' => $CI->lang->line('return_quantity')),
+		array('invoice_no_pur' => $CI->lang->line('invoice_no')),
+		array('discount_pur' => $CI->lang->line('discount')),
+		array('opening_balance' => $CI->lang->line('ro_receivings_opening_balance')),
+		array('closing_balance' => $CI->lang->line('ro_receivings_closing_balance')),
+		array('pending_payables' => $CI->lang->line('pending_payables')),
+	);
+
+	
+
+	
+
+	
+
+	return transform_headers($headers);
+}
+
+
+/*
+Get the header for the sales tabular view
+*/
+function get_ro_cheque_data_row($ro_receivings_accounts,$count)
+{
+	$CI =& get_instance();
+// var_dump($ro_receivings_accounts);
+	$controller_name = strtolower(get_class($CI));
+
+	return array (
+		'serial_number' => $count,
+		'id' => $ro_receivings_accounts->id,
+		'date_of_transaction_pur' => $ro_receivings_accounts->receiving_time,
+		'purchase_amount' => $ro_receivings_accounts->purchase_amount,
+		'cheque_no_pur' => $ro_receivings_accounts->cheque_number,
+		'cheque_post_date_pur' => $ro_receivings_accounts->cheque_date,
+		'purchase_amt_pur' =>$ro_receivings_accounts->purchase_amount,
+		'paid_amt_pur' =>$ro_receivings_accounts->paid_amount ,
+		'return_amount_pur' =>$ro_receivings_accounts->purchase_return_amount,
+		'return_quantity_pur' =>$ro_receivings_accounts->purchase_return_qty ,
+		'invoice_no_pur' => $ro_receivings_accounts->voucher_no,
+		'discount_pur' => $ro_receivings_accounts->discount,
+		'opening_balance' => $ro_receivings_accounts->opening_balance,
+		'closing_balance' => $ro_receivings_accounts->closing_balance,
+		'pending_payables' => $ro_receivings_accounts->pending_payables,
+		
+	);
+	
+
+	
 }
 ?>

@@ -50,3 +50,12 @@ $lang["ro_receivings_supplier_name_required"]="Please select supplier name";
 $lang['ro_receivings_purchase_amount_required']="Please enter purchase amount or return amount";
 $lang['ro_receivings_payment_mode_required']="Please select payment mode";
 $lang['supplier_none']="None";
+
+$lang['date_of_transaction'] = "Date of Transaction";
+$lang['cheque_no'] ="Cheque No.";
+$lang['cheque_post_date'] = "Cheque Post Date";
+$lang['purchase_amount'] = "Purchase Amount";
+$lang['paid_amount'] = "Paid Amount";
+$lang['return_amount'] = "Return Amount";
+$lang['return_quantity'] = "Return Quantity";
+$lang['invoice_no'] = "Invoice No";

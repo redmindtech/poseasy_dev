@@ -22,17 +22,34 @@ class Roreceivings extends Secure_Controller
       $result=$this->Ro_receiving->opening_bal($supplier_id);
 	  $pending=0; 
 	  if($result!=NULL)
-	  {
-		foreach($result as $row)
-			{
-			$pending=$row->pending_payables;
-		  }
-	  }
+		{
+			foreach($result as $row)
+				{
+				$pending=$row->pending_payables;
+			}
+		}
 		if($pending == NULL || $result==NULL ){
         $pending=0;
 		}
 		echo $pending;
-   	 }
+    }
+
+
+	public function manage()
+	{
+		$data_row_cheque['table_headers'] = $this->xss_clean(get_ro_cheque_manage_table_headers());
+		$row=$this->Ro_receiving->cheque_get_info();
+		foreach( $row as $row){
+		$data_rows = $this->xss_clean(get_ro_cheque_data_row( $row));
+		
+		//echo json_encode($data_rows);
+		}
+		
+	   
+		$this->load->view('ro_receivings/cheque_detail', $data_row_cheque);
+   }
+
+		
 
 	/*
 	Returns Item_category_manage table data rows. This will be called with AJAX.
@@ -56,6 +73,8 @@ class Roreceivings extends Secure_Controller
 			$data = $this->Ro_receiving->agency_name($ro_receivings->supplier_id);
 		
 			$data_rows[] = $this->xss_clean(get_ro_receivings_data_row_search($ro_receivings,$data));
+
+			//$data_rows = $this->xss_clean(get_ro_cheque_data_row( $ro_receivings));
 		
 			
 			
@@ -72,11 +91,19 @@ class Roreceivings extends Secure_Controller
 		$data_db=$this->Ro_receiving->get_info_filter();
 		 foreach($data_db as $ro_receivings)
 		{ 			
-			$data_row[] = $this->xss_clean(get_ro_receivings_data_row( $ro_receivings,$data));
+			$data_row[] = $this->xss_clean(get_ro_receivings_data_row($ro_receivings,$data));
 		}
 		  echo json_encode($data_row);
 		
 	}
+
+	public function get_row_cheque($id)
+	{
+		$data_cheque = $this->xss_clean(get_purchase_data_row($this->Ro_receiving->get_info()));
+		echo json_encode($data_cheque);
+	}
+
+	
 	public function bulk_entry_view($id = -1)
 	{		
 		$data['ro_receivings_info'] = $this->Ro_receiving->get_info($id,"");

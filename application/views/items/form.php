@@ -557,6 +557,8 @@
 
 			$arg_fun = $check_null_flag."..".$check_name;
 
+			var_dump($arg_fun);
+
 			
 			
 			
@@ -800,20 +802,7 @@ rules:
 	name:
 	{
 		required: true,
-		remote: 
-		{
-			
-			url: "<?php echo site_url($controller_name . '/item_name_stringcmp/'.$arg_fun)?>",
-			type: 'POST',
-			data: {
-				
-				'name' : function()
-				{
-				
-					 return  $('#name').val();
-				},
-		}
-	}
+		
 	},
 	
 	 

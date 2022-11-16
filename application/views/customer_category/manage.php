@@ -31,6 +31,11 @@ $(document).ready(function()
 	{
 		table_support.refresh();
 	});
+	$('ul li:contains(JSON)').first().remove();
+                $('ul li:contains(XML)').first().remove();
+                $('ul li:contains(TXT)').first().remove();
+                $('ul li:contains(CSV)').first().remove();
+                $('ul li:contains(SQL)').first().remove();
 });
 </script>
 

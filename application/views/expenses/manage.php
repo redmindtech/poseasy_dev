@@ -32,6 +32,10 @@ $(document).ready(function()
 			
 			$(this).find('td').eq(2).hide();
 			$(this).find('th').eq(2).hide();
+			$(this).find('td').eq(1).hide();
+			$(this).find('th').eq(1).hide();
+			$(this).find('td').eq(9).hide();
+			$(this).find('th').eq(9).hide();
 			
 			//$(this).find('td').eq(1).html('<td>'+serial_no+'</td>'); 
 			}); 
