@@ -61,6 +61,7 @@
 								); ?>
 					  </div>
         </div>
+		
 
         <div class="form-group form-group-sm">
 				  <?php echo form_label($this->lang->line('ro_receivings_opening_balance'), 'opening_balance', array('class' => 'control-label col-xs-3')); ?>
@@ -71,7 +72,7 @@
 								'id'=>'opening_balance',
 								'class'=>'form-control input-sm',
 								'readonly'=>'true',
-								'value'=>'0')
+								'value'=>to_currency_no_money(0.00))
 								); ?>
 					  </div>
         </div>
@@ -83,7 +84,7 @@
 								'name'=>'purchase_amount',
 								'id'=>'purchase_amount',
 								'class'=>'form-control input-sm',
-								'value'=>'0'
+								'value'=>to_currency_no_money(0.00)
 								)
 								); ?>
 					</div>
@@ -96,7 +97,7 @@
 								'name'=>'paid_amount',
 								'id'=>'paid_amount',
 								'class'=>'form-control input-sm',
-								'value'=>'0')
+								'value'=>to_currency_no_money(0.00))
 								); ?>
 					</div>
                 </div>
@@ -128,14 +129,14 @@
 			</div>
 		</div>
 		<div class="form-group form-group-sm cheque_number">
-					<?php echo form_label($this->lang->line('ro_receivings_cheque_number'), 'cheque_number', array('class' => 'control-label col-xs-3')); ?>
+					<?php echo form_label($this->lang->line('ro_receivings_cheque_number'), 'cheque_number', array('class' => 'required control-label col-xs-3')); ?>
 					<div class='col-xs-4'>
 						<?php echo form_input(array(
 							  'onfocus'=>"this.value=''",
 								'name'=>'cheque_number',
 								'id'=>'cheque_number',
 								'class'=>'form-control input-sm',
-								'value'=>'0'
+								'value'=>''
 								)
 								); ?>
 					</div> 
@@ -148,7 +149,7 @@
 								'name'=>'closing_balance','type'=>'number',
 								'id'=>'closing_balance',
 								'class'=>'form-control input-sm',
-								'value'=>'0',
+								'value'=>to_currency_no_money(0.00),
 								'readonly'=>'readonly')
 								); ?>
 					</div> 
@@ -161,7 +162,7 @@
 								'name'=>'purchase_return_amount',
 								'id'=>'purchase_return_amount',
 								'class'=>'form-control input-sm',
-								'value'=>'0'
+								'value'=>to_currency_no_money(0.00)
 								)
 								); ?>
 					      </div> 
@@ -173,7 +174,7 @@
 								'name'=>'purchase_return_qty',
 								'id'=>'purchase_return_qty',
 								'class'=>'form-control input-sm',
-								'value'=>$ro_receivings_info->purchase_return_qty)
+								'value'=>'0')
 								); ?>
 					      </div> 
                      </div>
@@ -185,7 +186,7 @@
 								'name'=>'discount',
 								'id'=>'discount',
 								'class'=>'form-control input-sm',
-								'value'=>'0')
+								'value'=>to_currency_no_money(0.00))
 								); ?>
 					      </div> 
                      </div>
@@ -196,7 +197,7 @@
 								'name'=>'pending_payables',
 								'id'=>'pending_payables',
 								'class'=>'form-control input-sm',
-								'value'=>$ro_receivings_info->pending_payables,
+								'value'=>to_currency_no_money(0.00),
 								'readonly'=>'readonly')
 								); ?>
 					      </div> 
@@ -209,7 +210,7 @@
 				              'name'=>'last_purchase_qty',
 				               'id'=>'last_purchase_qty',
 				                'class'=>'form-control input-sm',
-				                 'value'=>$ro_receivings_info->	last_purchase_qty)
+				                 'value'=>'0')
 							);?>
 						</div>
 					</div>
@@ -235,7 +236,7 @@
 								'name'=>'gst_amount',
 								'id'=>'gst_amount',
 								'class'=>'form-control input-sm',
-								'value'=>'0')
+								'value'=>to_currency_no_money(0.00))
 								); ?>
 					      </div> 
                      </div>
@@ -247,10 +248,16 @@
 								'name'=>'rate_difference',
 								'id'=>'rate_difference',
 								'class'=>'form-control input-sm',
-								'value'=>$ro_receivings_info->rate_difference)
+								'value'=>to_currency_no_money(0.00))
 								); ?>
 					      </div> 
                      </div>
+					 <div class="form-group form-group-sm">
+			<?php echo form_label($this->lang->line('expenses_employee'), 'employee', array('class'=>'control-label col-xs-3')); ?>
+			<div class='col-xs-6'>
+				<?php echo form_dropdown('employee_id', $employees,$ro_receivings_info->employee_id, 'id="employee_id"  class="form-control"');?>
+			</div>
+		</div>
 					 <!-- <div class="form-group form-group-sm">
 					    <?php echo form_label($this->lang->line('total_stock'), 'total_stock', array('class' => 'control-label col-xs-3')); ?>
 					     <div class='col-xs-8'>
@@ -284,8 +291,15 @@ $(document).ready(function()
 	{
 		$('.cheque_number').show();
 		$('.cheque_date'). show();
+		$("#discount").attr('disabled', true); 
+		$("#purchase_return_qty").attr('disabled', true); 
+		$("#purchase_return_amount").attr('disabled', true); 
 	}
 	else{
+		$("#discount").attr('disabled', false); 
+		$("#purchase_return_qty").attr('disabled', false); 
+		$("#purchase_return_amount").attr('disabled', false);
+	
 		$('.cheque_number'). hide();
 		$('.cheque_date'). hide();
 	}
@@ -304,8 +318,7 @@ $(document).ready(function()
                 
 				$('#opening_balance').val(msg);                
             }).fail(function (errorMsg)
-			{
-            
+			{            
 			   $('#opening_balance').val('0');
         });
 });		
@@ -316,6 +329,30 @@ $(document).ready(function()
 
 $("form").on("change", "input","click", function(e)
 {       
+	
+
+	var payment_mode=$('#payment_mode').val();		
+		if(payment_mode=="Cheque")
+		{
+			
+			
+			
+		var	open_bal=parseFloat($('#opening_balance').val());
+		$('#closing_balance').val(open_bal);
+		$('#pending_payables').val(open_bal);
+		
+		var purchase_amt=parseFloat($('#purchase_amount').val());
+		var paid_amt=parseFloat($('#paid_amount').val());
+	
+		var discount= parseFloat($('#discount').val());
+		// alert()
+		// alert(open_bal	);
+		// alert( purchase_amt);
+		// alert(paid_amt);
+
+
+	}else{
+		
                 var	open_bal=parseFloat($('#opening_balance').val());
 				var purchase_amt=parseFloat($('#purchase_amount').val());
 				$('#paid_amount').on("focusin" ,function(e)
@@ -335,8 +372,11 @@ $("form").on("change", "input","click", function(e)
 				var discount= parseFloat($('#discount').val());
 				var pending_payables=(final_amt-return_amt)-discount;
 				$('#pending_payables').val(pending_payables);
+			}
+		
 			
 		});	
+		
 	$('#ro_receivings_edit_form').validate($.extend({
 		submitHandler: function(form,event) {
 			
@@ -364,14 +404,15 @@ $("form").on("change", "input","click", function(e)
 		rules:
 
 		{  				
-			company_name:"required",		
+			company_name:"required",	
+			cheque_number:"required"	
 			
 		},
 		messages:
 	{ 	 
 		 company_name: "<?php echo $this->lang->line('supplier_name_required'); ?>",		
 		 payment_mode:"<?php echo $this->lang->line('ro_receivings_payment_mode_required'); ?>",
-				
+		 cheque_number:	"<?php echo $this->lang->line('cheque_number_required'); ?>",	
 
 	}	
 	}, form_support.error));	

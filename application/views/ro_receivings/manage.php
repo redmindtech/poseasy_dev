@@ -59,6 +59,10 @@ $(document).ready(function()
 		<span class="glyphicon glyphicon-list">&nbsp</span><?php echo $this->lang->line($controller_name . '_new'); ?>
 	</button>
 </div>
+<ul class="pull-left">
+						<?php echo anchor($controller_name."/bulk_entry_view", '<span class="glyphicon glyphicon-list">&nbsp</span>' . $this->lang->line('receivings_bulk_entry'),
+									array('class'=>'btn btn-primary btn-sm', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('receivings_bulk_entry'))); ?>
+					</ul>
 
 
 

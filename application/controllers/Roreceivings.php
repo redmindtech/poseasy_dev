@@ -107,35 +107,47 @@ class Roreceivings extends Secure_Controller
 	public function bulk_entry_view($id = -1)
 	{		
 		$data['ro_receivings_info'] = $this->Ro_receiving->get_info($id,"");
-		if(empty($id))
+		$data['employees'] = array();
+		foreach($this->Employee->get_all()->result() as $employee)
 		{
-			$data['ro_receivings_info']->receiving_time = date('Y-m-d H:i:s');
-			$data['ro_receivings_info']->employee_id = $this->Employee->get_logged_in_employee_info()->person_id;
+			foreach(get_object_vars($employee) as $property => $value)
+			{
+				
+				$employee->$property = $this->xss_clean($value);
+			}
+
+			$data['employees'][$employee->person_id] = $employee->first_name . ' ' . $employee->last_name;
 		}
-		$data['company_name'] = $this->Ro_receiving->companyname(); 
+		
 		
 		$this->load->view("ro_receivings/counter_sale_form", $data);
+	
 	}
 	
      //View new form
-	public function view($id = -1)
-	{		
-		$data['ro_receivings_info'] = $this->Ro_receiving->get_info($id);
-
-		if(empty($id))
-		{
-			$data['ro_receivings_info']->receiving_time = date('Y-m-d H:i:s');
-			$data['ro_receivings_info']->employee_id = $this->Employee->get_logged_in_employee_info()->person_id;
-		}	
-		$company_name_none = array('' => $this->lang->line('supplier_none'));
-
-		$data['company_name'] = $this->Ro_receiving->companyname(); 
-		
-		 $data['company_name_none']=$company_name_none;
-	
-		$this->load->view("ro_receivings/form", $data);
-	}
-
+	 public function view($id = -1)
+	 {		
+		 $data['ro_receivings_info'] = $this->Ro_receiving->get_info($id);
+		 $data['employees'] = array();
+		 foreach($this->Employee->get_all()->result() as $employee)
+		 {
+			 foreach(get_object_vars($employee) as $property => $value)
+			 {
+				 $employee->$property = $this->xss_clean($value);
+			 }
+ 
+			 $data['employees'][$employee->person_id] = $employee->first_name . ' ' . $employee->last_name;
+		 }
+ 
+		 
+		 $company_name_none = array('' => $this->lang->line('supplier_none'));
+ 
+		 $data['company_name'] = $this->Ro_receiving->companyname(); 
+		 
+		  $data['company_name_none']=$company_name_none;
+	 
+		 $this->load->view("ro_receivings/form", $data);
+	 }
 
 	//Save new form
 	public function save($id = -1)
@@ -213,5 +225,79 @@ class Roreceivings extends Secure_Controller
 		 $this->load->view('ro_receivings/supplier_form',$data );
 
 	}
+	public function bulk_entry_save($id = -1)
+	{
+		
+		
+		foreach(json_decode($_POST[bulk_data]) as $row)
+		 {
+		
+			 $ro_receivings[$row[3]]=array($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8],$row[9]);
+			
+			$opening_balance=$this->Ro_receiving-> pending_pay($row[3]);
+			
+			if($opening_balance  == '0.00')
+			{
+				$open_bal_bulk='0.00';
+				$pending_pay='0.00';
+
+			}
+			else{
+				
+			foreach($opening_balance as $opening_balance)
+			{				 
+				$open_bal_bulk=$opening_balance->pending_payables;
+				
+			}
+			
+			
+			  $pending_pay=$open_bal_bulk-$row[5];
+			
+			
+		}
+		// log_message('$save_count',print_r( $pending_pay,TRUE));
+		// log_message('$save_count',print_r( $open_bal_bulk,TRUE));
+		
+				$save_bulk_entry[$row[3]] = array('supplier_id'=>$row[3],
+				 'employee_id'=>$row[2],
+				'voucher_no' => $row[1],
+				'purchase_date' => $row[0],
+				// 'purchase_amount'=> 0.00,
+				// 'last_purchase_qty'=>0.00,
+				'paid_amount'=>$row[5],
+				'payment_mode'=>$row[6],
+				'cheque_date'=>"00.00.00",
+				'cheque_number'=>"0",
+				'closing_balance'=>$pending_pay,
+				// 'purchase_return_amount'=>0.00,
+				// 'purchase_return_qty'=>0,
+				// 'discount'=>0.00,
+				'pending_payables'=> $pending_pay,
+				// 'rate_difference'=>0,
+				// 'total_stock'=>0,
+				// purchase_date
+				// receiving_time
+				'gst_slab'=>$row[7],
+				'gst_amount'=>$row[8],
+				'comments' => $row[9],				
+				'towards_vno' => $row[4],
+				'mode'=>"B",
+				'opening_balance'=>$open_bal_bulk,	
+				
+				
+			);
+	
+			
+		
+		
+		// $pending_pay = $this->Ro_receiving->pending_pay($row[2]);
+
+	//   log_message('debug',print_r($row[2],TRUE));
+		
+		//   $this->Ro_receiving->save_bulk($save_bulk_entry, $id);
+	}
+	$this->Ro_receiving->save_bulk($save_bulk_entry, $id);
+}
+
 }
 ?>

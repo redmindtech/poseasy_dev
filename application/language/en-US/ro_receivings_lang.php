@@ -59,3 +59,4 @@ $lang['paid_amount'] = "Paid Amount";
 $lang['return_amount'] = "Return Amount";
 $lang['return_quantity'] = "Return Quantity";
 $lang['invoice_no'] = "Invoice No";
+$lang["Roreceivings_save"]="Bulk save";

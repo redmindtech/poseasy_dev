@@ -28,12 +28,13 @@ $(document).ready(function()
 			
 			
 			$('#table').find('tr').each(function(){ 
+			
 				
 			
-			$(this).find('td').eq(2).hide();
-			$(this).find('th').eq(2).hide();
-			$(this).find('td').eq(1).hide();
-			$(this).find('th').eq(1).hide();
+			// $(this).find('td').eq(2).hide();
+			// $(this).find('th').eq(2).hide();
+			// $(this).find('td').eq(1).hide();
+			// $(this).find('th').eq(1).hide();
 			$(this).find('td').eq(9).hide();
 			$(this).find('th').eq(9).hide();
 			
@@ -93,7 +94,7 @@ $(document).ready(function()
 		</button>
 
 		<?php echo form_input(array('name'=>'daterangepicker', 'class'=>'form-control input-sm', 'id'=>'daterangepicker')); ?>
-		<?php echo form_multiselect('filters[]', $filters, '', array('id'=>'filters', 'data-none-selected-text'=>$this->lang->line('common_none_selected_text'), 'class'=>'selectpicker show-menu-arrow', 'data-selected-text-format'=>'count > 1', 'data-style'=>'btn-default btn-sm', 'data-width'=>'fit')); ?>
+		<!-- <?php echo form_multiselect('filters[]', $filters, '', array('id'=>'filters', 'data-none-selected-text'=>$this->lang->line('common_none_selected_text'), 'class'=>'selectpicker show-menu-arrow', 'data-selected-text-format'=>'count > 1', 'data-style'=>'btn-default btn-sm', 'data-width'=>'fit')); ?> -->
 	</div>
 </div>
 

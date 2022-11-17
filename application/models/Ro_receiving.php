@@ -372,7 +372,44 @@ class Ro_receiving extends CI_Model
     return $cheque;
 
 	}
+	public function save_bulk($save_bulk_entry,$id)
+	{
 	
+		// log_message('debug',print_r($save_bulk_entry,TRUE));
+	
+			foreach($save_bulk_entry as $row)
+			{
+				
+				 log_message('debug',print_r($row,TRUE));
+				$query=$this->db->insert('ro_receivings_accounts', $row);
+			}
+			
+	}
+	// SELECT pending_payables FROM ospos_ro_receivings_accounts 
+	// WHERE id IN ( SELECT MAX(id) FROM ospos_ro_receivings_accounts 
+	// WHERE supplier_id=62  GROUP BY supplier_id   );
+	public function pending_pay($supplier_id)
+	{
+			$this->db->select('max(id)');		
+			$this->db->from('ro_receivings_accounts');
+			$this->db->where('supplier_id',$supplier_id);
+			$this->db->group_by('supplier_id');
+			
+			$sub_query = $this->db->get_compiled_select();
+			$this->db->select('pending_payables');
+			$this->db->from('ro_receivings_accounts');
+			$this->db->where("Id IN ($sub_query)");		
+			$query = $this->db->get()->result();
+						
+			if($query==NULL || $query=='0')
+			{
+				$query='0.00';
+			 
+				return $query;
+			}
+			return $query;
+			
+	}
 
 }
 ?>
