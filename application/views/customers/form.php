@@ -32,16 +32,16 @@
 	<div class="tab-content">
 		<div class="tab-pane fade in active" id="customer_basic_info">
 			<fieldset>
-				<div class="form-group form-group-sm">
+				<!-- <div class="form-group form-group-sm">
 					<?php echo form_label($this->lang->line('customers_consent'), 'consent', array('class' => 'required control-label col-xs-3')); ?>
 					<div class='col-xs-1'>
 						<?php echo form_checkbox('consent', '1', $person_info->consent == '' ? (boolean)!$this->config->item('enforce_privacy') : (boolean)$person_info->consent); ?>
 					</div>
-				</div>
+				</div> -->
 
 				<?php $this->load->view("people/form_basic_info"); ?>
 				
-				<div class="form-group form-group-sm">
+				<!-- <div class="form-group form-group-sm">
 					<?php echo form_label($this->lang->line('customers_discount_type'), 'discount_type', array('class'=>'control-label col-xs-3')); ?>
 					<div class="col-xs-8">
 						<label class="radio-inline">
@@ -78,7 +78,7 @@
 									); ?>
 						</div>
 					</div>	
-				</div>
+				</div> -->
 
 				<div class="form-group form-group-sm">
 					<?php echo form_label($this->lang->line('customers_company_name'), 'company_name', array('class' => 'control-label col-xs-3')); ?>
@@ -174,7 +174,7 @@
 				<?php
 				}
 				?>
-				<div class="form-group form-group-sm">
+				<!-- <div class="form-group form-group-sm">
 					<?php echo form_label($this->lang->line('customers_opening_balance'), 'opening_balance', array('class' => 'control-label col-xs-3')); ?>
 					<div class='col-xs-8'>
 						<?php echo form_input(array(
@@ -250,7 +250,7 @@
                         <?php echo form_hidden('employee_id', $person_info->employee_id); ?>
 
 			</fieldset>
-		</div>
+		</div> -->
 		<?php
 		if(!empty($stats))
 		{

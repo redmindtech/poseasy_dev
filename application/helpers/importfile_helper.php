@@ -3,7 +3,7 @@
 function generate_import_items_csv($stock_locations,$attributes)
 {
 	$csv_headers = pack('CCC',0xef,0xbb,0xbf);	//Encode the Byte-Order Mark (BOM) so that UTF-8 File headers display properly in Microsoft Excel
-	$csv_headers .= '"ITEM NAME",Category,"Stock type",Item type,"SUPPLIER NAME","Cost Price","Unit Price",Stock Qty,"Reorder Level",Branch,Location,Rack,Bin,Pack type,"HSN CODE",Customer Category 1,Sales price 1,Customer Category 2,Sales price 2,Customer Category 3,Sales price 3,Customer Category 4,Sales price 4' ;
+	$csv_headers .= '"ITEM NAME",Category,"SUPPLIER NAME","Purchase Price","Sales Price",Stock Qty,"Reorder Level",Branch,Location,Rack,Bin,Pack type,"HSN CODE",Customer Category 1,Sales price 1,Customer Category 2,Sales price 2,Customer Category 3,Sales price 3,Customer Category 4,Sales price 4,Customer Category 5,Sales price 5' ;
 	//$csv_headers .= generate_stock_location_headers($stock_locations);
 	// $csv_headers .= generate_attribute_headers($attributes);
 

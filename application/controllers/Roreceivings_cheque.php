@@ -49,19 +49,77 @@ class Roreceivings_cheque extends Secure_Controller
 		echo json_encode(array('total' => $total_rows, 'rows' => $data_rows));
 	}
    //Get row
-	public function get_row($row_id)
+	public function get_row( $row_id)
 	{
 		$data_row = $this->xss_clean(get_ro_cheque_data_row($this->Roreceivings_cheques->get_info($row_id)));
 		echo json_encode($data_row);
 	}
-     //View new form
-	// public function view($id = -1)
-	// {
-	// 	$data['Master_category_info'] = $this->Roreceivings_cheques->get_info($id);
-
-	// 	$this->load->view("masters/form", $data);
-	// }
+     
 	//Save new form
+	public function cheque_valid(){
+		
+		$id = $_POST['id'];
+		
+		$supplier_id = $_POST['supplier_id'];
+		$overall_val = $_POST['overall_val'];
+		$final_val = $_POST['final_val'];
+					
+		$this->Roreceivings_cheques->save_cheque($id,$overall_val,$final_val,$supplier_id);	
+		
+		$check_id= $this->Roreceivings_cheques->transaction_cheque($supplier_id);
+		$next_row=$this->Roreceivings_cheques->remainding_ids($id,$supplier_id);	
+
+		foreach($check_id as $check_id){
+			$next_id=$check_id;
+		}
+		if($next_id==$id)
+		{
+			log_message('debug',print_r($id,TRUE));
+		}
+		else{			
+			$next_row=$this->Roreceivings_cheques->remainding_ids($id,$supplier_id);
+			$this->adjust_balance($final_val,$next_row);
+				
+			}
+	
+	}
+	public function adjust_balance($final_val,$next_row)
+	{ 
+		 $open_bal=$final_val;
+		$obj=json_decode(json_encode($next_row));	
+
+		foreach($obj as $key=>$value)
+		 {   
+			
+			$id=$value->id;			 
+			
+			if($value->payment_mode=="Cheque")
+			{
+				$open_bal=$open_bal;
+				$closing_bal=$open_bal;
+				$pending_pay=$open_bal;
+				
+				$this->Roreceivings_cheques->after_cheque_pass_ids($id,$open_bal,$closing_bal,$pending_pay);
+
+			}
+		 else{
+			
+			$sum=($open_bal+($value->purchase_amount))-($value->paid_amount);
+			$closing_bal=number_format($sum,2, ".", "");
+			
+
+			$sum1=($closing_bal-($value->purchase_return_amount))-($value->discount);
+			$pending_pay=number_format($sum1,2, ".", "");
+		
+
+			$this->Roreceivings_cheques->after_cheque_pass_ids($id,$open_bal,$closing_bal,$pending_pay);
+			$open_bal=$pending_pay;
+			
+		 }
+		 }
+		
+	
+}
 	
 	
 }

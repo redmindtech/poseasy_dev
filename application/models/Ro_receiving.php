@@ -287,8 +287,8 @@ class Ro_receiving extends CI_Model
 			$this->db->where("Id IN ($sub_query)");						
 			$this->db->group_start();
 			$this->db->like('id', $search);
-			$this->db->like('discount', $search);
-			$this->db->or_like('purchase_date', $search);
+			$this->db->or_like('discount', $search);
+			 
 			$this->db->group_end();	
 
 		// get_found_rows case

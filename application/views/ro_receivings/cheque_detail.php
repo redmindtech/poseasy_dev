@@ -3,9 +3,6 @@
 <script type="text/javascript">
 $(document).ready(function()
 {
-
-	var opening_balance;
-	var id_new;
 	<?php $this->load->view('partial/bootstrap_tables_locale'); ?>
 
 	table_support.init({
@@ -18,22 +15,59 @@ $(document).ready(function()
 		{
 			
 			
-			$('#table').find('tr').each(function(){ 
-
-				id_new =  $(this).find("td:eq(2)").text();
-
-				//opening_balance=  $(this).find("td:eq(13)").text();
-				
-				$(this).find('td').eq(-1).after('<td><a href id="submit_cheque" name="'+id_new+'" title="Save Quantity" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok id="submit_span"></span></a></td>');
 			
-			
-			
+				$('table').find('tr').each(function(){ 						
+                    var row = $(this).closest("tr");
+                    var id=$(this).find("td:eq(2)").text();;
+                    serial_no = row.find("td:eq(1)").text();
+					
+					$(this).find('td').eq(-1).after('<td><a href id="submit_qty" name="'+id+'" title="Save Quantity" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok id="submit_span"></span></a></td>');
+					
 			}); 
+
+
+
 			var myClasses = document.querySelectorAll('.btn.btn-default.btn-sm.dropdown-toggle');
                
                 myClasses[0].style.display = 'none';
 			
 		} 
+	});
+	
+	$(document).on("click", '#submit_qty',  function(e){
+				console.log($(this).attr("name"));
+                var current_row = $(this).attr("name");
+				var row = $(this).closest("tr");
+                var id= row.find("td:eq(2)").text();
+				var supplier_id=  row.find("td:eq(3)").text();
+				var purchase_amt= row.find("td:eq(7)").text();
+				var paid_amt = row.find("td:eq(8)").text();
+				var closing_bal = row.find("td:eq(14)").text();
+				var pending_payable = row.find("td:eq(15)").text();
+				// var quantity_reg = e.target.value ;
+
+				
+				opening_balance = parseFloat(row.find("td:eq(13)").text());
+				purchase_amount = parseFloat(row.find("td:eq(7)").text());
+				
+				overall_val = ((parseFloat(opening_balance) + parseFloat(purchase_amount))- parseFloat(paid_amt));
+				final_val = overall_val ;
+			
+				alert('Do you want update the stock quantity?');
+        $.ajax({
+           type: 'POST',
+			url: "<?php echo site_url("Roreceivings_cheque/cheque_valid/"); ?>",
+            data: {'id':id,'overall_val':overall_val,'final_val':final_val,'supplier_id':supplier_id},   
+            datatype : 'json',
+            }).done(function (msg) {
+                //  alert(data);
+                alert("Stock quantity has been successfully updated " );
+    	        window.location.reload();
+                
+            }).fail((jqXHR, errorMsg) => {
+                alert(jqXHR.responseText, errorMsg);
+        });
+		e.preventDefault();
 	});
 	
 
@@ -48,42 +82,24 @@ $(document).ready(function()
                 $('ul li:contains(CSV)').first().remove();
                 $('ul li:contains(SQL)').first().remove();
 
-	$(document).on('click',"#submit_cheque",function(evt){
-       
-       
-     
-        alert('Do you want update the stock quantity?');
-		evt.preventDefault();
-		
-		
-		
-		
-        $.ajax({
-           type: 'POST',
-			url: "<?php echo site_url("Roreceivings_cheque/update_cheque/"); ?>" ,
-            data: {'id':id_new,'opening_balance':opening_balance},   
-            datatype : 'json',
-            }).done(function (msg) {
-                // alert(data);
-                alert("Stock quantity has been successfully updated " );
-    	        window.location.reload();
-                
-            }).fail((jqXHR, errorMsg) => {
-                alert(jqXHR.responseText, errorMsg);
-        });
-       
-            
-            //return FALSE;
-
-			evt.preventDefault();
-       
-  
- });
+         
 });
 
 </script>
 
+<div id="title_bar" class="btn-toolbar">
+<?php echo anchor("Roreceivings", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . "Purchase Details",
+			array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('sales_takings'))); ?>
+					
+</div>
 
+<div id="toolbar">
+	<!-- <div class="pull-left form-inline" role="toolbar">
+		<button id="delete" class="btn btn-default btn-sm print_hide">
+			<span class="glyphicon glyphicon-trash">&nbsp</span><?php echo $this->lang->line("common_delete");?>
+		</button>
+	</div> -->
+</div>
 
 <div id="table_holder">
 	<table id="table"></table>

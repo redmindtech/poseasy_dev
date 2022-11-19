@@ -49,22 +49,18 @@ $(document).ready(function()
 <div id="title_bar" class="btn-toolbar">
 
 
-	<?php echo anchor("Roreceivings_cheque/manage", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . "Cheque detail",
-			array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('sales_takings'))); ?>
+	<?php echo anchor("Roreceivings_cheque/manage", '<span class="glyphicon glyphicon-check">&nbsp</span>' . "Cheque Approval",
+			array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('ro_checque_approve'))); ?>
 					
-	
+	<?php echo anchor($controller_name."/bulk_entry_view", '<span class="glyphicon glyphicon-tags">&nbsp</span>' . $this->lang->line('receivings_bulk_entry'),
+			array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('receivings_bulk_entry'))); ?>
+					
 	
 	<button class='btn btn-info btn-sm pull-right modal-dlg' data-btn-submit='<?php echo $this->lang->line('common_submit') ?>' data-href='<?php echo site_url($controller_name."/view"); ?>'
 			title='<?php echo $this->lang->line($controller_name.'_new'); ?>'>
-		<span class="glyphicon glyphicon-list">&nbsp</span><?php echo $this->lang->line($controller_name . '_new'); ?>
+		<span class="glyphicon glyphicon-tag">&nbsp</span><?php echo $this->lang->line($controller_name . '_new'); ?>
 	</button>
 </div>
-<ul class="pull-left">
-						<?php echo anchor($controller_name."/bulk_entry_view", '<span class="glyphicon glyphicon-list">&nbsp</span>' . $this->lang->line('receivings_bulk_entry'),
-									array('class'=>'btn btn-primary btn-sm', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('receivings_bulk_entry'))); ?>
-					</ul>
-
-
 
 
 

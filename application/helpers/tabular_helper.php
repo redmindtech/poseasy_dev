@@ -1159,6 +1159,7 @@ function get_ro_cheque_manage_table_headers()
 	$headers = array(
 		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
 		array('id' =>  $CI->lang->line('ro_id') ),
+		array('supplier_name' => $CI->lang->line('supplier_name')),
 		array('date_of_transaction_pur' => $CI->lang->line('date_of_transaction')),
 		array('cheque_no_pur' => $CI->lang->line('cheque_no')),
 		array('cheque_post_date_pur' => $CI->lang->line('cheque_post_date')),
@@ -1195,6 +1196,7 @@ function get_ro_cheque_data_row($ro_receivings_accounts,$count)
 	return array (
 		'serial_number' => $count,
 		'id' => $ro_receivings_accounts->id,
+		'supplier_name'=> $ro_receivings_accounts->supplier_id,
 		'date_of_transaction_pur' => $ro_receivings_accounts->receiving_time,
 		'purchase_amount' => $ro_receivings_accounts->purchase_amount,
 		'cheque_no_pur' => $ro_receivings_accounts->cheque_number,

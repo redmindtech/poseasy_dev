@@ -151,17 +151,27 @@ class Roreceivings extends Secure_Controller
 
 	//Save new form
 	public function save($id = -1)
-	{			
+
+	{	
+		if($this->input->post('payment_mode')=='Cheque')	
+		{
+			$mode='pending';
+			$date=$this->input->post('cheque_number');
+			
+		}else{
+			$mode='complete';
+			$date="00.00.00";
+		}	
+		
 		$ro_receivings_data = array(
-			// 'category' => $this->input->post('category'),
-			// 'invoice_no' => $this->input->post('invoice_no'),
+		
 			'voucher_no'=> $this->input->post('voucher_no'),
 			'supplier_id' => $this->input->post('supplier_id'),
 			'opening_balance' => $this->input->post('opening_balance'),
 			'purchase_amount' => $this->input->post('purchase_amount'),
 			'paid_amount' => $this->input->post('paid_amount'),
 			'payment_mode' => $this->input->post('payment_mode'),
-			'cheque_date' => $this->input->post('cheque_date'),
+			'cheque_date' =>$date,
 			'cheque_number' => $this->input->post('cheque_number'),			
 			'closing_balance' => $this->input->post('closing_balance'),
 			'purchase_return_amount' => $this->input->post('purchase_return_amount'),
@@ -173,8 +183,10 @@ class Roreceivings extends Secure_Controller
 			// 'total_stock' => $this->input->post('total_stock'),
 			'gst_slab' => $this->input->post('gst_slab'),
 			'gst_amount' => $this->input->post('gst_amount'),
-			// 'purchase_date' => $this->input->post('purchase_date'),
-			'receiving_time' => $this->input->post('receiving_time'),			
+			'receiving_time' => $this->input->post('receiving_time'),	
+			'employee_id'=>	$this->input->post('employee_id'),	
+			'mode'=>'I',
+			'status'=>$mode
 		);
 
 		if($this->Ro_receiving->save($ro_receivings_data, $id))
@@ -255,34 +267,25 @@ class Roreceivings extends Secure_Controller
 			
 			
 		}
-		// log_message('$save_count',print_r( $pending_pay,TRUE));
-		// log_message('$save_count',print_r( $open_bal_bulk,TRUE));
+		
 		
 				$save_bulk_entry[$row[3]] = array('supplier_id'=>$row[3],
 				 'employee_id'=>$row[2],
 				'voucher_no' => $row[1],
-				'purchase_date' => $row[0],
-				// 'purchase_amount'=> 0.00,
-				// 'last_purchase_qty'=>0.00,
+				
 				'paid_amount'=>$row[5],
 				'payment_mode'=>$row[6],
 				'cheque_date'=>"00.00.00",
 				'cheque_number'=>"0",
 				'closing_balance'=>$pending_pay,
-				// 'purchase_return_amount'=>0.00,
-				// 'purchase_return_qty'=>0,
-				// 'discount'=>0.00,
 				'pending_payables'=> $pending_pay,
-				// 'rate_difference'=>0,
-				// 'total_stock'=>0,
-				// purchase_date
-				// receiving_time
 				'gst_slab'=>$row[7],
 				'gst_amount'=>$row[8],
 				'comments' => $row[9],				
 				'towards_vno' => $row[4],
 				'mode'=>"B",
 				'opening_balance'=>$open_bal_bulk,	
+				'status'=>'complete'
 				
 				
 			);

@@ -31,11 +31,13 @@ class Roreceivings_cheques extends CI_Model
 	/*
 	Gets information about a particular category
 	*/
-	public function get_info($id )
+	public function get_info($id)
 	{
+		
 		$this->db->from('ro_receivings_accounts');
-		$this->db->where('id ', $id );
+		$this->db->where('id', $id );
 		$this->db->where('payment_mode', 'Cheque');
+		$this->db->where('status', 'pending');
 		$query = $this->db->get();
 
 		if($query->num_rows()==1)
@@ -56,6 +58,7 @@ class Roreceivings_cheques extends CI_Model
 			return $ro_receivings_accounts_obj;
 		}
 	}
+ 
 
 	/*
 	Returns all the item_categories
@@ -66,6 +69,7 @@ class Roreceivings_cheques extends CI_Model
 		if($no_deleted == TRUE)
 		{
 			$this->db->where('payment_mode', 'Cheque');
+			$this->db->where('status', 'pending');
 		}
 
 		$this->db->order_by('cheque_number', 'asc');
@@ -77,7 +81,6 @@ class Roreceivings_cheques extends CI_Model
 
 		return $this->db->get();
 	}
-
 	/*
 	Gets information about multiple item_master_id 
 	*/
@@ -103,7 +106,67 @@ class Roreceivings_cheques extends CI_Model
 	{
 		return $this->search($search, 0, 0, 'cheque_number', 'asc', TRUE);
 	}
+	public function save_cheque($id,$overall_val,$final_val,$supplier_id)
+	{
+		$data = array(
+			'supplier_id' => $supplier_id,
+			'closing_balance'=>$overall_val,
+			'pending_payables'=>$final_val,
+			  'status'=>'complete'
+			);
+		$this->db->where('id', $id);		
+		$result = $this->db->update('ro_receivings_accounts', $data);
+		return $result;
+	}
+	
 
+	public function transaction_cheque($supplier_id )
+	{
+		$this->db->select('max(id)');		
+		$this->db->from('ro_receivings_accounts');
+		$this->db->where('supplier_id',$supplier_id);
+		$this->db->group_by('supplier_id');
+
+		$sub_query = $this->db->get_compiled_select();
+		$this->db->select('id','opening_balance','purchase_amount','paid_amount','pending_payables','payment_mode','purchase_return_amount','discount','status');
+		$this->db->from('ro_receivings_accounts');
+		$this->db->where("Id IN ($sub_query)");		
+			$query = $this->db->get()->result();
+			
+					
+			return $query;
+			
+	}
+	// SELECT * FROM ospos_ro_receivings_accounts 
+	//   WHERE id > 237 AND supplier_id=65;
+	public function remainding_ids($id,$supplier_id)
+	{
+		$this->db->select('*');
+		$this->db->from('ro_receivings_accounts');
+		$this->db->where('id >',$id );
+		$this->db->where( 'supplier_id',$supplier_id);
+		 
+		$query = $this->db->get()->result();
+		return $query;
+		
+	}
+	public function after_cheque_pass_ids($id,$open_bal,$closing_bal,$pending_pay)
+	{
+		$data = array(
+			
+			 'opening_balance' =>$open_bal,
+			'closing_balance'=>$closing_bal,
+			'pending_payables'=>$pending_pay,
+			 'status'=>'complete'
+			);
+			log_message('debug',print_r($data,TRUE));
+		$this->db->where('id', $id);		
+		 $result = $this->db->update('ro_receivings_accounts', $data);
+
+		//  log_message('debug',print_r($result,TRUE));
+		// return $result;
+	}
+	
 	/*
 	Perform a search on item_category
 	*/
@@ -121,6 +184,7 @@ class Roreceivings_cheques extends CI_Model
 		$this->db->or_like('cheque_date', $search);
 		$this->db->group_end();
 		$this->db->where('payment_mode', 'Cheque');
+		$this->db->where('status', 'pending');
 
 		// get_found_rows case
 		if($count_only == TRUE)

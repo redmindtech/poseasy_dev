@@ -260,17 +260,17 @@ class Customers extends Persons
 		$date_formatter = date_create_from_format($this->config->item('dateformat') . ' ' . $this->config->item('timeformat'), $this->input->post('date'));
 
 		$customer_data = array(
-			'consent' => $this->input->post('consent') != NULL,
+			// 'consent' => $this->input->post('consent') != NULL,
 			'account_number' => $this->input->post('account_number') == '' ? NULL : $this->input->post('account_number'),
 			'tax_id' => $this->input->post('tax_id'),
 			'company_name' => $this->input->post('company_name') == '' ? NULL : $this->input->post('company_name'),
-			'discount' => $this->input->post('discount') == '' ? 0.00 : $this->input->post('discount'),
-			'discount_type' => $this->input->post('discount_type') == NULL ? PERCENT : $this->input->post('discount_type'),
+			// 'discount' => $this->input->post('discount') == '' ? 0.00 : $this->input->post('discount'),
+			// 'discount_type' => $this->input->post('discount_type') == NULL ? PERCENT : $this->input->post('discount_type'),
 			'package_id' => $this->input->post('package_id') == '' ? NULL : $this->input->post('package_id'),
 			'customer_category_name'=>  $this->input->post('customer_category_name') ,
 			'taxable' => $this->input->post('taxable') != NULL,
-			'date' => $date_formatter->format('Y-m-d H:i:s'),
-			'employee_id' => $this->input->post('employee_id'),
+			// 'date' => $date_formatter->format('Y-m-d H:i:s'),
+			// 'employee_id' => $this->input->post('employee_id'),
 			'sales_tax_code_id' => $this->input->post('sales_tax_code_id') == '' ? NULL : $this->input->post('sales_tax_code_id')
 		);
 

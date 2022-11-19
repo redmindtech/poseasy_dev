@@ -992,8 +992,9 @@ class Items extends Secure_Controller
 				if(file_exists($_FILES['file_path']['tmp_name']))
 				{
 					set_time_limit(240);
-	
+					$myrow=0;
 					$failCodes = [];
+
 					$csv_rows = get_csv_file($_FILES['file_path']['tmp_name']);
 					
 					$employee_id = $this->Employee->get_logged_in_employee_info()->person_id;
@@ -1027,10 +1028,10 @@ class Items extends Secure_Controller
 						$item_data = array(												
 							'name' => $row['ITEM NAME'],						
 							'category' => $row['Category'],
-							'stock_type'=>$row['Stock type'],
-							'item_type'=>$row['Item type'],
-							'cost_price' => $row['Cost Price'],
-							'unit_price' => $row['Unit Price'],
+							//'stock_type'=>$row['Stock type'],
+							//'item_type'=>$row['Item type'],
+							'cost_price' => $row['Purchase Price'],
+							'unit_price' => $row['Sales Price'],
 							'supplier_id'=>$row['SUPPLIER NAME'],
 							'receiving_quantity'=>$row['Stock Qty'],
 							'branch'=>$row['Branch'],
@@ -1045,7 +1046,7 @@ class Items extends Secure_Controller
 						);	
 						$counter_flag=0;	
 	
-						for($i=1; $i<=4 ;$i++){
+						for($i=1; $i<=5 ;$i++){
 							$a = 'Sales price ';
 							$b = $i;
 							$c = $a.$b;						
@@ -1054,16 +1055,16 @@ class Items extends Secure_Controller
 						}
 						
 						$j =0;
-						for($i=1; $i<=4 ;$i++)
+						for($i=1; $i<=5 ;$i++)
 						{   
-							$counter_flag=4;
+							$counter_flag=5;
 							$a = 'Customer Category ';
 							$b = $i;
 							$c = $a.$b;
 							if($row[$c]==NULL)
 							{			
 								$j++;						
-								$counter_flag = 4-$j;
+								$counter_flag = 5-$j;
 							}
 							
 							$customer_category_name[$i] = $row[$c];
@@ -1084,11 +1085,14 @@ class Items extends Secure_Controller
 							}
 						}
 						}
-						if(!$is_failed_row)
-						{ 
-							$is_failed_row = $this->data_error_check($row, $item_data, $allowed_stock_locations, $attribute_definition_names);
-							
-						}
+
+
+							if($is_failed_row == FALSE)
+							{ 
+								$is_failed_row = $this->data_error_check($row, $item_data, $allowed_stock_locations, $attribute_definition_names);
+							}
+
+
 						$str_supplier_name=$this->Item->csv_save_supplier_id();
 						
 						$supplier_name=strtolower(str_replace(" ","",$item_data['supplier_id']));
@@ -1105,53 +1109,64 @@ class Items extends Secure_Controller
 						//Remove FALSE, NULL, '' and empty strings but keep 0
 						$item_data = array_filter($item_data, 'strlen');
 						
-						if(!$is_failed_row && $this->Item->csvsave($item_data, $item_name))
+						if($is_failed_row == FALSE && $this->Item->csvsave($item_data, $item_name))
 						{    
+							if(!empty($item_data['name']) and !empty($item_data['supplier_id']) and !empty($item_data['hsn_code']))
+							{
 							
-							for($i=1; $i<=$counter_flag;$i++)
-							{				
-								$customer_category_data = array(
+								for($i=1; $i<=$counter_flag;$i++)
+								{				
+									$customer_category_data = array(
 									'sales_price'=> $customer_category_price[$i] ,
 									'customer_category_id' =>$customer_category_name[$i],
 									'item_id' => $item_data['item_id']
 			
-								);
+									);
 								
-								$result = $this->Item->save_customer_category_price_slab($customer_category_data, $item_data['item_id']);
-							}
+									$result = $this->Item->save_customer_category_price_slab($customer_category_data, $item_data['item_id']);
+								}
 									
-							$this->csvsave_inventory_quantities($row, $item_data, $allowed_stock_locations, $employee_id);
+								$this->csvsave_inventory_quantities($row, $item_data, $allowed_stock_locations, $employee_id);
 	
-							//$is_failed_row = $this->save_attribute_data($row, $item_data,$attribute_data);
+								//$is_failed_row = $this->save_attribute_data($row, $item_data,$attribute_data);
+								$myrow++;
 	
-							if($is_update)
-							{
-								$item_data = array_merge($item_data, get_object_vars($this->Item->get_info_by_id_or_name($item_name )));
+								if($is_update)
+								{
+									$item_data = array_merge($item_data, get_object_vars($this->Item->get_info_by_id_or_name($item_name )));
+								}
 							}
+							
 						}
-						else
-						{
+						else if($is_failed_row == TRUE){
 							$failed_row = $key+2;
 							$failCodes[] = $failed_row;
 							log_message('ERROR',"CSV Item import failed on line $failed_row. This item was not imported.");
+							
 						}
-						
+
 						unset($csv_rows[$key]);
 					}
 	
+
 					$csv_rows = NULL;
 					
 					if(count($failCodes) > 0)
 					{
-						$message = $this->lang->line('items_csv_import_partially_failed', count($failCodes), implode(', ', $failCodes));
-						$this->db->trans_rollback();
+						$message = $this->lang->line('items_csv_import_partially_failed', count($failCodes), implode(', ', $failCodes),$myrow);
+						//$this->db->trans_rollback();
 						echo json_encode(array('success' => FALSE, 'message' => $message));
+
+						$this->db->trans_commit();
+						//echo json_encode(array('success' => TRUE, 'message' => $this->lang->line('items_csv_import_success')));
 					}
+					
 					else
-					{					
+					{		
 						$this->db->trans_commit();
 						echo json_encode(array('success' => TRUE, 'message' => $this->lang->line('items_csv_import_success')));
 					}
+					
 				}
 				else
 				{
@@ -1215,16 +1230,16 @@ class Items extends Secure_Controller
 			return TRUE;
 		}
 		$j =0;
-		for($i=1; $i<=4 ;$i++)
+		for($i=1; $i<=5 ;$i++)
 		{   
-			$counter_flag=4;
+			$counter_flag=5;
 			$a = 'Customer Category ';
 			$b = $i;
 			$c = $a.$b;
 			if($row[$c]==NULL)
 			{			
 				$j++;						
-				$counter_flag = 4-$j;
+				$counter_flag = 5-$j;
 			}			
 			$customer_category_name[$i] = $row[$c];
 		}
