@@ -1,14 +1,14 @@
 <?php $this->load->view("partial/header"); ?>
 
-
+<h3><center><b>Bulk Entry</b></center></h3>
 <div id="required_fields_message"><?php echo $this->lang->line('common_fields_required_message'); ?></div>
 
 <ul id="error_message_box" class="error_message_box"></ul>
 <?php echo form_open('Roreceivings/bulk_entry_save/'.$ro_receivings_info->id, array('id'=>'ro_receivings_edit_form', 'class'=>'form-horizontal')); ?>
 	
 <fieldset id="item_basic_info">
-<button class='btn btn-info btn-sm pull-right submit'><span class="glyphicon glyphicon-ok">&nbsp;</span><?php echo $this->lang->line($controller_name. '_save'); ?>
-    </button>
+
+
 	
 	
 
@@ -98,7 +98,7 @@
 					 <td id="td"><div class="form-group form-group-sm">
 						<div class='col-xs-11'>
 						<?php echo form_input(array(
-								'type'=>'text',
+								'type'=>'number',
 								'name'=>'opening_balance_1',
 								'id'=>'opening_balance_1',
 								'class'=>'form-control input-sm',
@@ -153,8 +153,19 @@
 							
 			</tr>	
 			</tbody>
+							</table>
+
+
+							<button class='btn btn-info btn-sm pull-right submit'><span class="glyphicon glyphicon-ok">&nbsp;</span><?php echo $this->lang->line($controller_name. '_save'); ?>
+    </button>
+			
+			
 		
 	</fieldset>	
+
+
+
+	
 	
 					
 					
@@ -231,8 +242,14 @@ $(document).ready(function(){
 		
 		if(supplier_name=="" || supplier_name=="Start Typing Supplier's name..." ||open == '0')
 		{ 
-			alert('Please enter supplier name and net amount');
+
+			if(supplier_name=="" || supplier_name=="Start Typing Supplier's name..."){
+			alert('Please enter supplier name');
 			e.preventDefault();
+			}else{
+				alert('Please enter net amount');
+				e.preventDefault();
+			}
 		}
 		else{		
 		count++;
@@ -241,7 +258,7 @@ $(document).ready(function(){
 		html += '<td id="sno"><input type="hidden" id="sno" name="sno" value="'+count+'">'+count+'</td>';
 		html += '<td><input type="text" id="supplier_name_'+count+'" data-supplier_id='+count+' class="form-control input-sm supplier_name" name="supplier_name[]" placeholder="Start Typing Suppliers name..." required=""></td>';
 		html += '<td><input type="text" id="towards_vno_'+count+'" class="form-control input-sm data-id" name="towards_vno_'+count+'" ></td>';
-		html += '<td><input type="text" id="opening_balance_'+count+'" class="form-control input-sm" name="opening_balance_'+count+'" value="0" ></td>';
+		html += '<td><input type="number" id="opening_balance_'+count+'" class="form-control input-sm" name="opening_balance_'+count+'" value="0" ></td>';
 		html += '<td><input type="text" id="type_'+count+'" class="form-control input-sm" value="" placeholder="Cash or UPI" name="type_'+count+'" ></td>';
 		html += '<td><input type="text" id="gst_slab_'+count+'" value="0.00" class="form-control input-sm" name="gst_slab[]" ></td>';
 		html += '<td><input type="text" id="gst_amt_'+count+'" value="0.00" class="form-control input-sm" name="gst_amt_'+count+'"></td>';
@@ -295,11 +312,40 @@ $(document).ready(function(){
 		// var employee_id=$('#employee_id').val();
 		var supplier_name1 =($('[data-supplier_id=1]').val());
 		var open1=$("#opening_balance_1").val();
+
+
+		var supplier_name =($('[data-supplier_id='+count+']').val());
+		
+		var open=$("#opening_balance_"+count).val();
+		var supplier_name_0 = $("#supplier_name").val();
+		//alert(supplier_name_0);
+
+		if(supplier_name_0 == "Start Typing Supplier's name..." || supplier_name == "" ){
+
+      			var check_null = "0";
+				//alert(check_null);
+
+		}
+
+
+		
 	
 
-		if(voucher_no =="" ||supplier_name1=="" || supplier_name1=="Start Typing Supplier's name..." ||open1 == '0' ){
-			alert("Please enter voucher number, Supplier name,Net amount" )
+		if(voucher_no =="" || check_null == "0" || open== "0"){
+
+			if(voucher_no == ""){
+			alert("Please enter voucher number" )
 			e.preventDefault();
+			}else
+			{
+				if(check_null == "0"){
+				alert("Please enter supplier name");
+				e.preventDefault();
+				}else{
+					alert("Please enter net amount");
+					e.preventDefault();
+				}
+			}
 		}else{
 		
 		var table = $('table');
@@ -317,7 +363,7 @@ $(document).ready(function(){
 				var employee_id=$('#employee_id').val();
 				var supplier_id = $(this).find("td:eq(1) input[type='text']").attr('id');
 				var towards_vno = $(this).find("td:eq(2) input[type='text']").val();
-				var opening_balance = $(this).find("td:eq(3) input[type='text']").val();
+				var opening_balance = $(this).find("td:eq(3) input[type='number']").val();
 				var type = $(this).find("td:eq(4) input[type='text']").val();
 				var gst_slab = $(this).find("td:eq(5) input[type='text']").val();
 				var gst_amt = $(this).find("td:eq(6) input[type='text']").val();
@@ -344,8 +390,10 @@ $.ajax({
 			datatype : 'json',
 		}).done(function (msg) {
             
-                // alert("Successfully Added" );
-    	        window.location.reload();
+			
+    	        location.reload();
+				
+				
                 
             }).fail((jqXHR, errorMsg) => {
                 alert(jqXHR.responseText, errorMsg);

@@ -371,13 +371,12 @@ Get the html data row for the supplier
 function get_supplier_data_row($supplier,$count)
 {
 	$CI =& get_instance();
-
 	$controller_name = strtolower(get_class($CI));
-
+	
 	return array (
 		'serial_number' => $count,
 		'people.person_id' => $supplier->person_id,
-		'company_name' => anchor($controller_name."/suppliers_details", $supplier->company_name,
+		'company_name' => anchor($controller_name."/suppliers_details/$supplier->person_id/$count", $supplier->company_name,
 			array('class'=>"modal-dlg", 'title'=>$CI->lang->line($controller_name.'_update'))),
 		'agency_name' => $supplier->agency_name,
 		'category' => $supplier->category,
@@ -390,6 +389,7 @@ function get_supplier_data_row($supplier,$count)
 		'edit' => anchor($controller_name."/view/$supplier->person_id", '<span class="glyphicon glyphicon-edit"></span>',
 			array('class'=>"modal-dlg", 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update')))
 	);
+	
 }
 
 
@@ -987,6 +987,7 @@ function get_ro_receivings_manage_table_headers()
 	$CI =& get_instance();
 
 	$headers = array(
+		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
 		array('id' => $CI->lang->line('ro_id')),
 		// array('category' => $CI->lang->line('ro_receiving_category')),
 		// array('invoice_no' => $CI->lang->line('invoice_no')),
@@ -1092,7 +1093,7 @@ function get_ro_receivings_data_row($ro_receivings_accounts,$data)
 	//	)
 	 );
 }
-function get_ro_receivings_data_row_search($ro_receivings_accounts,$data)
+function get_ro_receivings_data_row_search($ro_receivings_accounts,$data,$count)
 {
 	$CI =& get_instance();
 	
@@ -1120,12 +1121,14 @@ function get_ro_receivings_data_row_search($ro_receivings_accounts,$data)
 	$controller_name = strtolower(get_class($CI));
 
 	return array (
+		'serial_number'=>$count,
+		
 		'supplier_id'=>$ro_receivings_accounts->supplier_id,
 		'id' => $ro_receivings_accounts->id,
 		// 'category' => $ro_receivings_accounts->category,
 		// 'invoice_no' => $ro_receivings_accounts->invoice_no,
 		'company_name' => anchor($controller_name."/suppliers_details/$ro_receivings_accounts->supplier_id/$ro_receivings_accounts->id", $company_name,
-			array('class'=>"modal-dlg", 'title'=>$company_name)),
+			array('class'=>"modal-dlg", 'title'=>"Summary of ".$company_name)),
 		// 'company_name' =>$company_name,
 		// 'company_name' =>$company_name,
 		'supplier_name' =>$agency_name,

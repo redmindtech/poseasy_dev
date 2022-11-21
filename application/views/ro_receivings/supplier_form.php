@@ -1,4 +1,15 @@
 <style>
+	#supplier_table thead tr {
+		padding:5px;
+		background:#0ad;
+		color:#fff;
+
+	}
+	#supplier_table, #supplier_table td, #supplier_table th{
+		
+		padding:5px;
+		border:1px solid #999 !important;
+	}
 @media (min-width: 768px)
 {
 	.modal-dlg .modal-dialog
@@ -7,7 +18,7 @@
 	}
 }
 </style>
-<table id="supplier_table" class="table table-striped table-hover">
+<table id="supplier_table">
 	<thead>
 		<tr bgcolor="#CCC">
 			
@@ -32,7 +43,8 @@
 		?>
 		<tr>
 		
-	<td><?php echo $supplier['receiving_time']; ?></td>
+	<td><?php echo substr_replace($supplier['receiving_time'] ,"", -8); ?></td>
+	
 <td><?php echo $supplier['opening_balance']; ?></td>
 <td><?php echo $supplier['purchase_amount']; ?></td>
 <td><?php echo $supplier['paid_amount']; ?></td>

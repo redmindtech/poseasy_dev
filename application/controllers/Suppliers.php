@@ -219,11 +219,18 @@ class Suppliers extends Persons
 			echo json_encode(array('success' => FALSE,'message' => $this->lang->line('suppliers_cannot_be_deleted')));
 		}
 	}
-	public function suppliers_details()
+	public function suppliers_details($supplier_id,$id)
 	{
-		$this->load->view("suppliers/popup_form");
+		$data['supplier']=$this->Supplier->supplier_info($supplier_id);
+		$data['supplier_summary']=$this->Supplier-> supplier_summary($supplier_id);
+		$data['supplier_open_close_bal']=$this->Supplier->open_close_bal($supplier_id);
+		$data['new_supplier_open_bal']=$this->Supplier->new_open_bal($supplier_id);
+		$data['new_supplier_close_bal']=$this->Supplier->new_close_bal($supplier_id);
+		$data['cash']=$this->Supplier->cash($supplier_id);
+		$data['cheque']=$this->Supplier->cheque($supplier_id);
+		 $this->load->view('suppliers/popup_form',$data );
+
 	}
-	
 	
 }
 ?>

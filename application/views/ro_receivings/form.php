@@ -29,12 +29,30 @@
 			</div>
 		</div>
 
-		<div class="form-group form-group-sm">
-			<?php echo form_label($this->lang->line('ro_receivings_company_name'), 'ro_receivings_company_name', array('class'=>' control-label col-xs-3')); ?>
-			<div class=' col-xs-8'  >								
-				<?php  echo form_dropdown('company_name', $companyname, $ro_receivings_info->supplier_id, array('id'=>'supplier_company_id','class'=>' form-control')); ?>
+
+		<div class="form-group form-group-sm" id="supplier_name_disp">
+			<?php echo form_label($this->lang->line('expenses_supplier_name'), 'supplier_name', array('class'=>'control-label col-xs-3 required')); ?>
+			<div class='col-xs-6'>
+			<div class="input-group">
+			<span class="input-group-addon input-sm"><span class="glyphicon glyphicon-tag"></span></span>
+				<?php echo form_input(array(
+						'name'=>'supplier_name',
+						'id'=>'supplier_name',
+						'class'=>'form-control input-sm required',
+						)
+					);
+					echo form_input(array(
+						'type'=>'hidden',
+						'name'=>'supplier_id',
+						'id'=>'supplier_id')
+						);?>
+
+					</div>
+						
 			</div>
-		</div>
+			</div>
+
+		
 		
 		<div class="form-group form-group-sm" style=display:none;>
 				  <?php echo form_label($this->lang->line('supplier_id'), 'supplier id', array('class' => 'control-label col-xs-3' )); ?>
@@ -67,7 +85,7 @@
 				  <?php echo form_label($this->lang->line('ro_receivings_opening_balance'), 'opening_balance', array('class' => 'control-label col-xs-3')); ?>
 					  <div class='col-xs-8'>
 						<?php echo form_input(array(
-								  'onfocus'=>"this.value=''",
+								 
 								'name'=>'opening_balance',
 								'id'=>'opening_balance',
 								'class'=>'form-control input-sm',
@@ -80,7 +98,7 @@
 					<?php echo form_label($this->lang->line('ro_receivings_purchase_amount'), 'purchase_amount', array('class' => 'control-label col-xs-3')); ?>
 					<div class='col-xs-8'>
 						<?php echo form_input(array('type'=>'number','min'=>0,
-								  'onfocus'=>"this.value=''",
+								  
 								'name'=>'purchase_amount',
 								'id'=>'purchase_amount',
 								'class'=>'form-control input-sm',
@@ -93,7 +111,7 @@
 					<?php echo form_label($this->lang->line('ro_receivings_paid_amount'), 'paid_amount', array('class' => 'control-label col-xs-3')); ?>
 					<div class='col-xs-8'>
 						<?php echo form_input(array('type'=>'number','min'=>0,
-								  'onfocus'=>"this.value=''",
+								  
 								'name'=>'paid_amount',
 								'id'=>'paid_amount',
 								'class'=>'form-control input-sm',
@@ -132,7 +150,7 @@
 					<?php echo form_label($this->lang->line('ro_receivings_cheque_number'), 'cheque_number', array('class' => 'required control-label col-xs-3')); ?>
 					<div class='col-xs-4'>
 						<?php echo form_input(array(
-							  'onfocus'=>"this.value=''",
+							  
 								'name'=>'cheque_number',
 								'id'=>'cheque_number',
 								'class'=>'form-control input-sm',
@@ -158,7 +176,7 @@
 					    <?php echo form_label($this->lang->line('ro_receivings_purchase_return_amount'), 'purchase_return_amount', array('class' => 'control-label col-xs-3')); ?>
 					     <div class='col-xs-8'>
 						<?php echo form_input(array('type'=>'number','min'=>0,
-								  'onfocus'=>"this.value=''",
+								  
 								'name'=>'purchase_return_amount',
 								'id'=>'purchase_return_amount',
 								'class'=>'form-control input-sm',
@@ -182,7 +200,7 @@
 					    <?php echo form_label($this->lang->line('discount'), 'discount', array('class' => 'control-label col-xs-3')); ?>
 					     <div class='col-xs-8'>
 						<?php echo form_input(array('type'=>'number','min'=>0,
-						      'onfocus'=>"this.value=''",
+						      
 								'name'=>'discount',
 								'id'=>'discount',
 								'class'=>'form-control input-sm',
@@ -232,7 +250,7 @@
 					    <?php echo form_label($this->lang->line('gst_amount'), 'gst_amount', array('class' => 'control-label col-xs-3')); ?>
 					     <div class='col-xs-8'>
 						<?php echo form_input(array('type'=>'number','min'=>0,
-								  'onfocus'=>"this.value=''",
+								  
 								'name'=>'gst_amount',
 								'id'=>'gst_amount',
 								'class'=>'form-control input-sm',
@@ -275,9 +293,53 @@
                
           
               </fieldset>
+
+
+			  
 <?php echo form_close(); ?>
 
 <script type="text/javascript">
+
+$('#supplier_name').click(function() {
+		$(this).attr('value', '');
+	});
+
+	$('#supplier_name').autocomplete({
+		source: '<?php echo site_url("Items/suggest_supplier"); ?>',
+		minChars:0,
+		delay:10,
+		select: function (event, ui) {
+			$('#supplier_id').val(ui.item.value);
+			$(this).val(ui.item.label);
+			$(this).attr('');
+			$('#remove_supplier_button').css('display', 'inline-block');
+			return false;
+		}
+	});
+
+	$('#supplier_name').blur(function() {
+		$(this).attr('value',"<?php echo $this->lang->line('expenses_start_typing_supplier_name'); ?>");
+	});
+
+	$('#remove_supplier_button').css('display', 'none');
+
+	$('#remove_supplier_button').click(function() {
+		$('#supplier_id').val('');
+		$('#supplier_name').removeAttr('readonly');
+		$('#supplier_name').val('');
+		$(this).css('display', 'none');
+	});
+
+	<?php
+	if(!empty($expenses_info->expense_id))
+	{
+	?>
+		$('#supplier_id').val('<?php echo $expenses_info->supplier_id ?>');
+		$('#supplier_name').val('<?php echo $expenses_info->supplier_name ?>').attr('readonly', 'readonly');
+		$('#remove_supplier_button').css('display', 'inline-block');
+	<?php
+	}
+	?>
 	
 $(document).ready(function()
 {
@@ -345,10 +407,7 @@ $("form").on("change", "input","click", function(e)
 		var paid_amt=parseFloat($('#paid_amount').val());
 	
 		var discount= parseFloat($('#discount').val());
-		// alert()
-		// alert(open_bal	);
-		// alert( purchase_amt);
-		// alert(paid_amt);
+		
 
 
 	}else{
@@ -403,13 +462,34 @@ $("form").on("change", "input","click", function(e)
 
 		rules:
 
-		{  				
+		{  	
+			supplier_name:
+			{
+				required: true,
+				remote: 
+				{
+					
+					url: "<?php echo site_url($controller_name.'/supplier_name_validate')?>",
+					type: 'POST',
+					data: {
+								
+								'supplier_name' : function()
+								{
+								
+									
+									return  $('#supplier_name').val();
+								},
+						  }
+				}
+
+			},			
 			company_name:"required",	
 			cheque_number:"required"	
 			
 		},
 		messages:
 	{ 	 
+		supplier_name:  "<?php echo $this->lang->line('supplier_name_required'); ?>",
 		 company_name: "<?php echo $this->lang->line('supplier_name_required'); ?>",		
 		 payment_mode:"<?php echo $this->lang->line('ro_receivings_payment_mode_required'); ?>",
 		 cheque_number:	"<?php echo $this->lang->line('cheque_number_required'); ?>",	

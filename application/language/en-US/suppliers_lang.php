@@ -28,4 +28,22 @@ $lang["supplier_id_header"] = "Supplier ID";
 $lang["invalid_account_number"] = "Please enter a valid account number";
 $lang["invalid_postcode"] = "Please enter a valid six digit postal code";
 $lang["invalid_gst_number"] = "Please enter a valid GST number";
+$lang["supplier_date"]="Date";
+$lang["supplier_balance"] = "Opening Balance";
+$lang["supplier_purchase_amount"] = "Purchase Amount";
+$lang["supplier_paid_amount"] = "Paid Amount";
+$lang["supplier_rate_difference"] = "Rate Difference";
+$lang["supplier_payment_mode"] = "Payment Mode";
+$lang["supplier_purchase_return_amount"] = "Purchase Return Amount";
+$lang["supplier_less"]= "Discount/Less";
+$lang["supplier_closing_balance"] = "Closing Balance";
+
+$lang['total_purchase']="Total Purchase";
+$lang['total_cheque']="Total Cheque";
+$lang['total_rate_difference']="Total Rate Difference";
+$lang['total_cash']="Total Cash";
+$lang['total_return']="Total Return";
+$lang['total_less']="Total Less";
+$lang['last_opening_balance']="Opening Balance";
+$lang['last_closing_balance']="Closing Balance";
     

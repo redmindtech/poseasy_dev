@@ -821,8 +821,8 @@ rules:
 					//alert($('#category').val());
 					 return  $('#category').val();
 				},
-		}
-	}
+					}
+			}
 		
 
 

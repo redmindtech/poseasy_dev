@@ -49,6 +49,17 @@ class Roreceivings extends Secure_Controller
 		$this->load->view('ro_receivings/cheque_detail', $data_row_cheque);
    }
 
+
+
+   public function supplier_name_validate()
+   {
+	$supplier_name = $this->input->post('supplier_name');
+	if($supplier_name == "Start Typing Supplier's name..."){
+		echo "false";
+	}else{
+		echo "true";
+	}
+   }
 		
 
 	/*
@@ -63,6 +74,8 @@ class Roreceivings extends Secure_Controller
 		$order  = $this->input->get('order');
 		$ro_receivings = $this->Ro_receiving->search($search, $limit, $offset, $sort, $order);
 		$total_rows = $this->Ro_receiving->get_found_rows($search);
+
+		$count = $offset+1;
 		
        
 		$data_rows = array();
@@ -72,7 +85,8 @@ class Roreceivings extends Secure_Controller
 
 			$data = $this->Ro_receiving->agency_name($ro_receivings->supplier_id);
 		
-			$data_rows[] = $this->xss_clean(get_ro_receivings_data_row_search($ro_receivings,$data));
+			$data_rows[] = $this->xss_clean(get_ro_receivings_data_row_search($ro_receivings,$data,$count));
+			$count++;
 
 			//$data_rows = $this->xss_clean(get_ro_cheque_data_row( $ro_receivings));
 		
@@ -274,7 +288,7 @@ class Roreceivings extends Secure_Controller
 				'voucher_no' => $row[1],
 				
 				'paid_amount'=>$row[5],
-				'payment_mode'=>$row[6],
+				'payment_mode'=>"Cash",
 				'cheque_date'=>"00.00.00",
 				'cheque_number'=>"0",
 				'closing_balance'=>$pending_pay,
@@ -300,6 +314,7 @@ class Roreceivings extends Secure_Controller
 		//   $this->Ro_receiving->save_bulk($save_bulk_entry, $id);
 	}
 	$this->Ro_receiving->save_bulk($save_bulk_entry, $id);
+	
 }
 
 }
