@@ -30,21 +30,30 @@
 		</div>
 
 
-		<div class="form-group form-group-sm" id="supplier_name_disp">
-			<?php echo form_label($this->lang->line('expenses_supplier_name'), 'supplier_name', array('class'=>'control-label col-xs-3 required')); ?>
+		<div class="form-group form-group-sm">
+			<?php echo form_label($this->lang->line('expenses_supplier_name'), 'ro_receivings_company_name', array('class'=>' control-label col-xs-3 required')); ?>
+			<div class=' col-xs-8'  >								
+				<?php  echo form_dropdown('company_name', $companyname, $ro_receivings_info->supplier_id, array('id'=>'supplier_company_id','class'=>' form-control')); ?>
+			</div>
+		</div>
+
+
+		<div class="form-group form-group-sm" id="supplier_name_disp" style=display:none;>
+			<?php echo form_label($this->lang->line('expenses_supplier_name'), 'supplier_name', array('class'=>'control-label col-xs-3')); ?>
 			<div class='col-xs-6'>
 			<div class="input-group">
 			<span class="input-group-addon input-sm"><span class="glyphicon glyphicon-tag"></span></span>
 				<?php echo form_input(array(
 						'name'=>'supplier_name',
 						'id'=>'supplier_name',
-						'class'=>'form-control input-sm required',
+						'class'=>'form-control input-sm',
 						)
 					);
 					echo form_input(array(
 						'type'=>'hidden',
 						'name'=>'supplier_id',
-						'id'=>'supplier_id')
+						'id'=>'supplier_id',
+						'value'=>$ro_receivings_info->supplier_id)
 						);?>
 
 					</div>
@@ -54,17 +63,7 @@
 
 		
 		
-		<div class="form-group form-group-sm" style=display:none;>
-				  <?php echo form_label($this->lang->line('supplier_id'), 'supplier id', array('class' => 'control-label col-xs-3' )); ?>
-					  <div class='col-xs-8'>
-						<?php echo form_input(array(
-								'name'=>'supplier_id',
-								'id'=>'supplier_id',
-								'class'=>'form-control input-sm',
-								'value'=>$ro_receivings_info->supplier_id)
-								); ?>
-					  </div>
-        </div>
+		
 
 
 
@@ -416,7 +415,7 @@ $("form").on("change", "input","click", function(e)
 				var purchase_amt=parseFloat($('#purchase_amount').val());
 				$('#paid_amount').on("focusin" ,function(e)
 				{
-					$('#paid_amount').val("");					
+					//$('#paid_amount').val("");					
 
 				});			
 			    var paid_amt=parseFloat($('#paid_amount').val());							
@@ -463,33 +462,14 @@ $("form").on("change", "input","click", function(e)
 		rules:
 
 		{  	
-			supplier_name:
-			{
-				required: true,
-				remote: 
-				{
-					
-					url: "<?php echo site_url($controller_name.'/supplier_name_validate')?>",
-					type: 'POST',
-					data: {
-								
-								'supplier_name' : function()
-								{
-								
-									
-									return  $('#supplier_name').val();
-								},
-						  }
-				}
-
-			},			
+						
 			company_name:"required",	
 			cheque_number:"required"	
 			
 		},
 		messages:
 	{ 	 
-		supplier_name:  "<?php echo $this->lang->line('supplier_name_required'); ?>",
+		
 		 company_name: "<?php echo $this->lang->line('supplier_name_required'); ?>",		
 		 payment_mode:"<?php echo $this->lang->line('ro_receivings_payment_mode_required'); ?>",
 		 cheque_number:	"<?php echo $this->lang->line('cheque_number_required'); ?>",	

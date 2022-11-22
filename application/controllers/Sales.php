@@ -51,6 +51,89 @@ class Sales extends Secure_Controller
 		echo json_encode($data_row);
 	}
 
+
+
+
+	public function bulk_entry_view($id = -1)
+	{		
+		
+		$data['ro_sale_info'] = $this->Ro_sale->get_info($id);
+		// var_dump($data);
+		$data['employees'] = array();
+		foreach($this->Employee->get_all()->result() as $employee)
+		{
+			foreach(get_object_vars($employee) as $property => $value)
+			{
+				
+				$employee->$property = $this->xss_clean($value);
+			}
+
+			$data['employees'][$employee->person_id] = $employee->first_name . ' ' . $employee->last_name;
+		}
+		
+		
+		$this->load->view("sales/sales_bulk", $data);
+	
+	}
+
+	// Inserts bulk data 
+
+	public function sales_bulk_save()
+	{
+	
+			foreach(json_decode($_POST[bulk_data]) as $row)
+			 {
+			
+				 $ro_receivings[$row[3]]=array($row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8],$row[9]);
+				
+				$opening_balance=$this->Ro_sale-> pending_pay($row[3]);
+				
+				if($opening_balance  == '0.00')
+				{
+					$open_bal_bulk='0.00';
+					$pending_pay='0.00';
+	
+				}
+				else{
+					
+				foreach($opening_balance as $opening_balance)
+				{				 
+					$open_bal_bulk=$opening_balance->closing_balance;
+					
+				}
+				
+				
+				  $pending_pay=$open_bal_bulk-$row[5];
+				
+			}
+			
+					$save_bulk_entry[$row[3]] = array('customer_id'=>$row[3],
+					 'employee_id'=>$row[2],
+					'voucher_no' => $row[1],
+					'paid_amount'=>$row[5],
+					'payment_type'=>$row[6],
+					// 'cheque_date'=>"00.00.00",
+					// 'cheque_number'=>"0",
+					'closing_balance'=>$pending_pay,
+					//'pending_payables'=> $pending_pay,
+					'gst_slab'=>$row[7],
+					'gst_amount'=>$row[8],
+					'comments' => $row[9],				
+					'towards_vno' => $row[4],
+					'mode'=>"B",
+					'opening_balance'=>$open_bal_bulk,	
+					'status'=>'complete'
+					
+					
+				);
+		}
+		//log_message('debug',print_r($pending_pay,TRUE));
+		$this->Ro_sale->save_sales($save_bulk_entry, $id);
+	}
+
+
+
+
 	public function search()
 	{
 		$search = $this->input->get('search');

@@ -39,10 +39,25 @@ class Roreceivings extends Secure_Controller
 	{
 		$data_row_cheque['table_headers'] = $this->xss_clean(get_ro_cheque_manage_table_headers());
 		$row=$this->Ro_receiving->cheque_get_info();
-		foreach( $row as $row){
-		$data_rows = $this->xss_clean(get_ro_cheque_data_row( $row));
+
+
 		
-		//echo json_encode($data_rows);
+		
+
+		
+
+
+
+		foreach( $row as $row){
+
+			$data = $this->Ro_receiving->agency_name(29);
+			$company_name_for_id = $data[0]->company_name;
+			$row -> comments = $company_name_for_id;
+			echo $row -> comments;
+			
+			$data_rows = $this->xss_clean(get_ro_cheque_data_row( $row));
+		
+		
 		}
 		
 	   
@@ -88,7 +103,7 @@ class Roreceivings extends Secure_Controller
 			$data_rows[] = $this->xss_clean(get_ro_receivings_data_row_search($ro_receivings,$data,$count));
 			$count++;
 
-			//$data_rows = $this->xss_clean(get_ro_cheque_data_row( $ro_receivings));
+			
 		
 			
 			
@@ -170,7 +185,7 @@ class Roreceivings extends Secure_Controller
 		if($this->input->post('payment_mode')=='Cheque')	
 		{
 			$mode='pending';
-			$date=$this->input->post('cheque_number');
+			$date=$this->input->post('cheque_date');
 			
 		}else{
 			$mode='complete';
@@ -289,6 +304,7 @@ class Roreceivings extends Secure_Controller
 				
 				'paid_amount'=>$row[5],
 				'payment_mode'=>"Cash",
+				'type' => $row[6],
 				'cheque_date'=>"00.00.00",
 				'cheque_number'=>"0",
 				'closing_balance'=>$pending_pay,

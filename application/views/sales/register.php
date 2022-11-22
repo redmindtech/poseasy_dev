@@ -67,6 +67,19 @@ if(isset($success))
 					</button>
 				</li>
 
+
+
+
+
+				<li class="pull-right">
+					<?php echo anchor($controller_name."/bulk_entry_view", '<span class="glyphicon glyphicon-tags">&nbsp</span>' . $this->lang->line('receivings_bulk_entry'),
+					array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('receivings_bulk_entry'))); ?>
+			
+				</li>
+
+
+
+
 				<?php
 				if($this->Employee->has_grant('reports_sales', $this->session->userdata('person_id')))
 				{

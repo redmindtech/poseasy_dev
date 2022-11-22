@@ -93,6 +93,28 @@ class Roreceivings_cheques extends CI_Model
 		return $this->db->get();
 	}
 
+	/*
+	Deletes a list of item_category
+	*/
+	
+	/*
+	Gets rows
+	*/
+
+	public function reject_cheque($id){
+
+
+		$data = array(
+			'status' => 'rejected'
+			);
+		$this->db->where('id', $id);		
+		$result = $this->db->update('ro_receivings_accounts', $data);
+		return $result;
+
+
+
+	}
+
 	
 	
 	/*

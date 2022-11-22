@@ -10,36 +10,43 @@ $(document).ready(function()
 		headers: <?php echo $table_headers; ?>,
 		pageSize: <?php echo $this->config->item('lines_per_page'); ?>,
 		uniqueId: 'id',
+		enableActions: function()
+		{
+
+			// when any filter is clicked and the dropdown window is closed
+			$('#filters').on('hidden.bs.select', function(e)
+			{
+				
+				table_support.refresh();
+			});
+
+			$('table').find('tr').each(function(){ 
+		
+				var row = $(this).closest("tr");
+	
+				row.find("th:eq(-1)").hide();
+				row.find("td:eq(-1)").hide();
+
+				
+				row.find("td:eq(2)").hide();
+				row.find("th:eq(2)").hide();
+
+				row.find("td:eq(4)").hide();
+				row.find("th:eq(4)").hide();
+
+				
+				//$(this).find('td').eq(2).hide();
+		
+				});
+
+
+		}
 		
 	});
-	// $('table').find('tr').each(function(){ 
 	
-	// row.find("tr:eq(15)").hide();
-	// });
-
-	// when any filter is clicked and the dropdown window is closed
-	$('#filters').on('hidden.bs.select', function(e)
-	{
-		
-		table_support.refresh();
-	});
-	$('table').find('tr').each(function(){ 
-		
-		var row = $(this).closest("tr");
-	//  row.find("th:eq(15)").hide();
-
-	row.find("th:eq(-1)").hide();
-	row.find("td:eq(-1)").hide();
-
-	//row.find("th:eq(2)").hide();
-	row.find("td:eq(2)").hide();
 
 	
-	//$(this).find('td').eq(3).hide();
-	//$(this).find('th').eq(3).hide();
-
 	
-	});
 	var myClasses = document.querySelectorAll('.btn.btn-default.btn-sm.dropdown-toggle');
                
 			   myClasses[0].style.display = 'none';

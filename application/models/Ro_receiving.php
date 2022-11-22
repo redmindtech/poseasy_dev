@@ -180,6 +180,7 @@ class Ro_receiving extends CI_Model
 		
 		$this->db->from('suppliers');
 		$this->db->select('suppliers.company_name,suppliers.person_id');
+		$this->db->where('deleted',0);
 		$query = $this->db->get();			
 		$rocompanyid = $query->result();
 		return $rocompanyid;

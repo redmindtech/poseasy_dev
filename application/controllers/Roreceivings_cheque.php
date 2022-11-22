@@ -55,6 +55,18 @@ class Roreceivings_cheque extends Secure_Controller
 		echo json_encode($data_row);
 	}
      
+
+	public function cheque_reject(){
+
+		$id = $_POST['id'];
+
+		
+		$this->Roreceivings_cheques->reject_cheque($id);
+
+
+
+
+	}
 	//Save new form
 	public function cheque_valid(){
 		
