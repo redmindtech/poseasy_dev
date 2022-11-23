@@ -263,6 +263,8 @@ class Roreceivings extends Secure_Controller
 		$data['supplier_open_close_bal']=$this->Ro_receiving->open_close_bal($id);
 		$data['cash']=$this->Ro_receiving->cash($supplier_id);
 		$data['cheque']=$this->Ro_receiving->cheque($supplier_id);
+		$data['upi']=$this->Ro_receiving->upi($supplier_id);
+		$data['neft']=$this->Ro_receiving->neft($supplier_id);
 		 $this->load->view('ro_receivings/supplier_form',$data );
 
 	}

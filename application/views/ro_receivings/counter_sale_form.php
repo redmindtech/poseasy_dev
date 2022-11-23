@@ -393,9 +393,10 @@ $.ajax({
 
 
 			
+			    window.location.replace("<?php  echo base_url('Roreceivings'); ?>");
             
 			
-    	        location.reload();
+    	        //location.reload();
 				//window.location = <?php #echo base_url('Roreceivings'); ?>
 				
 				

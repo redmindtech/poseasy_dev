@@ -72,6 +72,8 @@
 			<th><?php echo $this->lang->line('ro_receivings_total_rate_difference'); ?></th>
 			<th><?php echo $this->lang->line('ro_receivings_total cash'); ?></th>	
 			<th><?php echo $this->lang->line('ro_receivings_total_cheque'); ?></th>	
+			<th><?php echo $this->lang->line('ro_receivings_total_upi'); ?></th>	
+			<th><?php echo $this->lang->line('ro_receivings_total_neft'); ?></th>
 			<th><?php echo $this->lang->line('ro_receivings_opening_balance'); ?></th>
 			<th><?php echo $this->lang->line('ro_receivings_closing_balance'); ?></th>
 					
@@ -116,6 +118,29 @@
 	<?php
 		}
 		?> 
+
+
+
+
+<?php
+		foreach($upi as $upi)
+		{
+		?>
+		<td><?php echo $upi['paid_amount']; ?></td>
+	
+	<?php
+		}
+		?> 
+<?php
+		foreach($neft as $neft)
+		{
+		?>
+		<td><?php echo $neft['paid_amount']; ?></td>
+	
+	<?php
+		}
+		?> 
+
 
 		<?php
 		foreach($supplier_open_close_bal as $supplier_open_close_bal)

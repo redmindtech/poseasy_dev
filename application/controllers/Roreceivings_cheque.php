@@ -42,7 +42,9 @@ class Roreceivings_cheque extends Secure_Controller
 		$data_rows = array();
 		foreach($ro_receivings_accounts->result() as $ro_receivings_accounts)
 		{
-			$data_rows[] = $this->xss_clean(get_ro_cheque_data_row($ro_receivings_accounts,$count));
+
+			$data = $this->Ro_receiving->agency_name($ro_receivings_accounts->supplier_id);
+			$data_rows[] = $this->xss_clean(get_ro_cheque_data_row($ro_receivings_accounts,$count,$data));
 			$count++;
 		}
 

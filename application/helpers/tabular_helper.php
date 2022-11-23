@@ -1161,7 +1161,8 @@ function get_ro_cheque_manage_table_headers()
 
 	$headers = array(
 		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
-		array('id' =>  $CI->lang->line('ro_id') ),
+		//array('id' =>  $CI->lang->line('ro_id') ),
+		array('company_name' => $CI->lang->line('company_name')),
 		array('supplier_name' => $CI->lang->line('supplier_name')),
 		array('date_of_transaction_pur' => $CI->lang->line('date_of_transaction')),
 		array('cheque_no_pur' => $CI->lang->line('cheque_no')),
@@ -1190,16 +1191,35 @@ function get_ro_cheque_manage_table_headers()
 /*
 Get the header for the sales tabular view
 */
-function get_ro_cheque_data_row($ro_receivings_accounts,$count)
+function get_ro_cheque_data_row($ro_receivings_accounts,$count,$data)
 {
 	$CI =& get_instance();
+
+	if(empty($data))
+	{
+		$data = array(
+			'company_name'  => 'none',
+			'agency_name' => 'none',
+					
+		);
+		$company_name=$data['company_name'];
+		$agency_name=$data['agency_name'];
+	}
+	else
+	{
+		$company_name=$data[0]->company_name;
+		$agency_name=$data[0]->agency_name;
+		
+	}
 // var_dump($ro_receivings_accounts);
 	$controller_name = strtolower(get_class($CI));
 
 	return array (
 		'serial_number' => $count,
-		'id' => $ro_receivings_accounts->id,
+		//'id' => $ro_receivings_accounts->id,
+		'company_name' => $company_name,
 		'supplier_name'=> $ro_receivings_accounts->supplier_id,
+		
 		'date_of_transaction_pur' => $ro_receivings_accounts->receiving_time,
 		'purchase_amount' => $ro_receivings_accounts->purchase_amount,
 		'cheque_no_pur' => $ro_receivings_accounts->cheque_number,

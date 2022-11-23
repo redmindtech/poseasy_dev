@@ -21,6 +21,21 @@ $(document).ready(function()
                     var id=$(this).find("td:eq(2)").text();;
                     serial_no = row.find("td:eq(1)").text();
 
+
+					//$(this).find("td:eq(3)").hide();
+					//$(this).find("th:eq(3)").hide();
+
+
+					// date_format = row.find("td:eq(4)").text();
+					// date_format = date_format.slice(0,-8);
+					// $(this).find('td').eq(4).html('<td id="g">'+date_format+'</td>'); 
+
+
+
+					// date_format = row.find("td:eq(7)").text();
+					// date_format = date_format.slice(0,-8);
+					// $(this).find('td').eq(7).html('<td id="g">'+date_format+'</td>');
+
 					
 
 
