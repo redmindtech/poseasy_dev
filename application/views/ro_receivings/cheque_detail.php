@@ -22,19 +22,22 @@ $(document).ready(function()
                     serial_no = row.find("td:eq(1)").text();
 
 
-					//$(this).find("td:eq(3)").hide();
-					//$(this).find("th:eq(3)").hide();
+					$(this).find("td:eq(4)").hide();
+					$(this).find("th:eq(4)").hide();
+
+					$(this).find("td:eq(2)").hide();
+					$(this).find("th:eq(2)").hide();
 
 
-					// date_format = row.find("td:eq(4)").text();
-					// date_format = date_format.slice(0,-8);
-					// $(this).find('td').eq(4).html('<td id="g">'+date_format+'</td>'); 
+					date_format = row.find("td:eq(5)").text();
+					date_format = date_format.slice(0,-8);
+					$(this).find('td').eq(5).html('<td id="g">'+date_format+'</td>'); 
 
 
 
-					// date_format = row.find("td:eq(7)").text();
-					// date_format = date_format.slice(0,-8);
-					// $(this).find('td').eq(7).html('<td id="g">'+date_format+'</td>');
+					date_format = row.find("td:eq(8)").text();
+					date_format = date_format.slice(0,-8);
+					$(this).find('td').eq(8).html('<td id="g">'+date_format+'</td>');
 
 					
 
@@ -64,18 +67,27 @@ $(document).ready(function()
 	$(document).on("click", '#submit_qty',  function(e){
 				console.log($(this).attr("name"));
                 var current_row = $(this).attr("name");
+				//alert("current_row"+current_row);
 				var row = $(this).closest("tr");
+				//alert("row"+row);
                 var id= row.find("td:eq(2)").text();
-				var supplier_id=  row.find("td:eq(3)").text();
-				var purchase_amt= row.find("td:eq(7)").text();
-				var paid_amt = row.find("td:eq(8)").text();
-				var closing_bal = row.find("td:eq(14)").text();
-				var pending_payable = row.find("td:eq(15)").text();
-				// var quantity_reg = e.target.value ;
-
+				//alert("id"+id);
+				var supplier_id=  row.find("td:eq(4)").text();
+				//alert("supplier_id"+supplier_id);
+				var purchase_amt= row.find("td:eq(10)").text();
+				//alert("purchase_amt"+purchase_amt);
+				var paid_amt = row.find("td:eq(11)").text();
+				//alert("paid_amt"+paid_amt);
+				var closing_bal = row.find("td:eq(17)").text();
+				//alert("closing_bal"+closing_bal);
+				var pending_payable = row.find("td:eq(18)").text();
+				//alert("pending_payable"+pending_payable);
 				
-				opening_balance = parseFloat(row.find("td:eq(13)").text());
-				purchase_amount = parseFloat(row.find("td:eq(7)").text());
+				
+				opening_balance = parseFloat(row.find("td:eq(16)").text());
+				//alert("opening_balance"+opening_balance);
+				purchase_amount = parseFloat(row.find("td:eq(10)").text());
+				//alert("purchase_amount"+purchase_amount);
 				
 				overall_val = ((parseFloat(opening_balance) + parseFloat(purchase_amount))- parseFloat(paid_amt));
 				final_val = overall_val ;
@@ -87,7 +99,7 @@ $(document).ready(function()
             data: {'id':id,'overall_val':overall_val,'final_val':final_val,'supplier_id':supplier_id},   
             datatype : 'json',
             }).done(function (msg) {
-                //  alert(data);
+                
                 alert("Stock quantity has been successfully updated " );
     	        window.location.reload();
                 

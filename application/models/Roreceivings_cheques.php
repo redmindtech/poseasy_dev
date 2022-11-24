@@ -201,9 +201,11 @@ class Roreceivings_cheques extends CI_Model
 		}
 
 		$this->db->from('ro_receivings_accounts AS ro_receivings_accounts');
+		$this->db->join('suppliers AS suppliers', 'suppliers.person_id = ro_receivings_accounts.supplier_id', 'left');
 		$this->db->group_start();
 		$this->db->like('cheque_number', $search);
 		$this->db->or_like('cheque_date', $search);
+		$this->db->or_like('company_name', $search);
 		$this->db->group_end();
 		$this->db->where('payment_mode', 'Cheque');
 		$this->db->where('status', 'pending');

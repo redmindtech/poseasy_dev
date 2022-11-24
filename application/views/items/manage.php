@@ -173,7 +173,7 @@ $(document).ready(function()
 			$(this).val(ui.item.label);
             $(this).attr('id',ui.item.value);
             supplier_id=ui.item.value;
-        //    alert(supplier_id);
+        //alert(supplier_id);
 			return false;
 		}
 	});
@@ -187,13 +187,13 @@ $(document).ready(function()
         // console.log(receiving_quantity);
         // console.log(items_add_quantity);
         // console.log(final_val);
+        //alert(supplier_id);
         
-       
-        if(supplier_id == 0){
+        if(supplier_id == 0 && items_add_quantity>0){
             alert("Please select supplier name");
-            //evt.preventDefault();
-           // return FALSE;
-        }else if(item_id==0){
+           
+        }
+        else if(item_id==0){
             alert("Please enter a value in Add Quantity");
             
         }

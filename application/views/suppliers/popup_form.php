@@ -20,9 +20,11 @@
 	}
 </style>
 <?php
-	if ($controller_name == 'suppliers')
+	if ($controller_name == 'suppliers' && $supplier != NULL)
 	{
 	?>
+
+
 
 <table id="supplier_table" class="table table-striped table-hover">
 <thead>
@@ -61,12 +63,15 @@
 <td><?php echo $supplier['closing_balance']; ?></td>
 
 
+
 		</tr>
 	<?php
 		}
 		?>
 
 </table>
+
+
 
 <div class="supplier_div">
 <table id="supplier_table" >
@@ -167,5 +172,12 @@
 </div>
 
 <?php
+	}else{
+		$null_message = "This supplier has no transaction";
+	?>
+	
+	<h3><center><?php echo $null_message; ?></center></h3>
+
+	<?php
 	}
 	?>

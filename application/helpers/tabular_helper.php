@@ -1161,21 +1161,21 @@ function get_ro_cheque_manage_table_headers()
 
 	$headers = array(
 		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
-		//array('id' =>  $CI->lang->line('ro_id') ),
+		array('id' =>  $CI->lang->line('ro_id') ),
 		array('company_name' => $CI->lang->line('company_name')),
 		array('supplier_name' => $CI->lang->line('supplier_name')),
-		array('date_of_transaction_pur' => $CI->lang->line('date_of_transaction')),
-		array('cheque_no_pur' => $CI->lang->line('cheque_no')),
-		array('cheque_post_date_pur' => $CI->lang->line('cheque_post_date')),
-		array('purchase_amt_pur' => $CI->lang->line('purchase_amount')),
-		array('paid_amt_pur' => $CI->lang->line('paid_amount')),
-		array('return_amount_pur' => $CI->lang->line('return_amount')),
-		array('return_quantity_pur' => $CI->lang->line('return_quantity')),
-		array('invoice_no_pur' => $CI->lang->line('invoice_no')),
-		array('discount_pur' => $CI->lang->line('discount')),
-		array('opening_balance' => $CI->lang->line('ro_receivings_opening_balance')),
-		array('closing_balance' => $CI->lang->line('ro_receivings_closing_balance')),
-		array('pending_payables' => $CI->lang->line('pending_payables')),
+		array('receiving_time' => $CI->lang->line('date_of_transaction')),
+		array('cheque_no_pur' => $CI->lang->line('cheque_no'), 'sortable' => FALSE),
+		array('cheque_date' => $CI->lang->line('cheque_post_date')),
+		array('purchase_amt_pur' => $CI->lang->line('purchase_amount'), 'sortable' => FALSE),
+		array('paid_amt_pur' => $CI->lang->line('paid_amount'), 'sortable' => FALSE),
+		array('return_amount_pur' => $CI->lang->line('return_amount'), 'sortable' => FALSE),
+		array('return_quantity_pur' => $CI->lang->line('return_quantity'), 'sortable' => FALSE),
+		array('invoice_no_pur' => $CI->lang->line('invoice_no'), 'sortable' => FALSE),
+		array('discount_pur' => $CI->lang->line('discount'), 'sortable' => FALSE),
+		array('opening_balance' => $CI->lang->line('ro_receivings_opening_balance'), 'sortable' => FALSE),
+		array('closing_balance' => $CI->lang->line('ro_receivings_closing_balance'), 'sortable' => FALSE),
+		array('pending_payables' => $CI->lang->line('pending_payables'), 'sortable' => FALSE),
 	);
 
 	
@@ -1211,19 +1211,19 @@ function get_ro_cheque_data_row($ro_receivings_accounts,$count,$data)
 		$agency_name=$data[0]->agency_name;
 		
 	}
-// var_dump($ro_receivings_accounts);
+
 	$controller_name = strtolower(get_class($CI));
 
 	return array (
 		'serial_number' => $count,
-		//'id' => $ro_receivings_accounts->id,
+		'id' => $ro_receivings_accounts->id,
 		'company_name' => $company_name,
 		'supplier_name'=> $ro_receivings_accounts->supplier_id,
 		
-		'date_of_transaction_pur' => $ro_receivings_accounts->receiving_time,
+		'receiving_time' => $ro_receivings_accounts->receiving_time,
 		'purchase_amount' => $ro_receivings_accounts->purchase_amount,
 		'cheque_no_pur' => $ro_receivings_accounts->cheque_number,
-		'cheque_post_date_pur' => $ro_receivings_accounts->cheque_date,
+		'cheque_date' => $ro_receivings_accounts->cheque_date,
 		'purchase_amt_pur' =>$ro_receivings_accounts->purchase_amount,
 		'paid_amt_pur' =>$ro_receivings_accounts->paid_amount ,
 		'return_amount_pur' =>$ro_receivings_accounts->purchase_return_amount,

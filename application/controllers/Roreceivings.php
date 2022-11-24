@@ -182,31 +182,59 @@ class Roreceivings extends Secure_Controller
 	public function save($id = -1)
 
 	{	
+
+
+
+		$opening_bal = $this->input->post('opening_balance');
+		$purchase_amt = $this->input->post('purchase_amount');
+		$paid_amt    = $this->input->post('paid_amount');
+		$closing_bal  = $this->input->post('closing_balance');
+		$pending_pay  = $this->input->post('pending_payables');
+
+		
+
+
 		if($this->input->post('payment_mode')=='Cheque')	
 		{
+
+
 			$mode='pending';
 			$date=$this->input->post('cheque_date');
+  
+			$is_adjust = $this-> input -> post('cheque_processing');
+			if($is_adjust == 'true'){
+ 
+				$mode = 'complete';
+				$closing_bal = $opening_bal + $purchase_amt - $paid_amt;
+				$pending_pay = $opening_bal + $purchase_amt - $paid_amt;
+			}
+
+			
+			
 			
 		}else{
 			$mode='complete';
 			$date="00.00.00";
 		}	
+
+
+		
 		
 		$ro_receivings_data = array(
 		
 			'voucher_no'=> $this->input->post('voucher_no'),
 			'supplier_id' => $this->input->post('supplier_id'),
-			'opening_balance' => $this->input->post('opening_balance'),
-			'purchase_amount' => $this->input->post('purchase_amount'),
-			'paid_amount' => $this->input->post('paid_amount'),
+			'opening_balance' => $opening_bal,
+			'purchase_amount' => $purchase_amt,
+			'paid_amount' => $paid_amt,
 			'payment_mode' => $this->input->post('payment_mode'),
 			'cheque_date' =>$date,
 			'cheque_number' => $this->input->post('cheque_number'),			
-			'closing_balance' => $this->input->post('closing_balance'),
+			'closing_balance' => $closing_bal,
 			'purchase_return_amount' => $this->input->post('purchase_return_amount'),
 			'purchase_return_qty' => $this->input->post('purchase_return_qty'),
 			'discount' => $this->input->post('discount'),
-			'pending_payables' => $this->input->post('pending_payables'),
+			'pending_payables' => $pending_pay,
 			'last_purchase_qty' => $this->input->post('last_purchase_qty'),
 			'rate_difference' => $this->input->post('rate_difference'),
 			// 'total_stock' => $this->input->post('total_stock'),

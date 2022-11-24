@@ -155,7 +155,7 @@
 		</div>
 
 		<div class="form-group form-group-sm" id="supplierdiv">
-			<?php echo form_label($this->lang->line('items_supplier'), 'supplier', array('class'=>'required control-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('items_supplier'), 'supplier', array('class'=>' control-label col-xs-3')); ?>
 			<div class='col-xs-8'>
 				<?php echo form_dropdown('supplier_id', $suppliers, $selected_supplier, array('class'=>'form-control')); ?>
 			</div>
@@ -171,6 +171,7 @@
 					<?php echo form_input(array(
 							'name'=>'cost_price',
 							'id'=>'cost_price',
+							
 							'class'=>'form-control input-sm',
 							'onClick'=>'this.select();',
 							'value'=>to_currency_no_money($item_info->cost_price))
@@ -331,7 +332,7 @@
 		?>
 
 		<div class="form-group form-group-sm" id="receiving_quantity_display">
-			<?php echo form_label($this->lang->line('items_receiving_quantity'), 'receiving_quantity', array('class'=>'required control-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('items_receiving_quantity'), 'receiving_quantity', array('class'=>' control-label col-xs-3')); ?>
 			<div class='col-xs-4'>
 				<?php echo form_input(array(
 						'name'=>'receiving_quantity',
@@ -344,7 +345,7 @@
 		</div>
 
 		<div class="form-group form-group-sm">
-			<?php echo form_label($this->lang->line('items_reorder_level'), 'reorder_level', array('class'=>'required control-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('items_reorder_level'), 'reorder_level', array('class'=>' control-label col-xs-3')); ?>
 			<div class='col-xs-4'>
 				<?php echo form_input(array(
 						'name'=>'reorder_level',
@@ -797,11 +798,22 @@ $(document).ready(function()
 
 rules:
 {
-	supplier_id: 'required',
+	//supplier_id: 'required',
 	name:
 	{
 		required: true,
-		
+		remote: {
+			url: "<?php echo site_url($controller_name . '/item_name_stringcmp')?>",
+			type: 'POST',
+			data: {
+				'item_name' : "<?php echo $item_info->name; ?>",
+				'mode' : "<?php echo $check_null_flag; ?>",
+				'name' : function()
+				{ 
+					return $('#name').val();
+				},
+			}
+		}
 	},
 	
 	 
@@ -847,15 +859,43 @@ rules:
 	
 	cost_price:
 	{	
-		min:1,
+		
+		
 		required: true,
-		remote: "<?php echo site_url($controller_name . '/check_numeric')?>"
+		remote: 
+		{
+			url: "<?php echo site_url($controller_name . '/cost_price_validate')?>",
+			type: 'POST',
+			data: {
+						
+						'cost_price' : function()
+						{
+						
+							//alert($('#category').val());
+							return  $('#cost_price').val();
+						},
+				}
+		}
 	},
 	unit_price:
 	{
-		min:1,
+		
 		required: true,
-		remote: "<?php echo site_url($controller_name . '/check_numeric')?>"
+		remote: 
+		{
+			url: "<?php echo site_url($controller_name . '/sale_price_validate')?>",
+			type: 'POST',
+			data: {
+						
+						'unit_price' : function()
+						{
+						
+							//alert($('#category').val());
+							return  $('#unit_price').val();
+						},
+				}
+
+		}
 	},
 	<?php
 	foreach($stock_locations as $key=>$location_detail)

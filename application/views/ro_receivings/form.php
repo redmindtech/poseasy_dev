@@ -446,6 +446,33 @@ $("form").on("change", "input","click", function(e)
 			}
 
 			else{
+
+
+				var isAdjust = false;
+				var cheque_date = $("input[name='cheque_date']").val();
+				//alert(cheque_date);
+				var today = new Date().toISOString().slice(0, 10);
+
+			    if (cheque_date <= today) {
+
+					var payment_mode=$('#payment_mode').val();
+
+					if(payment_mode=="Cheque"){
+
+							if(confirm("It seems the cheque is predated. Press Ok if the amount is already settled.")){
+								isAdjust = true;
+								$('<input>').attr({
+									type: 'hidden',
+									id: 'cheque_processing',
+									name: 'cheque_processing',
+									value: isAdjust
+								}).appendTo('form');
+								
+							}
+					}
+
+			    }
+
 			$(form).ajaxSubmit({
 				success: function(response)
 				{
