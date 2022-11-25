@@ -78,6 +78,7 @@ $(document).ready(function()
                     var item_id=row.find("td:eq(2)").text();
                     serial_no = row.find("td:eq(1)").text();
 
+                    //alert(item_id);
 
                 
                         count = count+1;
@@ -95,7 +96,7 @@ $(document).ready(function()
                     $(this).find('th').eq(-1).after('<th style=display:none;>Less Quantity</th>');
                     $(this).find('th').eq(7).after('<th class=""  style=display:none;><div class="th-inner sortable both">&nbsp;Current Qty &nbsp;</div><div class="fht-cell"></div></th>');
                     $(this).find('td').eq(6).after('<td style=width:100px;height:50px;><input type="number" style="background-color:#FFFFE0;" id="items_add_quantity" name="'+item_id+'" class="form-control input-sm" min="null" max="null" step="0.50" value="" placeholder="0.00" required></td>');			
-                    if($('#table tr'). length != 2){
+                    if($('#table tr').length != 2 || item_id >0){
                                             
                         $(this).find('td').eq(-1).after('<td><a href id="submit_qty" name="'+item_id+'" title="Save Quantity" class="btn btn-success btn-sm disabled"><span class="glyphicon glyphicon-ok id="submit_span"></span></a></td>');
                     }
