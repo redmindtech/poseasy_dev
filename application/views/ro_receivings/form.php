@@ -120,7 +120,7 @@
                 </div>
         
                 <div class="form-group form-group-sm">
-			        <?php echo form_label($this->lang->line('ro_receivings_payment_mode'), 'payment_mode', array('class'=>'required control-label col-xs-3')); ?>
+			        <?php echo form_label($this->lang->line('ro_receivings_payment_mode'), 'payment_mode', array('class'=>'control-label col-xs-3')); ?>
 			         <div class='col-xs-8'>
 			           <select name="payment_mode" id="payment_mode" required="" class='form-control'>
                         <option value="" >--Select Payment Mode--</option >
@@ -293,6 +293,8 @@
           
               </fieldset>
 
+			 
+
 
 			  
 <?php echo form_close(); ?>
@@ -347,6 +349,8 @@ $(document).ready(function()
 	$('.cheque_date'). hide();
 	$('#payment_mode').on("change",function()
 {
+
+	
 	$cheque= $('#payment_mode option:selected').text();
 	if($cheque=="Cheque")
 	{
@@ -354,7 +358,10 @@ $(document).ready(function()
 		$('.cheque_date'). show();
 		$("#discount").attr('disabled', true); 
 		$("#purchase_return_qty").attr('disabled', true); 
-		$("#purchase_return_amount").attr('disabled', true); 
+		$("#purchase_return_amount").attr('disabled', true);
+		//$("#paid_amount").attr('required',true);
+		
+		 
 	}
 	else{
 		$("#discount").attr('disabled', false); 
@@ -363,6 +370,7 @@ $(document).ready(function()
 	
 		$('.cheque_number'). hide();
 		$('.cheque_date'). hide();
+		//$("#paid_amount").attr('required',false);
 	}
 });
 
@@ -390,6 +398,26 @@ $(document).ready(function()
 
 $("form").on("change", "input","click", function(e)
 {       
+
+
+
+	var paid_amt_for_mode = parseFloat($('#paid_amount').val());
+	var purchase_amt_for_mode = parseFloat($('#purchase_amount').val());
+	
+	
+
+	if(purchase_amt_for_mode > 0 && paid_amt_for_mode < 1){
+		$("#payment_mode").attr('required',false);
+	}else{
+		$("#payment_mode").attr('required',true);
+	}
+
+
+	
+
+
+	
+	
 	
 
 	var payment_mode=$('#payment_mode').val();		
@@ -491,7 +519,50 @@ $("form").on("change", "input","click", function(e)
 		{  	
 						
 			company_name:"required",	
-			cheque_number:"required"	
+			cheque_number:"required",
+			paid_amount :
+			{
+				remote: {
+				url: "<?php echo site_url($controller_name . '/paid_amount_validate')?>",
+				type: 'POST',
+				data: {
+							
+							'payment_mode':function(){
+								return $('#payment_mode').val();
+
+							},
+							'paid_amount' : function()
+							{ 
+								return $('#paid_amount').val();
+							},
+					  }
+				}
+			},
+			// payment_mode:
+			// {
+			// 	remote :{
+			// 		url: "<?php echo site_url($controller_name . '/payment_mode_validate')?>",
+			// 	type: 'POST',
+			// 	data: {
+							
+							
+			// 				'paid_amount' : function()
+			// 				{ 
+			// 					return $('#paid_amount').val();
+			// 				},
+			// 				'purchase_amount' : function()
+			// 				{ 
+			// 					return $('#purchase_amount').val();
+			// 				},
+			// 				'payment_mode':function(){
+			// 					return $('#payment_mode').val();
+
+			// 				},
+			// 		  }
+
+			// 	}
+			// }
+				
 			
 		},
 		messages:
@@ -500,6 +571,7 @@ $("form").on("change", "input","click", function(e)
 		 company_name: "<?php echo $this->lang->line('supplier_name_required'); ?>",		
 		 payment_mode:"<?php echo $this->lang->line('ro_receivings_payment_mode_required'); ?>",
 		 cheque_number:	"<?php echo $this->lang->line('cheque_number_required'); ?>",	
+		 paid_amount: "<?php echo $this->lang->line('ro_receivings_paid_amount_required'); ?>"
 
 	}	
 	}, form_support.error));	

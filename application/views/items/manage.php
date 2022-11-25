@@ -100,7 +100,7 @@ $(document).ready(function()
                         $(this).find('td').eq(-1).after('<td><a href id="submit_qty" name="'+item_id+'" title="Save Quantity" class="btn btn-success btn-sm disabled"><span class="glyphicon glyphicon-ok id="submit_span"></span></a></td>');
                     }
                     $(this).find('td').eq(-1).after('<td><input type="hidden" id="items_less_quantity" class="form-control input-sm" value="0"></td>');
-                    $(this).find('td').eq(7).after('<td style=width:100px;height:50px;><input type="text" name="supplier_name" style="background-color:#FFFFE0;" id="supplier_name" class="form-control input-sm" placeholder="Type Supplier Name" value="" style=width:150px; required></td>');	
+                    $(this).find('td').eq(7).after('<td style=width:100px;height:50px;><input autocomplete="off" type="text" name="supplier_name" style="background-color:#FFFFE0;" id="supplier_name" class="form-control input-sm" placeholder="Type Supplier Name" value="" style=width:150px; required></td>');	
                         row.find("td:eq(3)").hide();
                         row.find("th:eq(2)").hide();
                    

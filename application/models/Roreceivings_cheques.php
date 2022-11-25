@@ -101,19 +101,7 @@ class Roreceivings_cheques extends CI_Model
 	Gets rows
 	*/
 
-	public function reject_cheque($id){
-
-
-		$data = array(
-			'status' => 'rejected'
-			);
-		$this->db->where('id', $id);		
-		$result = $this->db->update('ro_receivings_accounts', $data);
-		return $result;
-
-
-
-	}
+	
 
 	
 	
@@ -127,6 +115,24 @@ class Roreceivings_cheques extends CI_Model
 	public function get_found_rows($search)
 	{
 		return $this->search($search, 0, 0, 'cheque_number', 'asc', TRUE);
+	}
+
+
+	public function reject_cheque($id,$overall_val,$pending_payables){
+
+
+		$data = array(
+			'paid_amount'=>0,
+			'status' => 'rejected',
+			'pending_payables'=> $pending_payables,
+			'closing_balance'=> $overall_val
+			);
+		$this->db->where('id', $id);		
+		$result = $this->db->update('ro_receivings_accounts', $data);
+		return $result;
+
+
+
 	}
 	public function save_cheque($id,$overall_val,$final_val,$supplier_id)
 	{

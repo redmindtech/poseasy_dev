@@ -62,8 +62,14 @@ class Roreceivings_cheque extends Secure_Controller
 
 		$id = $_POST['id'];
 
+		$supplier_id = $_POST['supplier_id'];
+		$overall_val = $_POST['overall_val'];
+		$discount = $_POST['discount'];
+		$pending_payables = $overall_val - $discount;
 		
-		$this->Roreceivings_cheques->reject_cheque($id);
+
+		
+		$this->Roreceivings_cheques->reject_cheque($id,$overall_val,$pending_payables);
 
 
 

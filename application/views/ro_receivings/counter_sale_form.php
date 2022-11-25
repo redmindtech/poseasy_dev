@@ -255,14 +255,14 @@ $(document).ready(function(){
 		count++;
 		var html = '';
 		html +='<tr id="row'+count+'">';
-		html += '<td id="sno"><input type="hidden" id="sno" name="sno" value="'+count+'">'+count+'</td>';
-		html += '<td><input type="text" id="supplier_name_'+count+'" data-supplier_id='+count+' class="form-control input-sm supplier_name" name="supplier_name[]" placeholder="Start Typing Suppliers name..." required=""></td>';
-		html += '<td><input type="text" id="towards_vno_'+count+'" class="form-control input-sm data-id" name="towards_vno_'+count+'" ></td>';
-		html += '<td><input type="number" id="opening_balance_'+count+'" class="form-control input-sm" name="opening_balance_'+count+'" value="0" ></td>';
-		html += '<td><input type="text" id="type_'+count+'" class="form-control input-sm" value="" placeholder="Cash or UPI" name="type_'+count+'" ></td>';
-		html += '<td><input type="text" id="gst_slab_'+count+'" value="0.00" class="form-control input-sm" name="gst_slab[]" ></td>';
-		html += '<td><input type="text" id="gst_amt_'+count+'" value="0.00" class="form-control input-sm" name="gst_amt_'+count+'"></td>';
-		html += '<td><input type="text" id="narration_'+count+'" class="form-control input-sm" name="narration_'+count+'" ></td>';
+		html += '<td id="sno"><input type="hidden" id="sno" name="sno" value="'+count+'"><label>'+count+'</label</td>';
+		html += '<td><div class="col-xs-12"><input type="text" id="supplier_name_'+count+'" data-supplier_id='+count+' class="form-control input-sm supplier_name" name="supplier_name[]" placeholder="Start Typing Suppliers name..." required=""></div></td>';
+		html += '<td><div class="col-xs-11"><input type="text" id="towards_vno_'+count+'" class="form-control input-sm data-id" name="towards_vno_'+count+'"></div></td>';
+		html += '<td><div class="col-xs-11"><input type="number" id="opening_balance_'+count+'" class="form-control input-sm" name="opening_balance_'+count+'" value="0" ></div></td>';
+		html += '<td><div class="col-xs-11"><input type="text" id="type_'+count+'" class="form-control input-sm" value="" placeholder="Cash or UPI" name="type_'+count+'" ></div></td>';
+		html += '<td><div class="col-xs-11"><input type="text" id="gst_slab_'+count+'" value="0.00" class="form-control input-sm" name="gst_slab[]" ></div></td>';
+		html += '<td><div class="col-xs-11"><input type="text" id="gst_amt_'+count+'" value="0.00" class="form-control input-sm" name="gst_amt_'+count+'"></div></td>';
+		html += '<td><div class="col-xs-11"><input type="text" id="narration_'+count+'" class="form-control input-sm" name="narration_'+count+'" ></div></td>';
 		html += '<td><a id="delete" name="delete" class="btn btn-danger btn-sm " title="Delete" ><span class="glyphicon glyphicon-minus" value="Add"></span></a></td>';
 		e.preventDefault();
 		

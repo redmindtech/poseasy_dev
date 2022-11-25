@@ -92,7 +92,7 @@ $(document).ready(function()
 				overall_val = ((parseFloat(opening_balance) + parseFloat(purchase_amount))- parseFloat(paid_amt));
 				final_val = overall_val ;
 			
-				alert('Do you want update the stock quantity?');
+				alert('Do you want to approve cheque?');
         $.ajax({
            type: 'POST',
 			url: "<?php echo site_url("Roreceivings_cheque/cheque_valid/"); ?>",
@@ -100,7 +100,7 @@ $(document).ready(function()
             datatype : 'json',
             }).done(function (msg) {
                 
-                alert("Stock quantity has been successfully updated " );
+                alert("Cheque has been approved successfully" );
     	        window.location.reload();
                 
             }).fail((jqXHR, errorMsg) => {
@@ -115,20 +115,30 @@ $(document).ready(function()
 				console.log($(this).attr("name"));
 
 				var current_row = $(this).attr("name");
+				
 				var row = $(this).closest("tr");
+			
                 var id= row.find("td:eq(2)").text();
-				var supplier_id=  row.find("td:eq(3)").text();
-				var purchase_amt= row.find("td:eq(7)").text();
-				var paid_amt = row.find("td:eq(8)").text();
-				var closing_bal = row.find("td:eq(14)").text();
-				var pending_payable = row.find("td:eq(15)").text();
-				// var quantity_reg = e.target.value ;
+				
+				var supplier_id=  row.find("td:eq(4)").text();
+				
+				var purchase_amt= row.find("td:eq(10)").text();
+				
+				var paid_amt = row.find("td:eq(11)").text();
+				
+				var closing_bal = row.find("td:eq(17)").text();
+				
+				var pending_payable = row.find("td:eq(18)").text();
+				
 
 				
-				opening_balance = parseFloat(row.find("td:eq(13)").text());
-				purchase_amount = parseFloat(row.find("td:eq(7)").text());
+				opening_balance = parseFloat(row.find("td:eq(16)").text());
 				
-				overall_val = ((parseFloat(opening_balance) + parseFloat(purchase_amount))- parseFloat(paid_amt));
+				purchase_amount = parseFloat(row.find("td:eq(10)").text());
+				
+				discount = parseFloat(row.find("td:eq(15)").text());
+				
+				overall_val = ((parseFloat(opening_balance) + parseFloat(purchase_amount)));
 				final_val = overall_val ;
                 
 			
@@ -136,7 +146,7 @@ $(document).ready(function()
         $.ajax({
            type: 'POST',
 			url: "<?php echo site_url("Roreceivings_cheque/cheque_reject/"); ?>",
-            data: {'id':id,'overall_val':overall_val,'final_val':final_val,'supplier_id':supplier_id},   
+            data: {'id':id,'overall_val':overall_val,'final_val':final_val,'supplier_id':supplier_id,'discount':discount},   
             datatype : 'json',
             }).done(function (msg) {
                 //  alert(data);

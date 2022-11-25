@@ -75,6 +75,38 @@ class Roreceivings extends Secure_Controller
 		echo "true";
 	}
    }
+
+
+   public function paid_amount_validate(){
+	$paid_amt = $this->input->post('paid_amount');
+	$payment_mode = $this->input->post('payment_mode');
+	
+	if($paid_amt < 1 && $payment_mode == "Cheque"){
+		echo "false";
+	}else{
+		echo "true";
+	}
+   }
+
+
+//    public function payment_mode_validate(){
+// 	$paid_amt = $this->input->post('paid_amount');
+// 	$payment_mode = $this->input->post('payment_mode');
+// 	//log_message("paid",$paid_amt);
+// 	$purchase_amt = $this->input->post('purchase_amount');
+// 	$mode = false;
+// 	//if($payment_mode == "--Select Payment Mode--" || $payment_mode == "Cash" || $payment_mode == "Cheque" || $payment_mode == "NEFT" || $payment_mode == "UPI"){
+// 		//$mode=true;
+// 		if($paid_amt < 1 && $purchase_amt>0 && $payment_mode== "Cash"){
+
+// 			echo "true";
+// 		}else{
+// 			echo "false";
+// 		}
+// 	//}
+	
+	
+//    }
 		
 
 	/*

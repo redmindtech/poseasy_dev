@@ -63,3 +63,5 @@ $lang["Roreceivings_save"]="Bulk save";
 $lang["Roreceivings_cheque_no_Roreceivings_cheque_to_display"] = "No records found";
 $lang["ro_receivings_total_neft"]  = "Total NEFT";
 $lang["ro_receivings_total_upi"]  = "Total UPI";
+$lang["ro_receivings_paid_amount_required"] = "Paid amount is required for cheque transactions";
+$lang["cheque_number_required"] = "Please enter Cheque number";
