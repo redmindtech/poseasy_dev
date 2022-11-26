@@ -228,6 +228,8 @@ class Suppliers extends Persons
 		$data['new_supplier_close_bal']=$this->Supplier->new_close_bal($supplier_id);
 		$data['cash']=$this->Supplier->cash($supplier_id);
 		$data['cheque']=$this->Supplier->cheque($supplier_id);
+		$data['neft']=$this->Supplier->neft($supplier_id);
+		$data['upi']=$this->Supplier->upi($supplier_id);
 		 $this->load->view('suppliers/popup_form',$data );
 
 	}

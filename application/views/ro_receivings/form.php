@@ -427,8 +427,10 @@ $("form").on("change", "input","click", function(e)
 			
 			
 		var	open_bal=parseFloat($('#opening_balance').val());
-		$('#closing_balance').val(open_bal);
-		$('#pending_payables').val(open_bal);
+		var purchase_amt=parseFloat($('#purchase_amount').val());
+		var closing_bal = open_bal + purchase_amt;
+		$('#closing_balance').val(closing_bal);
+		$('#pending_payables').val(closing_bal);
 		
 		var purchase_amt=parseFloat($('#purchase_amount').val());
 		var paid_amt=parseFloat($('#paid_amount').val());

@@ -19,7 +19,7 @@ class Dashboard extends CI_Model
 		 $this->db->from('ro_sales');
 		 $query=$this->db->get();
 		 $fetched_item_id=$query->row();
-		 var_dump($fetched_item_id->paid_amount);
+		 
 		 return $fetched_item_id->paid_amount;		
 	}
 	public function get_total_expenses()
@@ -29,7 +29,7 @@ class Dashboard extends CI_Model
 		 $this->db->from('expenses');
 		 $query=$this->db->get();
 		 $fetched_item_id=$query->row();
-		 var_dump($fetched_item_id->paid_amount);
+		 
 		 return $fetched_item_id->paid_amount;		
 	}
 	public function get_total_stock()
