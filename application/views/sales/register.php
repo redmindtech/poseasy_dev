@@ -60,22 +60,29 @@ if(isset($success))
 				}
 				?>
 
-				<li class="pull-right">
+				<!-- <li class="pull-right">
 					<button class='btn btn-default btn-sm modal-dlg' id='show_suspended_sales_button' data-href="<?php echo site_url($controller_name."/suspended"); ?>"
 							title="<?php echo $this->lang->line('sales_suspended_sales'); ?>">
 						<span class="glyphicon glyphicon-align-justify">&nbsp</span><?php echo $this->lang->line('sales_suspended_sales'); ?>
 					</button>
-				</li>
-
-
-
-
+				</li> -->
 
 				<li class="pull-right">
-					<?php echo anchor($controller_name."/bulk_entry_view", '<span class="glyphicon glyphicon-tags">&nbsp</span>' . $this->lang->line('receivings_bulk_entry'),
-					array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('receivings_bulk_entry'))); ?>
+					<?php echo anchor("Ro_sales_cheque/manage", '<span class="glyphicon glyphicon-check">&nbsp</span>' . $this->lang->line('ro_checque_approve'),
+					array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('ro_checque_approve'))); ?>
 			
 				</li>
+
+				<li class="pull-right">
+					<?php echo anchor($controller_name."/bulk_entry_view", '<span class="glyphicon glyphicon-tags">&nbsp</span>' . $this->lang->line('sales_bulk_entry'),
+					array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('sales_bulk_entry'))); ?>
+			
+				</li>
+
+
+
+
+
 
 
 

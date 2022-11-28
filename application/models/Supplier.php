@@ -411,7 +411,33 @@ class Supplier extends Person
 		// WHERE payment_mode!='Cash' AND supplier_id=10;
 	$this->db->select('SUM(paid_amount) as paid_amount');
 	$this->db->from('ro_receivings_accounts');
-	$this->db->where(' payment_mode!="Cash" and supplier_id='.$id);
+	$this->db->where(' payment_mode="Cheque" and supplier_id='.$id);
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+	
+    return $cheque;
+
+	}
+	public function neft($id)
+	{
+		// SELECT  supplier_id,SUM(paid_amount),payment_mode FROM ospos_ro_receivings_accounts 
+		// WHERE payment_mode!='Cash' AND supplier_id=10;
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ro_receivings_accounts');
+	$this->db->where(' payment_mode="NEFT" and supplier_id='.$id);
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+	
+    return $cheque;
+
+	}
+	public function upi($id)
+	{
+		// SELECT  supplier_id,SUM(paid_amount),payment_mode FROM ospos_ro_receivings_accounts 
+		// WHERE payment_mode!='Cash' AND supplier_id=10;
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ro_receivings_accounts');
+	$this->db->where(' payment_mode="UPI" and supplier_id='.$id);
 	$query = $this->db->get();			
 	$cheque= $query->result_array();
 	

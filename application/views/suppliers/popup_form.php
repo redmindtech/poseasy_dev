@@ -52,7 +52,7 @@
 		?>
 		<tr>
 		
-	<td><?php echo $supplier['receiving_time']; ?></td>
+	<td><?php echo substr_replace($supplier['receiving_time'] ,"", -8); ?></td>
 <td><?php echo $supplier['opening_balance']; ?></td>
 <td><?php echo $supplier['purchase_amount']; ?></td>
 <td><?php echo $supplier['paid_amount']; ?></td>
@@ -89,8 +89,22 @@
 				<tr>
 				<th><?php echo $this->lang->line('total_purchase'); ?></th>
 				<td><?php echo $supplier_summary['purchase_amount'];?></td>
-				<th><?php echo $this->lang->line('total_return'); ?></th>
-				<td><?php echo $supplier_summary['purchase_return_amount'];?></td></tr>
+				<th><?php echo $this->lang->line('total_neft'); ?></th>
+				<?php foreach($neft as $neft){
+				
+				if(!empty($neft['paid_amount'])){
+				?>
+					<td><?php echo $neft['paid_amount'];?></td>
+				<?php 
+			}
+			else{
+				?>
+				<td>0.00</td>
+				<?php
+			}
+			}?>
+				
+				</tr>
 				<tr>
 				<?php
 				foreach($cheque as $cheque)
@@ -108,27 +122,25 @@
 					}
 				}
 				?>
-				<th><?php echo $this->lang->line('total_less'); ?></th>
-				<td><?php echo $supplier_summary['discount'];?></td></tr>
+				<th><?php echo $this->lang->line('total_return'); ?></th>
+				<td><?php echo $supplier_summary['purchase_return_amount'];?></td>
+				
+
+
 				</tr>
 
 				<tr>
 				<th><?php echo $this->lang->line('total_rate_difference'); ?></th>
 				<td><?php echo $supplier_summary['rate_difference'];?></td>
-				<th><?php echo $this->lang->line('last_opening_balance'); ?></th>
-				<?php foreach($new_supplier_open_bal as $new_supplier_open_bal){
+
+
+				<th><?php echo $this->lang->line('total_less'); ?></th>
+				<td><?php echo $supplier_summary['discount'];?></td></tr>
 				
-				if(!empty($new_supplier_open_bal['opening_balance'])){
-				?>
-					<td><?php echo $new_supplier_open_bal['opening_balance'];?></td>
-				<?php 
-			}
-			else{
-				?>
-				<td>0.00</td>
-				<?php
-			}
-			}?>
+
+
+
+
 				</tr>
 
 				<tr>
@@ -152,7 +164,44 @@
 			<?php
 			}
 			?>
+
+			<th><?php echo $this->lang->line('last_opening_balance'); ?></th>
+				<?php foreach($new_supplier_open_bal as $new_supplier_open_bal){
+				
+				if(!empty($new_supplier_open_bal['opening_balance'])){
+				?>
+					<td><?php echo $new_supplier_open_bal['opening_balance'];?></td>
+				<?php 
+			}
+			else{
+				?>
+				<td>0.00</td>
+				<?php
+			}
+			}?>
+
+
+
 			
+			
+		</tr>
+
+
+		<tr>
+				<th><?php echo $this->lang->line('total_upi'); ?></th>
+				<?php foreach($upi as $upi){
+				
+				if(!empty($upi['paid_amount'])){
+				?>
+					<td><?php echo $upi['paid_amount'];?></td>
+				<?php 
+			}
+			else{
+				?>
+				<td>0.00</td>
+				<?php
+			}
+			}?>
 			<th><?php echo $this->lang->line('last_closing_balance'); ?></th>
 			<?php foreach($new_supplier_close_bal as $new_supplier_close_bal){
 				
@@ -166,7 +215,16 @@
 				<?php
 			}
 		}?>
-		</tr>
+				
+				</tr>
+
+
+
+
+		
+
+
+
 	</tbody>
 </table>
 </div>
@@ -181,3 +239,6 @@
 	<?php
 	}
 	?>
+
+
+

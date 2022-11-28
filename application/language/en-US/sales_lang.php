@@ -221,3 +221,36 @@ $lang["sales_work_order_number_duplicate"] = "Work Order Number must be unique."
 $lang["sales_work_order_sent"] = "Work Order sent to";
 $lang["sales_work_order_unsent"] = "Work Order failed to be sent to";
 $lang["sales_ebill_with_address"]= "Estimate Bill with Address";
+$lang["sales_save"]="Bulk save";
+$lang["sales_bulk_entry"]="Bulk Entry";
+$lang['ro_sale_date_of_transaction'] = "Date of Transaction";
+$lang['ro_sale_cheque_no'] ="Cheque No.";
+$lang['ro_sale_cheque_post_date'] = "Cheque Date";
+$lang['ro_sale_purchase_amount'] = "Purchase Amount";
+$lang['ro_sale_paid_amount'] = "Paid Amount";
+$lang['ro_sale_return_amount'] = "Return Amount";
+$lang['ro_sale_return_quantity'] = "Return Quantity";
+$lang['ro_sale_invoice_no'] = "Invoice No";
+$lang["ro_sale_save"]="Bulk save";
+$lang["Ro_sales_cheque_no_Ro_sales_cheque_to_display"] = "No records found";
+$lang["ro_sale_total_neft"]  = "Total NEFT";
+$lang["ro_sale_total_upi"]  = "Total UPI";
+$lang["ro_checque_approve"]  = "Cheque Approval";
+$lang["ro_sales_register"]  = "Sales Register";
+$lang['sales_customer_id']="Customer id";
+$lang['ro_sales_voucher_no'] = "Invoice No.";
+
+
+
+$lang["ro_sales_invoice_no"] = "Invoice No";
+$lang["ro_sales_purchase_amount"] = "Sales Amount";
+$lang["ro_sales_paid_amount"] = "Paid Amount";
+$lang["ro_sales_payment_mode"] = "Payment Mode";
+$lang["ro_sales_id"] = "ID";
+$lang["ro_sales_closing_balance"] = "Closing Balance";
+$lang["ro_sales_discount"] = "Discount";
+$lang["ro_sales_receiving_time"] = "Date";
+$lang["ro_sales_opening_balance"] = "Opening Balance";
+$lang["gst_slab"] = "GST Slab";
+$lang["gst_amount"] = "GST Amount";
+$lang["sales_customer_name"] = "Customer Name";

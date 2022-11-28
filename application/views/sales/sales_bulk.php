@@ -1,14 +1,24 @@
 <?php $this->load->view("partial/header"); ?>
 
-<h3 style="align:center">Sales Bulk Entry Form</h3>
+<style>
+#bulk_title{
+		text-align: center;
+		font-family:times new roman;
+			
+	}
+	#bulk{
+		color:blue;
+	}
+	</style>
+
+<h3 id='bulk_title'>Sales Bulk Entry <span class="glyphicon glyphicon-shopping-cart" id="bulk"></span></h3>
 <div id="required_fields_message"><?php echo $this->lang->line('common_fields_required_message'); ?></div>
 
 <ul id="error_message_box" class="error_message_box"></ul>
 <?php echo form_open('Sales/sales_bulk_save/'.$ro_sale_info->id, array('id'=>'ro_sales_edit_form', 'class'=>'form-horizontal')); ?>
 	
 <fieldset id="sales_basic_info">
-<button class='btn btn-info btn-sm pull-right submit'><span class="glyphicon glyphicon-ok">&nbsp;</span><?php echo $this->lang->line($controller_name. '_save'); ?>
-    </button>
+
 	
 	<div class="form-group form-group-sm">
 			<?php echo form_label($this->lang->line('receivings_cash_date'), 'receivings_cash_date', array('class'=>'control-label col-xs-3' )); ?>
@@ -23,7 +33,7 @@
 		</div>
 	
 		<div class="form-group form-group-sm">
-			<?php echo form_label($this->lang->line('receivings_voucher_no'), 'voucher_no', array('class'=>'required control-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('ro_sales_voucher_no'), 'voucher_no', array('class'=>'required control-label col-xs-3')); ?>
 			<div class='col-xs-3'>
 				<?php echo form_input(array(
 						'name'=>'voucher_no',
@@ -145,7 +155,10 @@
 					
 			</tr>	
 			</tbody>
-		
+			</table>
+			<br>		
+			<button class='btn btn-info btn-sm pull-right submit'><span class="glyphicon glyphicon-ok">&nbsp;</span><?php echo $this->lang->line($controller_name. '_save'); ?>
+    </button>
 	</fieldset>	
 	
 					
@@ -244,6 +257,7 @@ $(document).ready(function(){
 		html += '<td><input type="text" id="gst_amt_'+count+'" value="0.00" class="form-control input-sm" name="gst_amt_'+count+'"></td>';
 		html += '<td><input type="text" id="narration_'+count+'" class="form-control input-sm" name="narration_'+count+'" ></td>';
 		html += '<td><a id="delete" name="delete" class="btn btn-danger btn-sm " title="Delete" ><span class="glyphicon glyphicon-minus" value="Add"></span></a></td>';
+		html += '</br></br>';
 		e.preventDefault();
 		
 		$("tbody").append(html);
