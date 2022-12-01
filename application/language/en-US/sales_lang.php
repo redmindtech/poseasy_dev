@@ -255,7 +255,7 @@ $lang['total_return']="Total Return";
 $lang['total_less']="Total Less";
 $lang['last_opening_balance']="Opening Balance";
 $lang['last_closing_balance']="Closing Balance";
-=======
+
 $lang["sales_save"]="Bulk save";
 $lang["sales_bulk_entry"]="Bulk Entry";
 $lang['ro_sale_date_of_transaction'] = "Date of Transaction";
@@ -289,4 +289,4 @@ $lang["ro_sales_opening_balance"] = "Opening Balance";
 $lang["gst_slab"] = "GST Slab";
 $lang["gst_amount"] = "GST Amount";
 $lang["sales_customer_name"] = "Customer Name";
->>>>>>> 007490ef253957475e137373427a807314c1565e
+
