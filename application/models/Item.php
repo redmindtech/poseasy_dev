@@ -48,6 +48,10 @@ class Item extends CI_Model
 	}
 	public function item_name_exists_edit($name_item,$assume)
 	{
+
+
+		$assume = preg_replace('/\s*/', '', $assume);
+		$assume = strtolower($assume);
 		$this->db->select('lower(REPLACE(name," ","")) as name');
 		 $this->db->from('items');
 		 $this->db->where('deleted',0);

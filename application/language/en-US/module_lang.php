@@ -54,6 +54,8 @@ $lang["module_timeclocks_desc"] = "";
 $lang["module_masters"]="Item Category";
 $lang["module_customer_category"]="Customer Category";
 $lang["module_roreceivings"]="Purchase";
+$lang["module_dashboards"] = "Dashboard";
+
 
 
 

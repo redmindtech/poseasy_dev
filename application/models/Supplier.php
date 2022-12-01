@@ -325,5 +325,124 @@ class Supplier extends Person
 			return $this->lang->line('suppliers_cost');
 		}
 	}
+
+
+	public function supplier_info($id)
+	{ 
+		$this->db->select('supplier_id,receiving_time,opening_balance,cheque_number,voucher_no,cheque_date,receiving_time,purchase_amount,paid_amount,rate_difference,payment_mode,purchase_return_amount,discount,closing_balance');
+		$this->db->from('ro_receivings_accounts');
+		$this->db->where('supplier_id',$id );
+		$query = $this->db->get();			
+		$supplier_details = $query->result_array();
+		return $supplier_details;
+
+	}
+	public function supplier_summary($id)
+	{
+		// SELECT SUM(opening_balance) FROM ospos_ro_receivings_accounts WHERE supplier_id=10;
+		$this->db->select('supplier_id,sum(purchase_amount) as purchase_amount,sum(purchase_return_amount) as purchase_return_amount,sum(discount) as discount,sum(rate_difference) as rate_difference');
+		$this->db->from('ro_receivings_accounts');
+		$this->db->where('supplier_id',$id);
+		$query = $this->db->get()->result();			
+		foreach($query as $row)
+			{
+				$supplier_total_open_balance[$row->supplier_id]=array('purchase_amount'=>$row->purchase_amount,
+				'purchase_return_amount'=>$row->purchase_return_amount,
+				'discount'=>$row->discount,
+				'rate_difference'=>$row->rate_difference,							
+				);
+			}
+		 return $supplier_total_open_balance;
+	}
+
+	public function open_close_bal($supplier_id)
+	{
+		$this->db->select('	opening_balance,pending_payables');
+		$this->db->from('ro_receivings_accounts');
+		$this->db->where('supplier_id='.$supplier_id);
+		$query = $this->db->get();			
+		$open_close_bal = $query->result_array();
+		 return $open_close_bal;
+		
+	}
+
+
+	public function new_open_bal($supplier_id)
+	{
+		$this->db->select('opening_balance');
+		$this->db->from('ro_receivings_accounts');
+		$this->db->where("supplier_id=".$supplier_id);
+		$this->db->order_by("id","desc");
+		$this->db->limit(1);
+		$query = $this->db->get();			
+		$open_close_bal = $query->result_array();
+		 return $open_close_bal;
+		
+	}
+
+	public function new_close_bal($supplier_id)
+	{
+		$this->db->select('pending_payables');
+		$this->db->from('ro_receivings_accounts');
+		$this->db->where("supplier_id=".$supplier_id);
+		$this->db->order_by("id","desc");
+		$this->db->limit(1);
+		$query = $this->db->get();			
+		$open_close_bal = $query->result_array();
+		 return $open_close_bal;
+		
+	}
+
+	public function cash($id)
+	{
+		// SELECT  supplier_id,SUM(paid_amount),payment_mode FROM ospos_ro_receivings_accounts 
+		// WHERE payment_mode='Cash' AND supplier_id=10;
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ro_receivings_accounts');
+	$this->db->where(' payment_mode="Cash" and supplier_id='.$id);
+	$query = $this->db->get();			
+	$cash= $query->result_array();
+    return $cash;
+
+	}
+	public function cheque($id)
+	{
+		// SELECT  supplier_id,SUM(paid_amount),payment_mode FROM ospos_ro_receivings_accounts 
+		// WHERE payment_mode!='Cash' AND supplier_id=10;
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ro_receivings_accounts');
+	$this->db->where(' payment_mode="Cheque" and supplier_id='.$id);
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+	
+    return $cheque;
+
+	}
+	public function neft($id)
+	{
+		// SELECT  supplier_id,SUM(paid_amount),payment_mode FROM ospos_ro_receivings_accounts 
+		// WHERE payment_mode!='Cash' AND supplier_id=10;
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ro_receivings_accounts');
+	$this->db->where(' payment_mode="NEFT" and supplier_id='.$id);
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+	
+    return $cheque;
+
+	}
+	public function upi($id)
+	{
+		// SELECT  supplier_id,SUM(paid_amount),payment_mode FROM ospos_ro_receivings_accounts 
+		// WHERE payment_mode!='Cash' AND supplier_id=10;
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ro_receivings_accounts');
+	$this->db->where(' payment_mode="UPI" and supplier_id='.$id);
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+	
+    return $cheque;
+
+	}
 }
 ?>

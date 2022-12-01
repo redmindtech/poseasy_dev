@@ -39,16 +39,74 @@ class Roreceivings extends Secure_Controller
 	{
 		$data_row_cheque['table_headers'] = $this->xss_clean(get_ro_cheque_manage_table_headers());
 		$row=$this->Ro_receiving->cheque_get_info();
-		foreach( $row as $row){
-		$data_rows = $this->xss_clean(get_ro_cheque_data_row( $row));
+
+
 		
-		//echo json_encode($data_rows);
+		
+
+		
+
+
+
+		foreach( $row as $row){
+
+			$data = $this->Ro_receiving->agency_name(29);
+			$company_name_for_id = $data[0]->company_name;
+			$row -> comments = $company_name_for_id;
+			echo $row -> comments;
+			
+			$data_rows = $this->xss_clean(get_ro_cheque_data_row( $row));
+		
+		
 		}
 		
 	   
 		$this->load->view('ro_receivings/cheque_detail', $data_row_cheque);
    }
 
+
+
+   public function supplier_name_validate()
+   {
+	$supplier_name = $this->input->post('supplier_name');
+	if($supplier_name == "Start Typing Supplier's name..."){
+		echo "false";
+	}else{
+		echo "true";
+	}
+   }
+
+
+   public function paid_amount_validate(){
+	$paid_amt = $this->input->post('paid_amount');
+	$payment_mode = $this->input->post('payment_mode');
+	
+	if($paid_amt < 1 && $payment_mode == "Cheque"){
+		echo "false";
+	}else{
+		echo "true";
+	}
+   }
+
+
+//    public function payment_mode_validate(){
+// 	$paid_amt = $this->input->post('paid_amount');
+// 	$payment_mode = $this->input->post('payment_mode');
+// 	//log_message("paid",$paid_amt);
+// 	$purchase_amt = $this->input->post('purchase_amount');
+// 	$mode = false;
+// 	//if($payment_mode == "--Select Payment Mode--" || $payment_mode == "Cash" || $payment_mode == "Cheque" || $payment_mode == "NEFT" || $payment_mode == "UPI"){
+// 		//$mode=true;
+// 		if($paid_amt < 1 && $purchase_amt>0 && $payment_mode== "Cash"){
+
+// 			echo "true";
+// 		}else{
+// 			echo "false";
+// 		}
+// 	//}
+	
+	
+//    }
 		
 
 	/*
@@ -63,6 +121,8 @@ class Roreceivings extends Secure_Controller
 		$order  = $this->input->get('order');
 		$ro_receivings = $this->Ro_receiving->search($search, $limit, $offset, $sort, $order);
 		$total_rows = $this->Ro_receiving->get_found_rows($search);
+
+		$count = $offset+1;
 		
        
 		$data_rows = array();
@@ -72,9 +132,10 @@ class Roreceivings extends Secure_Controller
 
 			$data = $this->Ro_receiving->agency_name($ro_receivings->supplier_id);
 		
-			$data_rows[] = $this->xss_clean(get_ro_receivings_data_row_search($ro_receivings,$data));
+			$data_rows[] = $this->xss_clean(get_ro_receivings_data_row_search($ro_receivings,$data,$count));
+			$count++;
 
-			//$data_rows = $this->xss_clean(get_ro_cheque_data_row( $ro_receivings));
+			
 		
 			
 			
@@ -153,31 +214,59 @@ class Roreceivings extends Secure_Controller
 	public function save($id = -1)
 
 	{	
+
+
+
+		$opening_bal = $this->input->post('opening_balance');
+		$purchase_amt = $this->input->post('purchase_amount');
+		$paid_amt    = $this->input->post('paid_amount');
+		$closing_bal  = $this->input->post('closing_balance');
+		$pending_pay  = $this->input->post('pending_payables');
+
+		
+
+
 		if($this->input->post('payment_mode')=='Cheque')	
 		{
+
+
 			$mode='pending';
-			$date=$this->input->post('cheque_number');
+			$date=$this->input->post('cheque_date');
+  
+			$is_adjust = $this-> input -> post('cheque_processing');
+			if($is_adjust == 'true'){
+ 
+				$mode = 'complete';
+				$closing_bal = $opening_bal + $purchase_amt - $paid_amt;
+				$pending_pay = $opening_bal + $purchase_amt - $paid_amt;
+			}
+
+			
+			
 			
 		}else{
 			$mode='complete';
 			$date="00.00.00";
 		}	
+
+
+		
 		
 		$ro_receivings_data = array(
 		
 			'voucher_no'=> $this->input->post('voucher_no'),
 			'supplier_id' => $this->input->post('supplier_id'),
-			'opening_balance' => $this->input->post('opening_balance'),
-			'purchase_amount' => $this->input->post('purchase_amount'),
-			'paid_amount' => $this->input->post('paid_amount'),
+			'opening_balance' => $opening_bal,
+			'purchase_amount' => $purchase_amt,
+			'paid_amount' => $paid_amt,
 			'payment_mode' => $this->input->post('payment_mode'),
 			'cheque_date' =>$date,
 			'cheque_number' => $this->input->post('cheque_number'),			
-			'closing_balance' => $this->input->post('closing_balance'),
+			'closing_balance' => $closing_bal,
 			'purchase_return_amount' => $this->input->post('purchase_return_amount'),
 			'purchase_return_qty' => $this->input->post('purchase_return_qty'),
 			'discount' => $this->input->post('discount'),
-			'pending_payables' => $this->input->post('pending_payables'),
+			'pending_payables' => $pending_pay,
 			'last_purchase_qty' => $this->input->post('last_purchase_qty'),
 			'rate_difference' => $this->input->post('rate_difference'),
 			// 'total_stock' => $this->input->post('total_stock'),
@@ -234,6 +323,8 @@ class Roreceivings extends Secure_Controller
 		$data['supplier_open_close_bal']=$this->Ro_receiving->open_close_bal($id);
 		$data['cash']=$this->Ro_receiving->cash($supplier_id);
 		$data['cheque']=$this->Ro_receiving->cheque($supplier_id);
+		$data['upi']=$this->Ro_receiving->upi($supplier_id);
+		$data['neft']=$this->Ro_receiving->neft($supplier_id);
 		 $this->load->view('ro_receivings/supplier_form',$data );
 
 	}
@@ -274,7 +365,8 @@ class Roreceivings extends Secure_Controller
 				'voucher_no' => $row[1],
 				
 				'paid_amount'=>$row[5],
-				'payment_mode'=>$row[6],
+				'payment_mode'=>"Cash",
+				'type' => $row[6],
 				'cheque_date'=>"00.00.00",
 				'cheque_number'=>"0",
 				'closing_balance'=>$pending_pay,
@@ -300,6 +392,7 @@ class Roreceivings extends Secure_Controller
 		//   $this->Ro_receiving->save_bulk($save_bulk_entry, $id);
 	}
 	$this->Ro_receiving->save_bulk($save_bulk_entry, $id);
+	
 }
 
 }

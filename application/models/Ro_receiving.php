@@ -180,6 +180,7 @@ class Ro_receiving extends CI_Model
 		
 		$this->db->from('suppliers');
 		$this->db->select('suppliers.company_name,suppliers.person_id');
+		$this->db->where('deleted',0);
 		$query = $this->db->get();			
 		$rocompanyid = $query->result();
 		return $rocompanyid;
@@ -272,6 +273,7 @@ class Ro_receiving extends CI_Model
 			$sub_query = $this->db->get_compiled_select();
 			$this->db->select('id,supplier_id,opening_balance,cheque_number,voucher_no,cheque_date,receiving_time,purchase_amount,payment_mode,paid_amount,purchase_return_amount,closing_balance,purchase_return_qty,discount,pending_payables,last_purchase_qty,total_stock, receiving_time');
 			$this->db->from('ro_receivings_accounts');
+			$this->db->join('suppliers AS suppliers', 'suppliers.person_id = ro_receivings_accounts.supplier_id', 'left');
 			$this->db->where("Id IN ($sub_query)");		
 			$query = $this->db->get()->result();					
 			$num_of_row=count($query);
@@ -284,9 +286,12 @@ class Ro_receiving extends CI_Model
 			$sub_query = $this->db->get_compiled_select();
 			$this->db->select('id,supplier_id,opening_balance,cheque_number,voucher_no,cheque_date,receiving_time,purchase_amount,payment_mode,paid_amount,purchase_return_amount,closing_balance,purchase_return_qty,discount,pending_payables,last_purchase_qty,total_stock, receiving_time');
 			$this->db->from('ro_receivings_accounts');
+			$this->db->join('suppliers AS suppliers', 'suppliers.person_id = ro_receivings_accounts.supplier_id', 'left');
 			$this->db->where("Id IN ($sub_query)");						
 			$this->db->group_start();
-			$this->db->like('id', $search);
+			$this->db->like('payment_mode', $search);
+			$this->db->or_like('company_name', $search);
+			$this->db->or_like('agency_name', $search);
 			$this->db->or_like('discount', $search);
 			 
 			$this->db->group_end();	
@@ -365,11 +370,39 @@ class Ro_receiving extends CI_Model
 		// WHERE payment_mode!='Cash' AND supplier_id=10;
 	$this->db->select('SUM(paid_amount) as paid_amount');
 	$this->db->from('ro_receivings_accounts');
-	$this->db->where(' payment_mode!="Cash" and supplier_id='.$id);
+	$this->db->where(' payment_mode="Cheque" and supplier_id='.$id);
 	$query = $this->db->get();			
 	$cheque= $query->result_array();
 	
     return $cheque;
+
+	}
+
+
+	
+	public function upi($id)
+	{
+		// SELECT  supplier_id,SUM(paid_amount),payment_mode FROM ospos_ro_receivings_accounts 
+		// WHERE payment_mode='Cash' AND supplier_id=10;
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ro_receivings_accounts');
+	$this->db->where(' payment_mode="UPI" and supplier_id='.$id);
+	$query = $this->db->get();			
+	$upi= $query->result_array();
+    return $upi;
+
+	}
+	public function neft($id)
+	{
+		// SELECT  supplier_id,SUM(paid_amount),payment_mode FROM ospos_ro_receivings_accounts 
+		// WHERE payment_mode!='Cash' AND supplier_id=10;
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ro_receivings_accounts');
+	$this->db->where(' payment_mode="neft" and supplier_id='.$id);
+	$query = $this->db->get();			
+	$neft= $query->result_array();
+	
+    return $neft;
 
 	}
 	public function save_bulk($save_bulk_entry,$id)

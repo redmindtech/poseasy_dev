@@ -166,7 +166,9 @@ $autoload['model'] = array(
 	'Customers_category',
 	'Ro_receiving',
 	'Roreceivings_cheques',
-	'Dashboard'
+	'Dashboard',
+	'Ro_sale',
+	'Ro_sales_cheques'
 	
 
 );

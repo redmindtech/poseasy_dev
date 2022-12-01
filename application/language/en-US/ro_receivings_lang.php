@@ -1,7 +1,7 @@
 <?php 
 
 $lang["receivings_amount_due"] = "";
-$lang["Roreceivings_new"] = "New Receivings";
+$lang["Roreceivings_new"] = "Add Purchase";
 $lang["ro_receiving_category"] = "Category";
 $lang["company_name"] = "Company Name";
 $lang["ro_receivings_company_name"] = "Company Name";
@@ -53,10 +53,15 @@ $lang['supplier_none']="None";
 
 $lang['date_of_transaction'] = "Date of Transaction";
 $lang['cheque_no'] ="Cheque No.";
-$lang['cheque_post_date'] = "Cheque Post Date";
+$lang['cheque_post_date'] = "Cheque Date";
 $lang['purchase_amount'] = "Purchase Amount";
 $lang['paid_amount'] = "Paid Amount";
 $lang['return_amount'] = "Return Amount";
 $lang['return_quantity'] = "Return Quantity";
 $lang['invoice_no'] = "Invoice No";
 $lang["Roreceivings_save"]="Bulk save";
+$lang["Roreceivings_cheque_no_Roreceivings_cheque_to_display"] = "No records found";
+$lang["ro_receivings_total_neft"]  = "Total NEFT";
+$lang["ro_receivings_total_upi"]  = "Total UPI";
+$lang["ro_receivings_paid_amount_required"] = "Paid amount is required for cheque transactions";
+$lang["cheque_number_required"] = "Please enter Cheque number";

@@ -42,7 +42,9 @@ class Roreceivings_cheque extends Secure_Controller
 		$data_rows = array();
 		foreach($ro_receivings_accounts->result() as $ro_receivings_accounts)
 		{
-			$data_rows[] = $this->xss_clean(get_ro_cheque_data_row($ro_receivings_accounts,$count));
+
+			$data = $this->Ro_receiving->agency_name($ro_receivings_accounts->supplier_id);
+			$data_rows[] = $this->xss_clean(get_ro_cheque_data_row($ro_receivings_accounts,$count,$data));
 			$count++;
 		}
 
@@ -55,6 +57,24 @@ class Roreceivings_cheque extends Secure_Controller
 		echo json_encode($data_row);
 	}
      
+
+	public function cheque_reject(){
+
+		$id = $_POST['id'];
+
+		$supplier_id = $_POST['supplier_id'];
+		$overall_val = $_POST['overall_val'];
+		$discount = $_POST['discount'];
+		$pending_payables = $overall_val - $discount;
+		
+
+		
+		$this->Roreceivings_cheques->reject_cheque($id,$overall_val,$pending_payables);
+
+
+
+
+	}
 	//Save new form
 	public function cheque_valid(){
 		

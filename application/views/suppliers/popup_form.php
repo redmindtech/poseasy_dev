@@ -14,63 +14,64 @@
 		width:100%;
 		margin-top: 20px;
 	}
+	#supplier_table{
+		width:100%;
+		margin-top: 20px;
+	}
 </style>
 <?php
-	if ($controller_name == 'suppliers')
+	if ($controller_name == 'suppliers' && $supplier != NULL)
 	{
 	?>
-<div class="supplier_div">
-<table id="supplier_table" >
-	<thead>
-		<tr>
-			<th>Date</th>
-			<th>Opening Balance</th>
-			<th>Purchase</th>
-			<th>Paid Amount</th>
-			<th>Rate Difference</th>
-			<th>Payment Mode</th>
-			<th>Return</th>
-			<th>Less</th>
-			<th>Closing Balance</th>
+
+
+
+<table id="supplier_table" class="table table-striped table-hover">
+<thead>
+		<tr bgcolor="#CCC">
+			
+			
+			<th><?php echo $this->lang->line('supplier_date'); ?></th>
+			<th><?php echo $this->lang->line('supplier_balance'); ?></th>
+			<th><?php echo $this->lang->line('supplier_purchase_amount'); ?></th>
+			<th><?php echo $this->lang->line('supplier_paid_amount'); ?></th>
+			<th><?php echo $this->lang->line('supplier_rate_difference'); ?></th>
+			<th><?php echo $this->lang->line('supplier_payment_mode'); ?></th>
+			<th><?php echo $this->lang->line('supplier_purchase_return_amount'); ?></th>
+			<th><?php echo $this->lang->line('supplier_less'); ?></th>
+			<th><?php echo $this->lang->line('supplier_closing_balance'); ?></th>
+
 		</tr>
 	</thead>
 	<tbody>
+	
+	
+	<?php
+		foreach($supplier as $supplier)
+		{
+		?>
 		<tr>
-			<td>01/04/2022</td>
-			<td>9,98,710</td>
-			<td>-</td>
-			<td>2,27,900</td>
-			<td>-</td>
-			<td>Cash/cheque</td>
-			<td>-</td>
-			<td>-</td>
-			<td>9,38,170</td>
+		
+	<td><?php echo substr_replace($supplier['receiving_time'] ,"", -8); ?></td>
+<td><?php echo $supplier['opening_balance']; ?></td>
+<td><?php echo $supplier['purchase_amount']; ?></td>
+<td><?php echo $supplier['paid_amount']; ?></td>
+<td><?php echo $supplier['rate_difference']; ?></td>
+<td><?php echo $supplier['payment_mode']; ?></td>
+<td><?php echo $supplier['purchase_return_amount']; ?></td>
+<td><?php echo $supplier['discount']; ?></td>
+<td><?php echo $supplier['closing_balance']; ?></td>
+
+
+
 		</tr>
-				<tr>
-			<td>14/04/2002</td>
-			<td>52,810</td>
-			<td>-</td>
-			<td>48,900</td>
-			<td>-</td>
-			<td>Cash/cheque</td>
-			<td>-</td>
-			<td>-</td>
-			<td>538</td>
-		</tr>
-				<tr>
-			<td>14/04/2001</td>
-			<td>98,710</td>
-			<td>-</td>
-			<td>55,900</td>
-			<td>-</td>
-			<td>Cash/cheque</td>
-			<td>-</td>
-			<td>-</td>
-			<td>170</td>
-		</tr>
-	</tbody>
+	<?php
+		}
+		?>
+
 </table>
-</div>
+
+
 
 <div class="supplier_div">
 <table id="supplier_table" >
@@ -80,36 +81,164 @@
 		</tr>
 	</thead>
 	<tbody>
+
+			<?php
+			foreach($supplier_summary as $supplier_summary)
+			{
+			?>
+				<tr>
+				<th><?php echo $this->lang->line('total_purchase'); ?></th>
+				<td><?php echo $supplier_summary['purchase_amount'];?></td>
+				<th><?php echo $this->lang->line('total_neft'); ?></th>
+				<?php foreach($neft as $neft){
+				
+				if(!empty($neft['paid_amount'])){
+				?>
+					<td><?php echo $neft['paid_amount'];?></td>
+				<?php 
+			}
+			else{
+				?>
+				<td>0.00</td>
+				<?php
+			}
+			}?>
+				
+				</tr>
+				<tr>
+				<?php
+				foreach($cheque as $cheque)
+				{
+				?>
+					<th><?php echo $this->lang->line('total_cheque'); ?></th>
+					<?php if(!empty($cheque['paid_amount'])){?>
+					<td><?php echo $cheque['paid_amount'];?></td>
+				<?php
+					}
+					else{
+						?>
+						<td>0.00</td>
+						<?php
+					}
+				}
+				?>
+				<th><?php echo $this->lang->line('total_return'); ?></th>
+				<td><?php echo $supplier_summary['purchase_return_amount'];?></td>
+				
+
+
+				</tr>
+
+				<tr>
+				<th><?php echo $this->lang->line('total_rate_difference'); ?></th>
+				<td><?php echo $supplier_summary['rate_difference'];?></td>
+
+
+				<th><?php echo $this->lang->line('total_less'); ?></th>
+				<td><?php echo $supplier_summary['discount'];?></td></tr>
+				
+
+
+
+
+				</tr>
+
+				<tr>
+				<th><?php echo $this->lang->line('total_cash'); ?></th>
+				<?php
+				foreach($cash as $cash)
+				{
+					if(!empty($cash['paid_amount']))
+					{
+				?>
+					<td><?php echo $cash['paid_amount'];?></td>
+				<?php
+				}
+				else{
+				?>
+				<td>0.00</td>
+				<?php
+				}
+				}
+				?>
+			<?php
+			}
+			?>
+
+			<th><?php echo $this->lang->line('last_opening_balance'); ?></th>
+				<?php foreach($new_supplier_open_bal as $new_supplier_open_bal){
+				
+				if(!empty($new_supplier_open_bal['opening_balance'])){
+				?>
+					<td><?php echo $new_supplier_open_bal['opening_balance'];?></td>
+				<?php 
+			}
+			else{
+				?>
+				<td>0.00</td>
+				<?php
+			}
+			}?>
+
+
+
+			
+			
+		</tr>
+
+
 		<tr>
-			<th>Total Purchase</th>
-			<td>9,98,710</td>
-			<th>Total Return</th>
-			<td>2,27,900</td>
-		</tr>
-				<tr>
-			<th>Total Cheque</th>
-			<td>52,810</td>
-			<th>Total Less</th>
-			<td>48,900</td>
-		</tr>
-				<tr>
-			<th>Total Rate Difference</th>
-			<td>98,710</td>
-			<th>Opening Balance</th>
-			<td>55,900</td>
-		</tr>
-						<tr>
-			<th>Total Cash</th>
-			<td>710</td>
-			<th>Closing Balance</th>
-			<td>5,900</td>
-		</tr>
+				<th><?php echo $this->lang->line('total_upi'); ?></th>
+				<?php foreach($upi as $upi){
+				
+				if(!empty($upi['paid_amount'])){
+				?>
+					<td><?php echo $upi['paid_amount'];?></td>
+				<?php 
+			}
+			else{
+				?>
+				<td>0.00</td>
+				<?php
+			}
+			}?>
+			<th><?php echo $this->lang->line('last_closing_balance'); ?></th>
+			<?php foreach($new_supplier_close_bal as $new_supplier_close_bal){
+				
+				if($new_supplier_close_bal['pending_payables']){
+				?>
+				<td><?php echo $new_supplier_close_bal['pending_payables'];?></td>
+			<?php }
+			else{
+				?>
+				<td>0.00</td>
+				<?php
+			}
+		}?>
+				
+				</tr>
+
+
+
+
+		
+
+
+
 	</tbody>
 </table>
 </div>
 
+<?php
+	}else{
+		$null_message = "This supplier has no transaction";
+	?>
+	
+	<h3><center><?php echo $null_message; ?></center></h3>
 
 	<?php
 	}
 	?>
-<?php $this->load->view("partial/footer"); ?>
+
+
+
