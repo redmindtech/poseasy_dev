@@ -69,7 +69,7 @@ class Ro_receiving extends CI_Model
 		$sub_query = $this->db->get_compiled_select();
 		$this->db->select('id,supplier_id,opening_balance,purchase_amount,payment_mode,paid_amount,purchase_return_amount,closing_balance,purchase_return_qty,discount,pending_payables,last_purchase_qty,total_stock, receiving_time');
 		$this->db->from('ro_receivings_accounts');
-		$this->db->where("Id IN ($sub_query),deleted,0");
+		$this->db->where("Id IN ($sub_query)");
 		
 		$query = $this->db->get()->result();
 					// //Get all the fields from items table

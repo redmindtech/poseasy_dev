@@ -367,6 +367,17 @@ class Customers extends Persons
 	{
 		$this->load->view('customers/form_csv_import', NULL);
 	}
+	public function customers_details($customer_id)
+	{
+		 $data['customer_sales']=$this->Customer-> customer_sales($customer_id);
+		 $data['overall_customer_sales']=$this->Customer-> overall_customer_sales($customer_id);
+		 $data['cash']=$this->Customer->cash($customer_id);
+		 $data['cheque']=$this->Customer->cheque($customer_id);
+		 $data['new_open_bal']=$this->Customer->new_open_bal($customer_id);
+		 $data['new_close_bal']=$this->Customer->new_close_bal($customer_id);
+		$this->load->view('customers/popup_form',$data);
+
+	}
 
 	public function do_csv_import()
 	{

@@ -406,5 +406,67 @@ class Customer extends Person
 
 		return $this->db->get();
 	}
+	public function customer_sales($id)
+	{ 
+		$this->db->select('*')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id);
+		$query = $this->db->get();			
+		$customer_details = $query->result_array();
+		return $customer_details;
+	}
+
+	public function overall_customer_sales($id)
+	{ 
+		$this->db->select('SUM(sales_amount) as purchased_amount')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id);
+		$query = $this->db->get();			
+		$customer_details = $query->result_array();
+		return $customer_details;
+	}
+
+	public function cheque($id)
+	{
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ospos_ro_sales');
+	$this->db->where('payment_type="Cheque" and customer_id='.$id);
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+    return $cheque;
+
+	}
+
+	public function cash($id)
+	{
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ospos_ro_sales');
+	$this->db->where('payment_type="Cash" and customer_id='.$id);
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+    return $cheque;
+	}
+
+	public function new_open_bal($customer_id)
+	{
+		$this->db->select('opening_balance');
+		$this->db->from('ospos_ro_sales');
+		$this->db->where("customer_id=".$customer_id);
+		$this->db->order_by("id","desc");
+		$this->db->limit(1);
+		$query = $this->db->get();			
+		$open_bal = $query->result_array();
+		 return $open_bal;
+		
+	}
+
+	public function new_close_bal($customer_id)
+	{
+		$this->db->select('closing_balance');
+		$this->db->from('ospos_ro_sales');
+		$this->db->where("customer_id=".$customer_id);
+		$this->db->order_by("id","desc");
+		$this->db->limit(1);
+		$query = $this->db->get();			
+		$close_bal = $query->result_array();
+		 return $close_bal;
+		
+	}
 }
 ?>

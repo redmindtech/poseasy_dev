@@ -574,8 +574,10 @@ class Sale extends CI_Model
 	 * The sales_taxes variable needs to be initialized to an empty array before calling
 	 */
 	public function save($sale_id, &$sale_status, &$items, $customer_id, $employee_id, $comment, $invoice_number,
-							$work_order_number, $quote_number, $sale_type, $payments, $dinner_table, &$sales_taxes)
+							$work_order_number, $quote_number, $sale_type, $payments, $dinner_table, &$sales_taxes,$sale_item_id,$sale_tax_id,$total,$opening_bal,$closing_bal)
 	{
+		
+		 log_message('debug',print_r($payments,TRUE));
 		if($sale_id != -1)
 		{
 			$this->clear_suspended_sale_detail($sale_id);
@@ -589,17 +591,23 @@ class Sale extends CI_Model
 		}
 
 		$sales_data = array(
-			'sale_time'			=> date('Y-m-d H:i:s'),
+			'date_added'			=> date('Y-m-d H:i:s'),
 			'customer_id'		=> $this->Customer->exists($customer_id) ? $customer_id : NULL,
 			'employee_id'		=> $employee_id,
-			'comment'			=> $comment,
-			'sale_status'		=> $sale_status,
-			'invoice_number'	=> $invoice_number,
-			'quote_number'		=> $quote_number,
-			'work_order_number'	=> $work_order_number,
-			'dinner_table_id'	=> $dinner_table,
-			'sale_status'		=> $sale_status,
-			'sale_type'			=> $sale_type
+			// 'comments'			=> $item['comment'],
+			// 'sale_status'		=> $sale_status,
+			'voucher_no'	=> $invoice_number,
+			'quote_no'		=> $quote_number,
+			'mode'          =>'I',
+			'sales_amount'=>$total,
+			'opening_balance'=>$opening_bal,
+			'closing_balance'=>$closing_bal,
+			// 'work_order_number'	=> $work_order_number,
+			// 'dinner_table_id'	=> $dinner_table,
+			// 'sale_status'		=> $sale_status,
+			 'type'			=> $sale_type,
+			 'status'=>'complete'
+			
 		);
 
 		// Run these queries as a transaction, we want to make sure we do all or nothing
@@ -607,53 +615,69 @@ class Sale extends CI_Model
 
 		if($sale_id == -1)
 		{
-			$this->db->insert('sales', $sales_data);
+			$this->db->insert('ro_sales', $sales_data);
 			$sale_id = $this->db->insert_id();
 		}
 		else
 		{
-			$this->db->where('sale_id', $sale_id);
-			$this->db->update('sales', $sales_data);
+			$this->db->where('id', $sale_id);
+			$this->db->update('ro_sales', $sales_data);
 		}
 		$total_amount = 0;
 		$total_amount_used = 0;
 		foreach($payments as $payment_id=>$payment)
 		{
-			if(!empty(strstr($payment['payment_type'], $this->lang->line('sales_giftcard'))))
-			{
-				// We have a gift card and we have to deduct the used value from the total value of the card.
-				$splitpayment = explode( ':', $payment['payment_type'] );
-				$cur_giftcard_value = $this->Giftcard->get_giftcard_value( $splitpayment[1] );
-				$this->Giftcard->update_giftcard_value( $splitpayment[1], $cur_giftcard_value - $payment['payment_amount'] );
+			// if(!empty(strstr($payment['payment_type'], $this->lang->line('sales_giftcard'))))
+			// {
+			// 	// We have a gift card and we have to deduct the used value from the total value of the card.
+			// 	$splitpayment = explode( ':', $payment['payment_type'] );
+			// 	$cur_giftcard_value = $this->Giftcard->get_giftcard_value( $splitpayment[1] );
+			// 	$this->Giftcard->update_giftcard_value( $splitpayment[1], $cur_giftcard_value - $payment['payment_amount'] );
+			// }
+			// elseif(!empty(strstr($payment['payment_type'], $this->lang->line('sales_rewards'))))
+			// {
+			// 	$cur_rewards_value = $this->Customer->get_info($customer_id)->points;
+			// 	$this->Customer->update_reward_points_value($customer_id, $cur_rewards_value - $payment['payment_amount'] );
+			// 	$total_amount_used = floatval($total_amount_used) + floatval($payment['payment_amount']);
+			// }
+			$status='complete';
+			if($payment['payment_type']=='Cheque'){
+				$status='pending';
 			}
-			elseif(!empty(strstr($payment['payment_type'], $this->lang->line('sales_rewards'))))
-			{
-				$cur_rewards_value = $this->Customer->get_info($customer_id)->points;
-				$this->Customer->update_reward_points_value($customer_id, $cur_rewards_value - $payment['payment_amount'] );
-				$total_amount_used = floatval($total_amount_used) + floatval($payment['payment_amount']);
+			else{
+
+				$status='complete';
 			}
 
 			$sales_payments_data = array(
-				'sale_id'		  => $sale_id,
+				//  'id'		  => $sale_id,
 				'payment_type'	  => $payment['payment_type'],
-				'payment_amount'  => $payment['payment_amount'],
-				'cash_refund'     => $payment['cash_refund'],
-				'cash_adjustment' => $payment['cash_adjustment'],
+				'paid_amount'  => $payment['payment_amount'],
+				'sales_cheque_no'=>$payment['sales_cheque_no'],
+				'sales_cheque_date'=>	$payment['sales_cheque_date'],
+				'status'=>$status,
+				// 'cash_refund'     => $payment['cash_refund'],
+				// /'cash_adjustment' => $payment['cash_adjustment'],
 				'employee_id'	  => $employee_id
+			// 	sales_cheque_date] => 2022-12-01
+            // [sales_cheque_no] => 5677
 			);
+			
+			$this->db->where('id',$sale_id);
 
-			$this->db->insert('sales_payments', $sales_payments_data);
-
-			$total_amount = floatval($total_amount) + floatval($payment['payment_amount']) - floatval($payment['cash_refund']);
+			$this->db->update('ro_sales', $sales_payments_data);
+			
+			// $total_amount = floatval($total_amount) + floatval($payment['payment_amount']) - floatval($payment['cash_refund']);
 
 		}
 		
-		$this->save_customer_rewards($customer_id, $sale_id, $total_amount, $total_amount_used);
+		// $this->save_customer_rewards($customer_id, $sale_id, $total_amount, $total_amount_used);
 		
-		$customer = $this->Customer->get_info($customer_id);
+		// $customer = $this->Customer->get_info($customer_id);
 
 		foreach($items as $line=>$item)
 		{
+			
 			$cur_item_info = $this->Item->get_info($item['item_id']);
 
 			if($item['price'] == 0.00)
@@ -662,70 +686,91 @@ class Sale extends CI_Model
 			}
 
 			$sales_items_data = array(
-				'sale_id'			=> $sale_id,
+				'sales_id'			=> $sale_id,
 				'item_id'			=> $item['item_id'],
-				'line'				=> $item['line'],
-				'description'		=> character_limiter($item['description'], 255),
-				'serialnumber'		=> character_limiter($item['serialnumber'], 30),
-				'quantity_purchased'=> $item['quantity'],
-				'discount'			=> $item['discount'],
-				'discount_type'		=> $item['discount_type'],
-				'item_cost_price'	=> $item['cost_price'],
-				'item_unit_price'	=> $item['price'],
-				'item_location'		=> $item['item_location'],
-				'print_option'		=> $item['print_option']
+				// 'line'				=> $item['line'],
+				// 'description'		=> character_limiter($item['description'], 255),
+				// 'serialnumber'		=> character_limiter($item['serialnumber'], 30),
+				 'qty'=> $item['quantity'],
+				// 'discount'			=> $item['discount'],
+				// 'discount_type'		=> $item['discount_type'],
+				// 'item_cost_price'	=> $item['cost_price'],
+				'unit_price'	=> $item['price'],
+				'sales_amount'=>$item['total'],
+				'discount'=>$item['discount'] ,
+				'other_cost'=>$item['other_cost'],
+				 'comments'=>$item['item_comments']
+				// 'item_location'		=> $item['item_location'],
+				// 'print_option'		=> $item['print_option']
 			);
+			// if($sale_item_id == -1)
+			// {
+				$this->db->insert('ro_sales_items', $sales_items_data);
+				$sale_item_id = $this->db->insert_id();
+			// }
+			// else
+			// {
+			// 	$this->db->where('id', $sale_item_id);
+			// 	$this->db->update('ro_sales_items', $sales_items_data);
+			// }
+			// $this->db->insert('sales_items', $sales_items_data);
+			$item_tax=array(
+				'sales_id'			=> $sale_id,
+				'item_id'			=> $item['item_id'],
+				'hsn_id'			=>$item['hsn_id'],
+				'item_tax_amount'=>$item['total_tax'] ,
+				
+			);
+			$this->db->insert('ro_sales_items_tax', $item_tax);
+			$item_tax_id= $this->db->insert_id();
+			// if($cur_item_info->stock_type == HAS_STOCK && $sale_status == COMPLETED)
+			// {
+			// 	// Update stock quantity if item type is a standard stock item and the sale is a standard sale
+			// 	$item_quantity = $this->Item_quantity->get_item_quantity($item['item_id'], $item['item_location']);
+			// 	$this->Item_quantity->save(array('quantity'	=> $item_quantity->quantity - $item['quantity'],
+			// 		'item_id'		=> $item['item_id'],
+			// 		'location_id'	=> $item['item_location']), $item['item_id'], $item['item_location']);
 
-			$this->db->insert('sales_items', $sales_items_data);
+			// 	// if an items was deleted but later returned it's restored with this rule
 
-			if($cur_item_info->stock_type == HAS_STOCK && $sale_status == COMPLETED)
-			{
-				// Update stock quantity if item type is a standard stock item and the sale is a standard sale
-				$item_quantity = $this->Item_quantity->get_item_quantity($item['item_id'], $item['item_location']);
-				$this->Item_quantity->save(array('quantity'	=> $item_quantity->quantity - $item['quantity'],
-					'item_id'		=> $item['item_id'],
-					'location_id'	=> $item['item_location']), $item['item_id'], $item['item_location']);
+			// 	if($item['quantity'] < 0)
+			// 	{
+			// 		$this->Item->undelete($item['item_id']);
+			// 	}
 
-				// if an items was deleted but later returned it's restored with this rule
+			// 	// Inventory Count Details
+			// 	$sale_remarks = 'POS '.$sale_id;
+			// 	$inv_data = array(
+			// 		'trans_date'		=> date('Y-m-d H:i:s'),
+			// 		'trans_items'		=> $item['item_id'],
+			// 		'trans_user'		=> $employee_id,
+			// 		'trans_location'	=> $item['item_location'],
+			// 		'trans_comment'		=> $sale_remarks,
+			// 		'trans_inventory'	=> -$item['quantity']
+			// 	);
+			// 	$this->Inventory->insert($inv_data);
+			// }
 
-				if($item['quantity'] < 0)
-				{
-					$this->Item->undelete($item['item_id']);
-				}
-
-				// Inventory Count Details
-				$sale_remarks = 'POS '.$sale_id;
-				$inv_data = array(
-					'trans_date'		=> date('Y-m-d H:i:s'),
-					'trans_items'		=> $item['item_id'],
-					'trans_user'		=> $employee_id,
-					'trans_location'	=> $item['item_location'],
-					'trans_comment'		=> $sale_remarks,
-					'trans_inventory'	=> -$item['quantity']
-				);
-				$this->Inventory->insert($inv_data);
-			}
-
-			$this->Attribute->copy_attribute_links($item['item_id'], 'sale_id', $sale_id);
+			// $this->Attribute->copy_attribute_links($item['item_id'], 'sale_id', $sale_id);
 		}
 
-		if($customer_id == -1 || $customer->taxable)
-		{
-			$this->save_sales_tax($sale_id, $sales_taxes[0]);
-			$this->save_sales_items_taxes($sale_id, $sales_taxes[1]);
-		}
+		// if($customer_id == -1 || $customer->taxable)
+		// {
+		// 	$this->save_sales_tax($sale_id, $sales_taxes[0]);
+		// 	$this->save_sales_items_taxes($sale_id, $sales_taxes[1]);
+		// }
 
-		if($this->config->item('dinner_table_enable') == TRUE)
-		{
-			if($sale_status == COMPLETED)
-			{
-				$this->Dinner_table->release($dinner_table);
-			}
-			else
-			{
-				$this->Dinner_table->occupy($dinner_table);
-			}
-		}
+		// if($this->config->item('dinner_table_enable') == TRUE)
+		// {
+		// 	if($sale_status == COMPLETED)
+		// 	{
+		// 		$this->Dinner_table->release($dinner_table);
+		// 	}
+		// 	else
+		// 	{
+		// 		$this->Dinner_table->occupy($dinner_table);
+		// 	}
+		// }
 
 		$this->db->trans_complete();
 
@@ -1438,6 +1483,68 @@ class Sale extends CI_Model
 			}
 		}
 	}
+	
+	public function sales_price($category_id,$item_id)
+	{
+		$this->db->select('sales_price');
+		$this->db->from('item_customer_category_price');
+		$this->db->where('customer_category_id',$category_id);
+		$this->db->where('item_id ',$item_id);
+		$query=$this->db->get();
+		$result=$query->result();
+		foreach($result as $row){
 
+			return $row->sales_price;
+		}
+		
+		
+	}
+	
+	public function hsn_id($hsn_code){
+		$this->db->select('tax_percentage,id');
+		$this->db->from('item_hsn_code');
+		$this->db->where('hsn_code',$hsn_code);
+		$query=$this->db->get();
+		$result=$query->result();
+		
+		  return $result;
+		
+		
+	 }
+	//  SELECT closing_balance FROM ospos_ro_sales 
+	//  WHERE id IN ( SELECT MAX(id) FROM ospos_sales 
+	// WHERE customer_id=68  GROUP BY customer_id);
+	// opening_bal($customer_id)
+	 public function opening_bal($customer_id){
+		
+		$this->db->select('max(id)');		
+		$this->db->from('ro_sales');
+		$this->db->where('customer_id ',$customer_id);
+		$this->db->where('type != 3');	
+		$this->db->group_by('customer_id');
+		
+		$sub_query = $this->db->get_compiled_select();
+		$this->db->select('closing_balance');
+		$this->db->from('ro_sales');
+		$this->db->where("Id IN ($sub_query)");	
+		$this->db->where('type != 3');	
+		$query = $this->db->get()->result();
+					
+		if($query==NULL || $query=='0')
+		{
+			$query='0.00';
+		 
+			return $query;
+		}
+		foreach($query as $row)
+		{
+			return $row->closing_balance;
+		}
+		return $query;
+		
+}
+
+		
+	 
 }
 ?>

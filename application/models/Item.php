@@ -865,6 +865,7 @@ class Item extends CI_Model
 			}
 		}
 	}
+	
 
 	public function get_search_suggestions($search, $filters = array('is_deleted' => FALSE, 'search_custom' => FALSE), $unique = FALSE, $limit = 25)
 	{
@@ -881,6 +882,7 @@ class Item extends CI_Model
 		{
 			$suggestions[] = array('value' => $row->item_id, 'label' => $this->get_search_suggestion_label($row));
 		}
+	
 
 		$this->db->select($this->get_search_suggestion_format('item_id, item_number, pack_name'));
 		$this->db->from('items');
@@ -950,6 +952,7 @@ class Item extends CI_Model
 					$suggestions[] = array('value' => $row->item_id, 'label' => $this->get_search_suggestion_label($row));
 				}
 			}
+
 		}
 
 		//only return $limit suggestions
@@ -1019,6 +1022,7 @@ class Item extends CI_Model
 			{
 				$suggestions[] = array('label' => $row->company_name);
 			}
+		
 
 			//Search by description
 			$this->db->select($this->get_search_suggestion_format('item_id, name, pack_name, description'));

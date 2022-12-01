@@ -128,6 +128,7 @@ class Sales extends Secure_Controller
 			$this->sale_lib->set_customer($customer_id);
 			$discount = $this->Customer->get_info($customer_id)->discount;
 			$discount_type = $this->Customer->get_info($customer_id)->discount_type;
+		
 
 			// apply customer default discount to items that have 0 discount
 			if($discount != '')
@@ -259,6 +260,7 @@ class Sales extends Secure_Controller
 		$data = array();
 
 		$payment_type = $this->input->post('payment_type');
+
 		if($payment_type !== $this->lang->line('sales_giftcard'))
 		{
 			$this->form_validation->set_rules('amount_tendered', 'lang:sales_amount_tendered', 'trim|required|callback_numeric');
@@ -350,18 +352,26 @@ class Sales extends Secure_Controller
 				$sales_total = $this->sale_lib->get_total(FALSE);
 
 				$amount_tendered = $this->input->post('amount_tendered');
-				$this->sale_lib->add_payment($payment_type, $amount_tendered);
+				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL);
 				$cash_adjustment_amount = $amount_due - $sales_total;
 				if($cash_adjustment_amount <> 0)
 				{
 					$this->session->set_userdata('cash_mode', CASH_MODE_TRUE);
-					$this->sale_lib->add_payment($this->lang->line('sales_cash_adjustment'), $cash_adjustment_amount, CASH_ADJUSTMENT_TRUE);
+					$this->sale_lib->add_payment($this->lang->line('sales_cash_adjustment'), $cash_adjustment_amount, CASH_ADJUSTMENT_TRUE,NULL,NULL);
 				}
+			}
+			elseif($payment_type === $this->lang->line("sales_check"))
+			{  
+				 log_message('debug',print_r('check',TRUE));
+				$check_date=$this->input->post('cheque_date');
+				$check_number=$this->input->post('cheque_number');
+				$amount_tendered = $this->input->post('amount_tendered');
+				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,$check_date,$check_number);
 			}
 			else
 			{
 				$amount_tendered = $this->input->post('amount_tendered');
-				$this->sale_lib->add_payment($payment_type, $amount_tendered);
+				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL);
 			}
 		}
 
@@ -382,33 +392,43 @@ class Sales extends Secure_Controller
 
 		$discount = $this->config->item('default_sales_discount');
 		$discount_type = $this->config->item('default_sales_discount_type');
-
+		
 		// check if any discount is assigned to the selected customer
 		$customer_id = $this->sale_lib->get_customer();
+		// $comments=$this->input->post('item_comments');
+			// log_message('debug',print_r($comments,TRUE));
 		if($customer_id != -1)
 		{
 			// load the customer discount if any
 			$customer_discount = $this->Customer->get_info($customer_id)->discount;
 			$customer_discount_type = $this->Customer->get_info($customer_id)->discount_type;
+			$category_id = $this->Customer->get_info($customer_id)->customer_category_name;
 			if($customer_discount != '')
 			{
 				$discount = $customer_discount;
 				$discount_type = $customer_discount_type;
 			}
 		}
-
+ 
 		$item_id_or_number_or_item_kit_or_receipt = $this->input->post('item');
+		$item_id=$this->input->post('item');
+		
+		$sale_price=$this->Sale->sales_price($category_id,$item_id);
+	
 		$this->token_lib->parse_barcode($quantity, $price, $item_id_or_number_or_item_kit_or_receipt);
 		$mode = $this->sale_lib->get_mode();
+		log_message('debug',print_r($mode,true));
 		$quantity = ($mode == 'return') ? -$quantity : $quantity;
 		$item_location = $this->sale_lib->get_sale_location();
 
 		if($mode == 'return' && $this->Sale->is_valid_receipt($item_id_or_number_or_item_kit_or_receipt))
 		{
+		
 			$this->sale_lib->return_entire_sale($item_id_or_number_or_item_kit_or_receipt);
 		}
 		elseif($this->Item_kit->is_valid_item_kit($item_id_or_number_or_item_kit_or_receipt))
 		{
+			
 			// Add kit item to order if one is assigned
 			$pieces = explode(' ', $item_id_or_number_or_item_kit_or_receipt);
 
@@ -432,10 +452,11 @@ class Sales extends Secure_Controller
 			}
 
 			$print_option = PRINT_ALL; // Always include in list of items on invoice
-
+			
+			
 			if(!empty($kit_item_id))
 			{
-				if(!$this->sale_lib->add_item($kit_item_id, $quantity, $item_location, $discount, $discount_type, PRICE_MODE_KIT, $kit_price_option, $kit_print_option, $price))
+				if(!$this->sale_lib->add_item($kit_item_id, $quantity, $item_location, $discount, $discount_type, PRICE_MODE_KIT, $kit_price_option, $kit_print_option, $price,$sale_price,$mode))
 				{
 					$data['error'] = $this->lang->line('sales_unable_to_add_item');
 				}
@@ -458,15 +479,19 @@ class Sales extends Secure_Controller
 		}
 		else
 		{
-			if(!$this->sale_lib->add_item($item_id_or_number_or_item_kit_or_receipt, $quantity, $item_location, $discount, $discount_type, PRICE_MODE_STANDARD, NULL, NULL, $price))
+			
+			if(!$this->sale_lib->add_item($item_id_or_number_or_item_kit_or_receipt, $quantity, $item_location, $discount, $discount_type, PRICE_MODE_STANDARD, NULL, NULL,NULL, NULL,NULL, NULL,NULL, NULL, $price,$sale_price,$mode))
 			{
+				// log_message('debug',print_r('add_item',true));
 				$data['error'] = $this->lang->line('sales_unable_to_add_item');
 			}
 			else
 			{
+				// log_message('debug',print_r('add_item1',true));
 				$data['warning'] = $this->sale_lib->out_of_stock($item_id_or_number_or_item_kit_or_receipt, $item_location);
 			}
 		}
+	
 
 		$this->_reload($data);
 	}
@@ -478,20 +503,29 @@ class Sales extends Secure_Controller
 		$this->form_validation->set_rules('price', 'lang:sales_price', 'required|callback_numeric');
 		$this->form_validation->set_rules('quantity', 'lang:sales_quantity', 'required|callback_numeric');
 		$this->form_validation->set_rules('discount', 'lang:sales_discount', 'required|callback_numeric');
+		$this->form_validation->set_rules('other_cost', 'lang:sales_other_cost', 'required|callback_numeric');
 
 		$description = $this->input->post('description');
 		$serialnumber = $this->input->post('serialnumber');
 		$price = parse_decimals($this->input->post('price'));
+		$other_cost=parse_decimals($this->input->post('other_cost'));
+		$item_comment=$this->input->post('item_comments');
+		$tax=$this->input->post('tax');
+		// log_message('debug',print_r($naration,true));
 		$quantity = parse_quantity($this->input->post('quantity'));
 		$discount_type = $this->input->post('discount_type');
 		$discount = $discount_type ? parse_quantity($this->input->post('discount')) : parse_decimals($this->input->post('discount'));
 
 		$item_location = $this->input->post('location');
 		$discounted_total = $this->input->post('discounted_total') != '' ? $this->input->post('discounted_total') : NULL;
+		// $mode = $this->sale_lib->get_mode();
+		// log_message('debug',print_r('edit',true));
+
+		// log_message('debug',print_r($mode,true));
 
 		if($this->form_validation->run() != FALSE)
 		{
-			$this->sale_lib->edit_item($item_id, $description, $serialnumber, $quantity, $discount, $discount_type, $price, $discounted_total);
+			$this->sale_lib->edit_item($item_id, $description, $serialnumber, $quantity, $discount, $discount_type, $price, $discounted_total,$other_cost,$tax,$item_comment);
 			
 			$this->sale_lib->empty_payments();
 		}
@@ -529,6 +563,11 @@ class Sales extends Secure_Controller
 	public function complete()
 	{
 		$sale_id = $this->sale_lib->get_sale_id();
+		
+		if($sale_id==-1){
+			$sale_item_id=-1;
+			$sale_tax_id=-1;
+		}
 		$sale_type = $this->sale_lib->get_sale_type();
 		$data = array();
 		$data['dinner_table'] = $this->sale_lib->get_dinner_table();
@@ -572,6 +611,11 @@ class Sales extends Secure_Controller
 		$quote_number = $this->sale_lib->get_quote_number();
 		$data["quote_number"] = $quote_number;
 		$customer_info = $this->_load_customer_data($customer_id, $data);
+		// $customer_opening_bal = $this->Sale->get_customer_opening_bal($customer_id);
+		// $cus_opening_bal = 0;
+		// foreach($customer_opening_bal as $customer_opening_bal){
+		// 	$cus_opening_bal = $customer_opening_bal->closing_balance;
+		// }
 		if($customer_info != NULL)
 		{
 			$data["customer_comments"] = $customer_info->comments;
@@ -584,8 +628,10 @@ class Sales extends Secure_Controller
 
 		// Returns 'subtotal', 'total', 'cash_total', 'payment_total', 'amount_due', 'cash_amount_due', 'payments_cover_total'
 		$totals = $this->sale_lib->get_totals($tax_details[0]);
+		
 		$data['subtotal'] = $totals['subtotal'];
 		$data['total'] = $totals['total'];
+		
 		$data['payments_total'] = $totals['payment_total'];
 		$data['payments_cover_total'] = $totals['payments_cover_total'];
 		$data['cash_rounding'] = $this->session->userdata('cash_rounding');
@@ -623,9 +669,11 @@ class Sales extends Secure_Controller
 		}
 
 		$data['print_price_info'] = TRUE;
+		
 
 		if($this->sale_lib->is_invoice_mode())
 		{
+			log_message('debug',print_r(1,TRUE));
 			$invoice_format = $this->config->item('sales_invoice_format');
 			// generate final invoice numbr (if using the invoice in sales by receipt mode then the invoice number can be manually entered or altered in some way
 			if(!empty($invoice_format) && $invoice_number == NULL)
@@ -649,8 +697,31 @@ class Sales extends Secure_Controller
 				// The PHP file name is the same as the invoice_type key
 				$invoice_view = $this->config->item('invoice_type');
 
-				// Save the data to the sales table
-				$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details);
+				$opening_bal=$this->Sale->opening_bal($customer_id);	
+
+			foreach( $data['payments'] as $row)
+			{
+				
+				$payed_amount=$row['payment_amount'];
+				$payment_type=$row['payment_type'];
+			}	
+
+			if($payment_type =='Cheque')	
+			{
+				$closing=$opening_bal;
+				$total_bal=$opening_bal;
+			}	
+
+			$sale= $data['total'];
+			
+			   $closing=bcadd($opening_bal,$sale);
+			
+			 $total_bal=bcsub($closing,$payed_amount);
+			//  log_message('debug',print_r($opening_bal,TRUE));
+
+			
+				$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
+				
 				$data['sale_id'] = 'POS ' . $data['sale_id_num'];
 
 				// Resort and filter cart lines for printing
@@ -672,7 +743,7 @@ class Sales extends Secure_Controller
 		}
 		elseif($this->sale_lib->is_work_order_mode())
 		{
-
+			log_message('debug',print_r(2,TRUE));
 			if(!($data['price_work_orders'] == 1))
 			{
 				$data['print_price_info'] = FALSE;
@@ -699,7 +770,7 @@ class Sales extends Secure_Controller
 				$data['sale_status'] = SUSPENDED;
 				$sale_type = SALE_TYPE_WORK_ORDER;
 
-				$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details);
+				$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total']);
 				$this->sale_lib->set_suspended_id($data['sale_id_num']);
 
 				$data['cart'] = $this->sale_lib->sort_and_filter_cart($data['cart']);
@@ -715,11 +786,14 @@ class Sales extends Secure_Controller
 		}
 		elseif($this->sale_lib->is_quote_mode())
 		{
+			log_message('debug',print_r(3,TRUE));
+			
 			$data['sales_quote'] = $this->lang->line('sales_quote');
 			$data['quote_number_label'] = $this->lang->line('sales_quote_number');
 
 			if($quote_number == NULL)
-			{
+			{	
+				// log_message('debug',print_r('a',TRUE));
 				// generate quote number
 				$quote_format = $this->config->item('sales_quote_format');
 				$quote_number = $this->token_lib->render($quote_format);
@@ -727,16 +801,21 @@ class Sales extends Secure_Controller
 
 			if($sale_id == -1 && $this->Sale->check_quote_number_exists($quote_number))
 			{
+				// log_message('debug',print_r('b',TRUE));
 				$data['error'] = $this->lang->line('sales_quote_number_duplicate');
 				$this->_reload($data);
 			}
 			else
 			{
+				// log_message('debug',print_r('c',TRUE));
 				$data['quote_number'] = $quote_number;
 				$data['sale_status'] = SUSPENDED;
 				$sale_type = SALE_TYPE_QUOTE;
+				// $opening_bal=$this->Sale->opening_bal($customer_id);
+				$opening_bal=0.00;
+				$total_bal=0.00;
 
-				$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details);
+				$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
 				$this->sale_lib->set_suspended_id($data['sale_id_num']);
 
 				$data['cart'] = $this->sale_lib->sort_and_filter_cart($data['cart']);
@@ -752,21 +831,77 @@ class Sales extends Secure_Controller
 		}
 		else
 		{
+			// log_message('debug',print_r(4,TRUE));
 			// Save the data to the sales table
 			$data['sale_status'] = COMPLETED;
 			if($this->sale_lib->is_return_mode())
 			{
 				$sale_type = SALE_TYPE_RETURN;
+				$opening_bal=$this->Sale->opening_bal($customer_id);	
+
+			foreach( $data['payments'] as $row)
+			{
+				
+				$payed_amount=$row['payment_amount'];
+				
+			}			
+			$sale= $data['total'];
+			
+			$total_bal=bcadd($opening_bal,$sale);
+			//  /  log_message('debug',print_r($opening_bal,TRUE));
+			//    log_message('debug',print_r($total_bal,TRUE));
+			//  $total_bal=bcsub($closing,$payed_amount);
+			$opening_bal=$this->Sale->opening_bal($customer_id);	
+
+			foreach( $data['payments'] as $row)
+			{
+				
+				$payed_amount=$row['payment_amount'];
+				$payment_type=$row['payment_type'];
+			}	
+
+			if($payment_type =='Cheque')	
+			{
+				$closing=$opening_bal;
+				$total_bal=$opening_bal;
+			}	
+
+			$sale= $data['total'];
+			
+			$total_bal=bcadd($opening_bal,$sale);
+			
+			//  $total_bal=bcsub($closing,$payed_amount);
 			}
 			else
 			{
 				$sale_type = SALE_TYPE_POS;
-			}
+				$opening_bal=$this->Sale->opening_bal($customer_id);	
 
-			$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details);
+				foreach( $data['payments'] as $row)
+				{
+					
+					$payed_amount=$row['payment_amount'];
+					$payment_type=$row['payment_type'];
+				}	
+	
+				if($payment_type =='Cheque')	
+				{
+					$closing=$opening_bal;
+					$total_bal=$opening_bal;
+				}	
+	
+				$sale= $data['total'];
+				
+				   $closing=bcadd($opening_bal,$sale);
+				
+				 $total_bal=bcsub($closing,$payed_amount);
+				
+			}
+			
+			$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
 
 			$data['sale_id'] = 'POS ' . $data['sale_id_num'];
-
+			
 			$data['cart'] = $this->sale_lib->sort_and_filter_cart($data['cart']);
 			$data = $this->xss_clean($data);
 
@@ -1026,10 +1161,12 @@ class Sales extends Secure_Controller
 
 		return $this->xss_clean($data);
 	}
+	
 
 	private function _reload($data = array())
 	{
 		$sale_id = $this->session->userdata('sale_id');
+		
 		if($sale_id == '')
 		{
 			$sale_id = -1;
@@ -1039,21 +1176,29 @@ class Sales extends Secure_Controller
 
 		// cash_rounding indicates only that the site is configured for cash rounding
 		$data['cash_rounding'] = $cash_rounding;
+		// $data['item_comments'];
 
 		$data['cart'] = $this->sale_lib->get_cart();
+		log_message('debug',print_r($data['cart'],true));
 		$customer_info = $this->_load_customer_data($this->sale_lib->get_customer(), $data, TRUE);
 
 		$data['modes'] = $this->sale_lib->get_register_mode_options();
+		// log_message('debug',print_r($data['modes'],true));
 		$data['mode'] = $this->sale_lib->get_mode();
+	//	log_message('debug',print_r($data['mode'],true));
 		$data['selected_table'] = $this->sale_lib->get_dinner_table();
+	//	log_message('debug',print_r($data['selected_table'],true));
 		$data['empty_tables'] = $this->sale_lib->get_empty_tables($data['selected_table']);
 		$data['stock_locations'] = $this->Stock_location->get_allowed_locations('sales');
 		$data['stock_location'] = $this->sale_lib->get_sale_location();
 		$data['tax_exclusive_subtotal'] = $this->sale_lib->get_subtotal(TRUE, TRUE);
+	//	log_message('debug',print_r($data['selected_table'],true));
 		$tax_details = $this->tax_lib->get_taxes($data['cart']);
 		$data['taxes'] = $tax_details[0];
+	//  log_message('debug',print_r($data['taxes'],true));
 		$data['discount'] = $this->sale_lib->get_discount();
 		$data['payments'] = $this->sale_lib->get_payments();
+		//  $data['item_comments']="";
 
 		// Returns 'subtotal', 'total', 'cash_total', 'payment_total', 'amount_due', 'cash_amount_due', 'payments_cover_total'
 		$totals = $this->sale_lib->get_totals($tax_details[0]);
@@ -1147,9 +1292,10 @@ class Sales extends Secure_Controller
 			$data['mode_label'] = $this->lang->line('sales_receipt');
 			$data['customer_required'] = $this->lang->line('sales_customer_optional');
 		}
+		// $data['sale_price']=$data['price'];
 
 		$data = $this->xss_clean($data);
-
+		
 		$this->load->view("sales/register", $data);
 	}
 
@@ -1213,7 +1359,11 @@ class Sales extends Secure_Controller
 		// Set up a slightly modified list of payment types for new payment entry
 		$payment_options["--"] = $this->lang->line('common_none_selected_text');
 
-		$data['new_payment_options'] = $this->xss_clean($payment_options);
+		// $data['new_payment_options'] = $this->xss_clean($payment_options);
+		// $customer_id = $this->input->post('customer');
+		// $item_id=$this->input->post('customer');
+		// $category_id=$this->sale->category_id($customer_id);
+		// $data['sale_price']=$this->sale->price($category_id,$item_id);
 
 		$this->load->view('sales/form', $data);
 	}
@@ -1277,7 +1427,7 @@ class Sales extends Secure_Controller
 	{
 		$newdate = $this->input->post('date');
 		$employee_id = $this->Employee->get_logged_in_employee_info()->person_id;
-
+		
 		$date_formatter = date_create_from_format($this->config->item('dateformat') . ' ' . $this->config->item('timeformat'), $newdate);
 		$sale_time = $date_formatter->format('Y-m-d H:i:s');
 
@@ -1535,6 +1685,7 @@ class Sales extends Secure_Controller
 	{
 		$item_id = $this->input->post('item_id');
 		$name = $this->input->post('item_name');
+		console.log($name);
 		$this->Item->update_item_name($item_id, $name);
 		$cart = $this->sale_lib->get_cart();
 		$x = $this->search_cart_for_item_id($item_id, $cart);
