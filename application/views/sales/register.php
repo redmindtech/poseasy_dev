@@ -686,7 +686,7 @@ if(isset($success))
 							<td>
 								 <?php
 								
-									echo form_input(array('name'=>'item_comments', 'class'=>'form-control input-sm', $item['item_comments'], 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
+									echo form_input(array('name'=>'item_comments', 'class'=>'form-control input-sm', 'value'=>$item['item_comments'], 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
 								
 								
 								?>

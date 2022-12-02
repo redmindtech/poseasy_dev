@@ -297,5 +297,7 @@ $lang["sales_estimate"] = "ESTIMATE";
 $lang["net_gross"] = "Net Gross";
 $lang["opening_bal"] = "Opening Balance";
 $lang['total_amount'] = "Total Amount";
+$lang['serialno'] = "S.No";
+ 
 
  
