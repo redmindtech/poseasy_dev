@@ -1544,6 +1544,29 @@ class Sale extends CI_Model
 		
 }
 
+public function get_customer_opening_bal($customer_id){
+		
+	$this->db->select('max(id)');		
+	$this->db->from('ro_sales');
+	$this->db->where('customer_id ',$customer_id);
+	$this->db->group_by('customer_id');
+	
+	$sub_query = $this->db->get_compiled_select();
+	$this->db->select('closing_balance');
+	$this->db->from('ro_sales');
+	$this->db->where("Id IN ($sub_query)");		
+	$query = $this->db->get()->result();
+				
+	if($query==NULL || $query=='0')
+	{
+		$query='0.00';
+	 
+		return $query;
+	}
+	return $query;
+	
+}
+
 		
 	 
 }

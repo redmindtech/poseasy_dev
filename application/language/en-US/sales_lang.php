@@ -221,7 +221,7 @@ $lang["sales_work_order_number_duplicate"] = "Work Order Number must be unique."
 $lang["sales_work_order_sent"] = "Work Order sent to";
 $lang["sales_work_order_unsent"] = "Work Order failed to be sent to";
 $lang["sales_ebill_with_address"]= "Estimate Bill with Address";
-<<<<<<< HEAD
+
 $lang['sales_customer_name']="Customer Name";
 $lang['sales_serial_number']="S.No";
 $lang['sales_hsn']="HSN/SAC";
@@ -290,3 +290,12 @@ $lang["gst_slab"] = "GST Slab";
 $lang["gst_amount"] = "GST Amount";
 $lang["sales_customer_name"] = "Customer Name";
 
+ 
+$lang["sales_cash_bill"] = "Cash Bill";
+$lang["sales_s_no"] = "S.No";
+$lang["sales_estimate"] = "ESTIMATE";
+$lang["net_gross"] = "Net Gross";
+$lang["opening_bal"] = "Opening Balance";
+$lang['total_amount'] = "Total Amount";
+
+ 

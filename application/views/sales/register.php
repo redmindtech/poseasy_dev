@@ -60,10 +60,6 @@ if(isset($success))
 				}
 				?>
 
-<<<<<<< HEAD
-				<li class="pull-right">
-				<?php echo anchor("Ro_sales_cheque/manage", '<span class="glyphicon glyphicon-check">&nbsp</span>' . $this->lang->line('ro_checque_approve'),
-=======
 				<!-- <li class="pull-right">
 					<button class='btn btn-default btn-sm modal-dlg' id='show_suspended_sales_button' data-href="<?php echo site_url($controller_name."/suspended"); ?>"
 							title="<?php echo $this->lang->line('sales_suspended_sales'); ?>">
@@ -73,7 +69,6 @@ if(isset($success))
 
 				<li class="pull-right">
 					<?php echo anchor("Ro_sales_cheque/manage", '<span class="glyphicon glyphicon-check">&nbsp</span>' . $this->lang->line('ro_checque_approve'),
->>>>>>> 007490ef253957475e137373427a807314c1565e
 					array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('ro_checque_approve'))); ?>
 			
 				</li>
@@ -85,8 +80,6 @@ if(isset($success))
 				</li>
 
 
-<<<<<<< HEAD
-=======
 
 
 
@@ -94,7 +87,7 @@ if(isset($success))
 
 
 
->>>>>>> 007490ef253957475e137373427a807314c1565e
+
 				<?php
 				if($this->Employee->has_grant('reports_sales', $this->session->userdata('person_id')))
 				{

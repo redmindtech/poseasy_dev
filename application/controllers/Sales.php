@@ -694,11 +694,11 @@ class Sales extends Secure_Controller
 		$quote_number = $this->sale_lib->get_quote_number();
 		$data["quote_number"] = $quote_number;
 		$customer_info = $this->_load_customer_data($customer_id, $data);
-		// $customer_opening_bal = $this->Sale->get_customer_opening_bal($customer_id);
-		// $cus_opening_bal = 0;
-		// foreach($customer_opening_bal as $customer_opening_bal){
-		// 	$cus_opening_bal = $customer_opening_bal->closing_balance;
-		// }
+		$customer_opening_bal = $this->Sale->get_customer_opening_bal($customer_id);
+		$cus_opening_bal = 0;
+		foreach($customer_opening_bal as $customer_opening_bal){
+			$cus_opening_bal = $customer_opening_bal->closing_balance;
+		}
 		if($customer_info != NULL)
 		{
 			$data["customer_comments"] = $customer_info->comments;
@@ -906,6 +906,7 @@ class Sales extends Secure_Controller
 				$data = $this->xss_clean($data);
 
 				$data['barcode'] = NULL;
+				$data['cus_opening_bal'] = $cus_opening_bal;
 
 				$this->load->view('sales/quote', $data);
 				$this->sale_lib->clear_mode();
