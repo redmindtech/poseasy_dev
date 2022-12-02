@@ -186,11 +186,10 @@ if (isset($error_message))
 			?>
 				<tr>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo $s_no_counter ?></td>
-					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['price']); ?></td>
+					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo "₹".$item['price']; ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;' class="item-name"><?php echo $item['name']; ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_quantity_decimals($item['quantity']);
-														$price_item_char = to_currency($item['price']);
-														$price_item = str_replace("₹ ","",$price_item_char);
+														$price_item = $item['price'];														
 														$total_item_price = $price_item*to_quantity_decimals($item['quantity']);  ?></td>
 					
 					
