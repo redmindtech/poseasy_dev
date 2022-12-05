@@ -92,10 +92,18 @@
 					</div>
 				</div>
 
-				<div class="form-group form-group-sm">
-			<?php echo form_label($this->lang->line('common_category'), 'customer_category_name', array('class'=>'control-label col-xs-3')); ?>
+				<!-- <div class="form-group form-group-sm">
+			<?php //echo form_label($this->lang->line('common_category'), 'customer_category_name', array('class'=>'control-label col-xs-3')); ?>
 			<div class='col-xs-6'>
-				<?php echo form_dropdown('customer_category_name', $customer_category, $person_info->customer_category_name, array('class'=>'form-control', 'id'=>'category')); ?>
+				<?php //echo form_dropdown('customer_category_name', $customer_category, $person_info->customer_category_name, array('class'=>'form-control', 'id'=>'category')); ?>
+			</div>
+		</div> -->
+
+
+		<div class="form-group form-group-sm" id="supplierdiv">
+			<?php echo form_label($this->lang->line('common_category'), 'customer_category_name', array('class'=>' control-label col-xs-3')); ?>
+			<div class='col-xs-8'>
+				<?php echo form_dropdown('customer_category_id', $customer_category, $selected_category, array('class'=>'form-control' ,'id'=>'customer_category_id')); ?>
 			</div>
 		</div>
 
@@ -576,4 +584,13 @@ $(document).ready(function()
 		}
 	}, form_support.error));
 });
+
+$(document).ready(function()
+{ 
+
+	$('select').on('change', function () {
+		console.log($customer_category_id);
+	});
+});
+
 </script>

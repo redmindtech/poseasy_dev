@@ -150,7 +150,7 @@ $(document).ready(function()
 </script>
 
 <div id="title_bar" class="btn-toolbar">
-<?php echo anchor("sales", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . "Sales Register",
+<?php echo anchor("sales", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . "Single Sale Entry",
 			array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('ro_sales_register'))); ?>
 					
 </div>

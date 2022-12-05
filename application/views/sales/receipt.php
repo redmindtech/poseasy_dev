@@ -46,6 +46,12 @@ $(document).ready(function()
 <div id="page-wrap">
 <div id="header"><?php echo $this->lang->line('sales_cash_bill'); ?></div>
 
+		
+	
+	
+				
+
+
 
 	<table id="items">
 
@@ -118,11 +124,10 @@ $(document).ready(function()
 			<th><?php echo $this->lang->line('sales_hsn'); ?></th>
 			<th><?php echo $this->lang->line('sales_quantity'); ?></th>
 			<th><?php echo $this->lang->line('sales_price'); ?></th>
-			<th><?php echo $this->lang->line('sales_tax_percent'); ?></th>
 			<th><?php echo $this->lang->line('sales_sub_total'); ?></th>
 			<!-- <th><?php //echo $this->lang->line('sales_discount'); ?></th> -->
-			<th><?php echo $this->lang->line('sales_discount'); ?></th>
-			
+			<th><?php echo $this->lang->line('sales_other_cost'); ?></th>
+			<th><?php echo $this->lang->line('sales_tax_percent'); ?></th>
 			<?php
 			if($discount > 0)
 			{
@@ -154,13 +159,14 @@ $(document).ready(function()
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo $item['hsn_code']; ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_quantity_decimals($item['quantity']); ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['price']); ?></td>
-					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['tax']) . '%'; ?></td>
-					<td style='text-align:center;border-bottom:none;border-top:none;' id="subtotal"><?php echo to_currency($item['discounted_total']); ?></td>
+					<td style='text-align:center;border-bottom:none;border-top:none;' id="subtotal"><?php echo to_currency($item['price']); ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['discount_type']==FIXED)?to_currency($item['discount']):to_decimals($item['discount']) . '%';?></td>
 					<?php if($discount > 0): ?>
+					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['discount'] / $item['quantity']); ?></td>
 					<?php endif; ?>
+					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo $this->config->item('discount') . '%'; ?></td>
 					
-					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['total']); ?></td>
+					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['discounted_total']); ?></td>
 					
 				</tr>
 				<?php
@@ -182,7 +188,7 @@ $(document).ready(function()
 		<tr>
 			<td colspan="8" style='text-align:right;'><?php echo $this->lang->line('sales_sub_total'); ?> </td>
 			
-			<td class="total-value" id="subtotal"><?php echo to_currency($total); ?></td>
+			<td class="total-value" id="subtotal"><?php echo to_currency($subtotal); ?></td>
 		</tr>
 
 		<?php
@@ -249,11 +255,11 @@ $(document).ready(function()
 	<div id="terms">
 		<div id="sale_return_policy">
 			<h5>
-				<div><?php echo nl2br($this->config->item('payment_message')); ?></div>
-				<div style='padding:4%;'><?php echo empty($comments) ? '' : $this->lang->line('sales_comments') . ': ' . $comments; ?></div>
-				<div style='padding:4%;'><?php echo $this->config->item('invoice_default_comments'); ?></div>
+				
+				
+				
 			</h5>
-			<div style='padding:2%;'><?php echo nl2br($this->config->item('return_policy')); ?></div>
+			
 		</div>
 		<div id='barcode'>
 			<img style='padding-top:4%;' src='data:image/png;base64,<?php echo $barcode; ?>' /><br>

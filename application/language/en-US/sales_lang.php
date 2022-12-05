@@ -196,7 +196,7 @@ $lang["sales_suspended_sale_id"] = "ID";
 $lang["sales_suspended_sales"] = "Suspended";
 $lang["sales_table"] = "Table";
 $lang["sales_takings"] = "Daily Sales";
-$lang["sales_tax"] = "Tax per qty";
+$lang["sales_tax"] = "Tax/Qty";
 $lang["sales_tax_id"] = "Tax Id";
 $lang["sales_tax_invoice"] = "Invoice";
 $lang["sales_tax_percent"] = "Tax %";
@@ -227,7 +227,7 @@ $lang['sales_serial_number']="S.No";
 $lang['sales_hsn']="HSN/SAC";
 $lang['sales_gross_amount']="Gross Amt";
 $lang['sales_other_cost']="Other cost";
-$lang['sales_tax']="Tax per qyt";
+$lang['sales_tax']="Tax/Qty";
 $lang['sales_narration']="Narration";
 $lang["sales_bulk_entry"]="Bulk Entry";
 $lang["ro_checque_approve"]  = "Cheque Approval";
@@ -271,7 +271,7 @@ $lang["Ro_sales_cheque_no_Ro_sales_cheque_to_display"] = "No records found";
 $lang["ro_sale_total_neft"]  = "Total NEFT";
 $lang["ro_sale_total_upi"]  = "Total UPI";
 $lang["ro_checque_approve"]  = "Cheque Approval";
-$lang["ro_sales_register"]  = "Sales Register";
+$lang["ro_sales_register"]  = "Single";
 $lang['sales_customer_id']="Customer id";
 $lang['ro_sales_voucher_no'] = "Invoice No.";
 
@@ -298,6 +298,22 @@ $lang["net_gross"] = "Net Gross";
 $lang["opening_bal"] = "Opening Balance";
 $lang['total_amount'] = "Total Amount";
 $lang['serialno'] = "S.No";
+
+$lang['single_sale_entry'] = "Single Sale Entry";
+
+$lang['sales_price_symbol'] = "Price(₹)";
+$lang['sales_gross_amount_symbol'] = "Gross Amt(₹)";
+$lang['sales_other_cost_symbol'] = "Other cost(₹)";
+$lang['sales_total_symbol'] = "Total(₹)";
+
+
+
+
+
+
+
+
+
  
 
  

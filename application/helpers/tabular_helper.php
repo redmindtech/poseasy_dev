@@ -223,8 +223,10 @@ function get_customer_manage_table_headers()
 
 	$headers = array(
 		array('people.person_id' => $CI->lang->line('customers_id')),
+		// array('first_name' => $CI->lang->line('customer_first')),
+		array('messages' => $CI->lang->line('customer_message')),
 		array('last_name' => $CI->lang->line('common_last_name')),
-		array('first_name' => $CI->lang->line('common_first_name')),
+		
 		array('customer_category_name'=>$CI->lang->line('common_category')),
 		array('email' => $CI->lang->line('common_email')),
 		array('phone_number' => $CI->lang->line('common_phone_number')),
@@ -234,7 +236,7 @@ function get_customer_manage_table_headers()
 
 	if($CI->Employee->has_grant('messages', $CI->session->userdata('person_id')))
 	{
-		$headers[] = array('messages' => $CI->lang->line('customers_message'),'sortable' => FALSE);
+		
 		$headers[]= array('edit' => $CI->lang->line('customers_edit'));
 	}
 
@@ -294,19 +296,19 @@ function get_picklist_manage_table_headers()
 /*
 Get the html data row for the customer
 */
-function get_customer_data_row($person, $stats)
+function get_customer_data_row($person, $stats, $count)
 {
 	$CI =& get_instance();
 
 	$controller_name = strtolower(get_class($CI));
 
 	return array (
-		'people.person_id' => $person->person_id,
+		'people.person_id' =>$person->person_id,
+		
 		'last_name' => $person->last_name,
-		//'first_name' => $person->first_name,
+		// 'first_name' => $person->first_name,
 
-		'first_name' => anchor($controller_name."/customers_details/$person->person_id", $person->first_name,
-		array('class'=>"modal-dlg", 'title'=>$CI->lang->line($controller_name.'_view'))),
+		
 
 		'customer_category_name' => $person->customer_category_name,
 
@@ -314,11 +316,13 @@ function get_customer_data_row($person, $stats)
 
 		'phone_number' => $person->phone_number,
 
+		'messages' => anchor($controller_name."/customers_details/$person->person_id/$count", $person->first_name,
+		array('class'=>"modal-dlg", 'title'=>"Summary of ".$person->first_name)),	
+
+
 		'total' => to_currency($stats->total),
 
-		'messages' => empty($person->phone_number) ? '' : anchor("Messages/view/$person->person_id", '<span class="glyphicon glyphicon-phone"></span>',
-			array('class'=>'modal-dlg', 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line('messages_sms_send'))),
-
+		
 			'edit' => anchor($controller_name."/view/$person->person_id", '<span class="glyphicon glyphicon-edit"></span>',
 			array('class'=>'modal-dlg', 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update'))
 		

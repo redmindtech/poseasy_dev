@@ -148,6 +148,8 @@ class Customer extends Person
 	{
 		$this->db->from('customers');
 		$this->db->join('people', 'people.person_id = customers.person_id');
+		$this->db->join('customer_category AS customer_category', 'customer_category.customer_category_id = customers.customer_category_id', 'left');
+	
 		$this->db->where_in('customers.person_id', $customer_ids);
 		$this->db->order_by('last_name', 'asc');
 
@@ -330,6 +332,18 @@ class Customer extends Person
 				$suggestions[] = array('value' => $row->person_id, 'label' => $row->phone_number);
 			}
 
+			$this->db->select('	customer_category_name');
+			$this->db->from('customer_category');
+			$this->db->like('customer_category_name', $search);
+			// restrict to non deleted companies only if is_deleted is FALSE
+			$this->db->where('deleted', $filters['is_deleted']);
+			$this->db->distinct();
+			$this->db->order_by('customer_category_name', 'asc');
+			foreach($this->db->get()->result() as $row)
+			{
+				$suggestions[] = array('label' => $row->customer_category_name);
+			}
+
 			$this->db->from('customers');
 			$this->db->join('people', 'customers.person_id = people.person_id');
 			$this->db->where('deleted', 0);
@@ -370,6 +384,7 @@ class Customer extends Person
 	/*
 	Performs a search on customers
 	*/
+	
 	public function search($search, $rows = 0, $limit_from = 0, $sort = 'last_name', $order = 'asc', $count_only = FALSE)
 	{
 		// get_found_rows case
@@ -378,18 +393,22 @@ class Customer extends Person
 			$this->db->select('COUNT(customers.person_id) as count');
 		}
 
+		// $this->db->select('*');
 		$this->db->from('customers AS customers');
 		$this->db->join('people', 'customers.person_id = people.person_id');
+		$this->db->join('customer_category', 'customer_category.customer_category_id = customers.customer_category_id');
 		$this->db->group_start();
 			$this->db->like('first_name', $search);
 			$this->db->or_like('last_name', $search);
 			$this->db->or_like('email', $search);
+			$this->db->or_like('customer_category_name', $search);
 			$this->db->or_like('phone_number', $search);
 			$this->db->or_like('account_number', $search);
 			$this->db->or_like('company_name', $search);
 			$this->db->or_like('CONCAT(first_name, " ", last_name)', $search);
 		$this->db->group_end();
-		$this->db->where('deleted', 0);
+		$this->db->where('customers.deleted', 0);
+		$this->db->where('customer_category.deleted', 0);
 
 		// get_found_rows case
 		if($count_only == TRUE)
@@ -406,6 +425,8 @@ class Customer extends Person
 
 		return $this->db->get();
 	}
+
+
 	public function customer_sales($id)
 	{ 
 		$this->db->select('*')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id);

@@ -244,8 +244,8 @@ if (isset($error_message))
 	<div id="terms">
 		<div id="sale_return_policy">
 			<h5>
-				<div style='padding:4%;'><?php echo empty($comments) ? '' : $this->lang->line('sales_comments') . ': ' . $comments; ?></div>
-				<div style='padding:4%;'><?php echo $this->config->item('quote_default_comments'); ?></div>
+				
+				
 			</h5>
 		</div>
 	</div>

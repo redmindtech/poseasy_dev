@@ -31,7 +31,7 @@ if(isset($success))
 					<?php echo form_dropdown('mode', $modes, $mode, array('onchange'=>"$('#mode_form').submit();", 'class'=>'selectpicker show-menu-arrow', 'data-style'=>'btn-default btn-sm', 'data-width'=>'fit')); ?>
 				</li>				
 				<li class="pull-left ">	
-					<input type="checkbox">
+					<input type="checkbox" id="checkbox_flag" name="checkbox_flag">
 					<label class="control-label"><b><?php echo $this->lang->line('sales_ebill_with_address'); ?></b></label>
                 </li>			 
                											 
@@ -218,9 +218,11 @@ if(isset($success))
 			<?php
 			}
 			?>
+			
 		<?php echo form_close(); ?>
 	
 
+		
 
 	<?php $tabindex = 0; ?>
 	
@@ -356,8 +358,8 @@ if(isset($success))
 							<tr>
 								<td><span id="amount_tendered_label"><?php echo $this->lang->line('sales_amount_tendered'); ?></span></td>
 								<td>
-									<?php echo form_input(array('name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm non-giftcard-input', 'value'=>to_currency_no_money($amount_due), 'size'=>'5', 'tabindex'=>++$tabindex, 'onClick'=>'this.select();')); ?>
-									<?php echo form_input(array('name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm giftcard-input', 'disabled' => true, 'value'=>to_currency_no_money($amount_due), 'size'=>'5', 'tabindex'=>++$tabindex)); ?>
+									<?php echo form_input(array('name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm non-giftcard-input', 'value'=>to_currency_no_money($amount_due), 'size'=>'5', 'onClick'=>'this.select();')); ?>
+									<?php echo form_input(array('name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm giftcard-input', 'disabled' => true, 'value'=>to_currency_no_money($amount_due), 'size'=>'5')); ?>
 								</td>
 							</tr>
 							<tr>
@@ -393,7 +395,7 @@ if(isset($success))
 						</table>
 					<?php echo form_close(); ?>
 
-					<div class='btn btn-sm btn-success pull-right' id='add_payment_button' tabindex="<?php echo ++$tabindex; ?>"><span class="glyphicon glyphicon-credit-card">&nbsp</span><?php echo $this->lang->line('sales_add_payment'); ?></div>
+					<div class='btn btn-sm btn-success pull-right' id='add_payment_button'><span class="glyphicon glyphicon-credit-card">&nbsp</span><?php echo $this->lang->line('sales_add_payment'); ?></div>
 				<?php
 				}
 				?>
@@ -546,14 +548,14 @@ if(isset($success))
 				<th style="width: 15%;"><?php echo $this->lang->line('sales_item_name'); ?></th>
 				<th style="width: 10%;"><?php echo $this->lang->line('sales_hsn'); ?></th>				
 				<th style="width: 7%;"><?php echo $this->lang->line('sales_quantity'); ?></th>
-				<th style="width: 7%;"><?php echo $this->lang->line('sales_price'); ?></th>
+				<th style="width: 7%;"><?php echo $this->lang->line('sales_price_symbol'); ?></th>
 				<th style="width: 7%;"><?php echo $this->lang->line('sales_tax'); ?></th>
-				<th style="width: 7%;"><?php echo $this->lang->line('sales_gross_amount'); ?></th>
+				<th style="width: 7%;"><?php echo $this->lang->line('sales_gross_amount_symbol'); ?></th>
 				<th style="width: 10%;"><?php echo $this->lang->line('sales_discount'); ?></th>
 				
-				<th style="width: 7%;"><?php echo $this->lang->line('sales_other_cost'); ?></th>
+				<th style="width: 7%;"><?php echo $this->lang->line('sales_other_cost_symbol'); ?></th>
 				
-				<th style="width: 10%;"><?php echo $this->lang->line('sales_total'); ?></th>
+				<th style="width: 10%;"><?php echo $this->lang->line('sales_total_symbol'); ?></th>
 				<th style="width: 10%;"><?php echo $this->lang->line('sales_narration'); ?></th>
 				<!-- <th style="width: 5%; "><?php echo $this->lang->line('sales_update'); ?></th> -->
 			</tr>
@@ -561,6 +563,7 @@ if(isset($success))
 
 		<tbody id="cart_contents">
 			<?php
+			$serial_no_counter=1;
 			if(count($cart) == 0)
 			{
 			?>
@@ -573,6 +576,7 @@ if(isset($success))
 			}
 			else
 			{
+				
 				foreach(array_reverse($cart, TRUE) as $line=>$item)
 				{
 			?>
@@ -598,7 +602,10 @@ if(isset($success))
 							else
 							{
 							?>
-								<td><?php echo $item['item_number']; ?></td>
+								<td><?php 
+										echo $serial_no_counter;
+										$serial_no_counter++; ?></td>
+								
 								<td style="align: center;">
 									<?php echo $item['name'] . ' '. implode(' ', array($item['attribute_values'], $item['attribute_dtvalues'])); ?>
 									<br/>
@@ -624,14 +631,14 @@ if(isset($success))
 								}
 								else
 								{
-									echo form_input(array('name'=>'quantity', 'class'=>'form-control input-sm', 'value'=>to_quantity_decimals($item['quantity']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
+									echo form_input(array('name'=>'quantity','id'=>'quantity','min'=>'0','type'=>'number','oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','class'=>'form-control input-sm', 'value'=>to_quantity_decimals($item['quantity']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
 								}
 								?>
 							</td><td>
 								 <?php
 								if($items_module_allowed && $change_price)
 								{
-									echo form_input(array('name'=>'price', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['price']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
+									echo form_input(array('name'=>'price','type'=>'number','oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','class'=>'form-control input-sm', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['price']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
 								}
 								else
 								{ 
@@ -643,7 +650,7 @@ if(isset($success))
 							<td>
 								 <?php
 								
-									echo form_input(array('name'=>'tax', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['tax']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
+									echo form_input(array('name'=>'tax','type'=>'number','oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','class'=>'form-control input-sm', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['tax']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
 								
 								
 								?>
@@ -652,18 +659,18 @@ if(isset($success))
 								<?php
 								if($item['item_type'] == ITEM_AMOUNT_ENTRY)
 								{
-									echo form_input(array('name'=>'discounted_total', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['discounted_total']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
+									echo form_input(array('name'=>'discounted_total', 'class'=>'form-control input-sm', 'value'=>$item['discounted_total'], 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
 								}
 								else
 								{
-									echo to_currency($item['discounted_total']);
+									echo $item['discounted_total'];
 								}
 								?>
 							</td>
 
 							<td>
 								<div class="input-group">
-									<?php echo form_input(array('name'=>'discount', 'class'=>'form-control input-sm', 'value'=>$item['discount_type'] ? to_currency_no_money($item['discount']) : to_decimals($item['discount']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();')); ?>
+									<?php echo form_input(array('name'=>'discount', 'type'=>'number','oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','class'=>'form-control input-sm','class'=>'form-control input-sm', 'value'=>number_format($item['discount'],0), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();')); ?>
 									<!-- <span class="input-group-btn">
 										<?php echo form_checkbox(array('id'=>'discount_toggle', 'name'=>'discount_toggle', 'value'=>1, 'data-toggle'=>"toggle",'data-size'=>'small', 'data-onstyle'=>'success', 'data-on'=>'<b>'.$this->config->item('currency_symbol').'</b>', 'data-off'=>'<b>%</b>', 'data-line'=>$line, 'checked'=>$item['discount_type'])); ?>
 									</span> -->
@@ -673,7 +680,7 @@ if(isset($success))
 							
 							<td>
 								<div class="input-group">
-									<?php echo form_input(array('name'=>'other_cost', 'class'=>'form-control input-sm', 'value'=>$item['other_cost'] ? to_currency_no_money($item['other_cost']) : to_decimals($item['other_cost']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();')); ?>
+									<?php echo form_input(array('name'=>'other_cost','type'=>'number', 'oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','class'=>'form-control input-sm','class'=>'form-control input-sm', 'value'=>$item['other_cost'] ? to_currency_no_money($item['other_cost']) : to_decimals($item['other_cost']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();')); ?>
 									<!-- <span class="input-group-btn">
 										<?php echo form_checkbox(array('id'=>'discount_toggle', 'name'=>'discount_toggle', 'value'=>1, 'data-toggle'=>"toggle",'data-size'=>'small', 'data-onstyle'=>'success', 'data-on'=>'<b>'.$this->config->item('currency_symbol').'</b>', 'data-off'=>'<b>%</b>', 'data-line'=>$line, 'checked'=>$item['discount_type'])); ?>
 									</span> -->
@@ -681,7 +688,7 @@ if(isset($success))
 							</td>
 							
 							<td>
-							<?php echo $item['total']; ?>
+							<?php echo number_format($item['total'],2); ?>
 							</td>
 							<td>
 								 <?php
@@ -689,10 +696,12 @@ if(isset($success))
 									echo form_input(array('name'=>'item_comments', 'class'=>'form-control input-sm', 'value'=>$item['item_comments'], 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
 								
 								
+									
+								
 								?>
 							</td>
 
-							<td><a href="javascript:document.getElementById('<?php echo 'cart_'.$line ?>').submit();" title=<?php echo $this->lang->line('sales_update')?> ><span class="glyphicon glyphicon-refresh"></span></a></td>
+							<td style=display:none;><a href="javascript:document.getElementById('<?php echo 'cart_'.$line ?>').submit();" title=<?php echo $this->lang->line('sales_update')?> ><span class="glyphicon glyphicon-refresh"></span></a></td>
 						</tr>
 						<tr>
 							<?php
@@ -781,8 +790,46 @@ if(isset($success))
 		
 
 <script type="text/javascript">
+
+	var flag=0;
+
+$('#checkbox_flag').click(function(e){ 
+	if (e.target.checked) 
+	{ 
+		//checked
+		flag = 1;
+		alert("true");
+		alert(flag);
+ 	 } else { 
+
+		flag = 2;		
+		alert("false");
+		alert(flag);
+	} 
+}) 
 $(document).ready(function()
 {
+
+    alert(flag);
+	if(flag=1){
+		
+	
+		document.querySelector('#checkbox_flag').checked = true ;
+	}else{
+		document.querySelector('#checkbox_flag').checked = false ;
+
+	}
+
+
+
+	
+
+
+
+	
+	
+	
+	
 	const redirect = function() {
 		window.location.href = "<?php echo site_url('sales'); ?>";
 	};
@@ -862,12 +909,31 @@ $(document).ready(function()
 		select: function (a, ui) {
 			$(this).val(ui.item.value);
 			item_id=ui.item.value;
-			// alert(item_id);
-			// $('#add_item_form').submit();
+
+
+			// const customer_field = document.getElementById('customer');
+			// var customer_empty_flag = customer_field.value;
+
+
 			
+			// if(customer_empty_flag == "Start typing customer details...")
+			// {
+			// 	alert("Please select customer");
+
+			// }else{
+
+				
+
+			// }
 			$('#add_item_form').submit();
 			
-			return false;
+				return false;
+
+			
+			
+			
+			
+			
 		}
 	});
 
@@ -879,6 +945,17 @@ $(document).ready(function()
 			return false;
 		}
 	});
+
+	
+
+
+	$("#amount_tendered").keydown(function (event) {
+			
+		$('input[name=quantity]').focus();
+            
+            
+     });
+
 
 	var clear_fields = function() {
 		if($(this).val().match("<?php echo $this->lang->line('sales_start_typing_item_name') . '|' . $this->lang->line('sales_start_typing_customer_name'); ?>"))
@@ -918,6 +995,9 @@ $(document).ready(function()
 			$('#customer').val(ui.item.value);
 			$(this).val(ui.item.lable);
 			$(this).val(ui.item.value);
+
+			
+
 			$('#select_customer_form').submit();
 			return false;
 		}

@@ -273,11 +273,10 @@ $(document).ready(function()
 	<div id="terms">
 		<div id="sale_return_policy">
 			<h5>
-				<div><?php echo nl2br($this->config->item('payment_message')); ?></div>
-				<div style='padding:4%;'><?php echo empty($comments) ? '' : $this->lang->line('sales_comments') . ': ' . $comments; ?></div>
-				<div style='padding:4%;'><?php echo $this->config->item('invoice_default_comments'); ?></div>
+				
+				
 			</h5>
-			<div style='padding:2%;'><?php echo nl2br($this->config->item('return_policy')); ?></div>
+			
 		</div>
 		<div id='barcode'>
 			<img style='padding-top:4%;' src='data:image/png;base64,<?php echo $barcode; ?>' /><br>
