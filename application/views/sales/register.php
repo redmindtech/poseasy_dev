@@ -810,7 +810,7 @@ $('#checkbox_flag').click(function(e){
 $(document).ready(function()
 {
 
-    alert(flag);
+    //alert(flag);
 	if(flag=1){
 		
 	
