@@ -354,7 +354,8 @@ class Sale_lib
 	public function get_payments()
 	{
 		if(!$this->CI->session->userdata('sales_payments'))
-		{
+		{ 
+
 			$this->set_payments(array());
 		}
 
@@ -363,7 +364,7 @@ class Sale_lib
 
 	// Multiple Payments
 	public function set_payments($payments_data)
-	{
+	{  				
 		$this->CI->session->set_userdata('sales_payments', $payments_data);
 	}
 
@@ -382,8 +383,7 @@ class Sale_lib
 			//payment_method already exists, add to payment_amount
 			$payments[$payment_id]['payment_amount'] = bcadd($payments[$payment_id]['payment_amount'], $payment_amount);
 		}
-		// $payment['cheque_number'],
-		// 		'sales_cheque_date'=>	$payment['cheque_date'],
+	
 		else
 		{
 			//add to existing array
@@ -400,7 +400,7 @@ class Sale_lib
 				$this->CI->session->set_userdata('cash_mode', CASH_MODE_FALSE);
 			}
 		}
-
+		
 		$this->set_payments($payments);
 	}
 
@@ -595,7 +595,7 @@ class Sale_lib
 		{
 			$totals['payments_cover_total'] = $current_due < $threshold;
 		}
-
+		
 		$totals['item_count'] = $item_count;
 		$totals['total_units'] = $total_units;
 		$totals['cash_adjustment_amount'] = 0;
@@ -770,8 +770,7 @@ class Sale_lib
 		
 		$item_info = $this->CI->Item->get_info_by_id_or_number($item_id, $include_deleted);
 		//make sure item exists
-		// log_message('debug',print_r($item_info,true));
-		
+				
 		if(empty($item_info))
 		{
 			$item_id = -1;
@@ -780,11 +779,10 @@ class Sale_lib
 		$hsn_code=$item_info->hsn_code;
 		
 		 $hsn=$this->CI->Sale->hsn_id($hsn_code);
-		//  log_message('debug',print_r('add_item',true));
-		//  log_message('debug',print_r($comments,true));
+		
 		 $hsn_id=$hsn[0]->id;
 		
-		  $hsn_tax=$hsn[0]->tax_percentage;
+		 $hsn_tax=$hsn[0]->tax_percentage;
 		 $applied_discount = $discount;
 		 
 	
@@ -827,7 +825,7 @@ class Sale_lib
 				}
 			}
 		}
-		$comments='good';
+		$comments='';
 		// Serialization and Description
 
 		//Get all items in the cart so far...
@@ -920,8 +918,7 @@ class Sale_lib
 			$price_tax=bcmul($quantity, $price);
 			$net_amt=$price_tax;
 			$total_tax=0.00;
-			//  log_message('debug',print_r($mode,true));
-
+			
 		}
 		
 		//Item already exists and is not serialized, add to quantity
@@ -1051,16 +1048,12 @@ class Sale_lib
 	}
 
 	public function edit_item($line, $description, $serialnumber, $quantity, $discount, $discount_type, $price, $discounted_total=NULL,$other_cost,$tax,$comments)
-	{ 
-		
-		
+	{ 		
 		$items = $this->get_cart();
-		log_message('debug',print_r($items,TRUE));
+		
 		if(isset($items[$line]))
 		{
-			$line = &$items[$line];
-		
-        
+			$line = &$items[$line];        
 
 			if($discounted_total != NULL && $discounted_total != $line['discounted_total'])
 			{
@@ -1072,7 +1065,7 @@ class Sale_lib
 			$line['quantity'] = $quantity;
 			$line['discount'] = $discount;
 			$line['item_comments']=$comments;
-			log_message('debug',print_r($line['item_comments'],TRUE));
+			
 			if(!is_null($discount_type))
 			{
 				$line['discount_type'] = $discount_type;
@@ -1093,8 +1086,7 @@ class Sale_lib
 			// $line['item_comments']=$comments;
 
 			$line['total']= $this->get_net_amount($discount_totals,$other_cost);
-			// $cart=$this->set_cart($items);
-			// log_message('debug',print_r($cart,TRUE));
+			
 			$this->set_cart($items);
 		}
 

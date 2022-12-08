@@ -55,32 +55,26 @@ class Sales extends Secure_Controller
 
 
 	public function bulk_entry_view($id = -1)
-	{		
-		
+	{			
 		$data['ro_sale_info'] = $this->Ro_sale->get_info($id);
-		// var_dump($data);
 		$data['employees'] = array();
 		foreach($this->Employee->get_all()->result() as $employee)
 		{
 			foreach(get_object_vars($employee) as $property => $value)
 			{
-				
 				$employee->$property = $this->xss_clean($value);
 			}
 
 			$data['employees'][$employee->person_id] = $employee->first_name . ' ' . $employee->last_name;
-		}
+		}		
 		
-		
-		$this->load->view("sales/sales_bulk", $data);
-	
+		$this->load->view("sales/sales_bulk", $data);	
 	}
 
 	// Inserts bulk data 
 
 	public function sales_bulk_save()
-	{
-	
+	{	
 			foreach(json_decode($_POST[bulk_data]) as $row)
 			 {
 			
@@ -94,18 +88,17 @@ class Sales extends Secure_Controller
 					$pending_pay='0.00';
 	
 				}
-				else{
-					
+				else
+				{
 				foreach($opening_balance as $opening_balance)
 				{				 
 					$open_bal_bulk=$opening_balance->closing_balance;
 					
-				}
-				
+				}				
 				
 				  $pending_pay=$open_bal_bulk-$row[5];
 				
-			}
+				}
 			
 					$save_bulk_entry[$row[3]] = array('customer_id'=>$row[3],
 					 'employee_id'=>$row[2],
@@ -122,18 +115,13 @@ class Sales extends Secure_Controller
 					'towards_vno' => $row[4],
 					'mode'=>"B",
 					'opening_balance'=>$open_bal_bulk,	
-					'status'=>'complete'
-					
+					'status'=>'complete'					
 					
 				);
 		}
 		//log_message('debug',print_r($pending_pay,TRUE));
 		$this->Ro_sale->save_sales($save_bulk_entry, $id);
 	}
-
-
-
-
 	public function search()
 	{
 		$search = $this->input->get('search');
@@ -341,9 +329,9 @@ class Sales extends Secure_Controller
 	public function add_payment()
 	{
 		$data = array();
-
+		
 		$payment_type = $this->input->post('payment_type');
-
+		
 		if($payment_type !== $this->lang->line('sales_giftcard'))
 		{
 			$this->form_validation->set_rules('amount_tendered', 'lang:sales_amount_tendered', 'trim|required|callback_numeric');
@@ -366,86 +354,86 @@ class Sales extends Secure_Controller
 		}
 		else
 		{
-			if($payment_type === $this->lang->line('sales_giftcard'))
-			{
-				// in case of giftcard payment the register input amount_tendered becomes the giftcard number
-				$giftcard_num = $this->input->post('amount_tendered');
+			// if($payment_type === $this->lang->line('sales_giftcard'))
+			// {
+			// 	// in case of giftcard payment the register input amount_tendered becomes the giftcard number
+			// 	$giftcard_num = $this->input->post('amount_tendered');
 
-				$payments = $this->sale_lib->get_payments();
-				$payment_type = $payment_type . ':' . $giftcard_num;
-				$current_payments_with_giftcard = isset($payments[$payment_type]) ? $payments[$payment_type]['payment_amount'] : 0;
-				$cur_giftcard_value = $this->Giftcard->get_giftcard_value($giftcard_num);
-				$cur_giftcard_customer = $this->Giftcard->get_giftcard_customer($giftcard_num);
-				$customer_id = $this->sale_lib->get_customer();
-				if(isset($cur_giftcard_customer) && $cur_giftcard_customer != $customer_id)
-				{
-					$data['error'] = $this->lang->line('giftcards_cannot_use', $giftcard_num);
-				}
-				elseif(($cur_giftcard_value - $current_payments_with_giftcard) <= 0 && $this->sale_lib->get_mode() == 'sale')
-				{
-					$data['error'] = $this->lang->line('giftcards_remaining_balance', $giftcard_num, to_currency($cur_giftcard_value));
-				}
-				else
-				{
-					$new_giftcard_value = $this->Giftcard->get_giftcard_value($giftcard_num) - $this->sale_lib->get_amount_due();
-					$new_giftcard_value = $new_giftcard_value >= 0 ? $new_giftcard_value : 0;
-					$this->sale_lib->set_giftcard_remainder($new_giftcard_value);
-					$new_giftcard_value = str_replace('$', '\$', to_currency($new_giftcard_value));
-					$data['warning'] = $this->lang->line('giftcards_remaining_balance', $giftcard_num, $new_giftcard_value);
-					$amount_tendered = min($this->sale_lib->get_amount_due(), $this->Giftcard->get_giftcard_value($giftcard_num));
+			// 	$payments = $this->sale_lib->get_payments();
+			// 	$payment_type = $payment_type . ':' . $giftcard_num;
+			// 	$current_payments_with_giftcard = isset($payments[$payment_type]) ? $payments[$payment_type]['payment_amount'] : 0;
+			// 	$cur_giftcard_value = $this->Giftcard->get_giftcard_value($giftcard_num);
+			// 	$cur_giftcard_customer = $this->Giftcard->get_giftcard_customer($giftcard_num);
+			// 	$customer_id = $this->sale_lib->get_customer();
+			// 	if(isset($cur_giftcard_customer) && $cur_giftcard_customer != $customer_id)
+			// 	{
+			// 		$data['error'] = $this->lang->line('giftcards_cannot_use', $giftcard_num);
+			// 	}
+			// 	elseif(($cur_giftcard_value - $current_payments_with_giftcard) <= 0 && $this->sale_lib->get_mode() == 'sale')
+			// 	{
+			// 		$data['error'] = $this->lang->line('giftcards_remaining_balance', $giftcard_num, to_currency($cur_giftcard_value));
+			// 	}
+			// 	else
+			// 	{
+			// 		$new_giftcard_value = $this->Giftcard->get_giftcard_value($giftcard_num) - $this->sale_lib->get_amount_due();
+			// 		$new_giftcard_value = $new_giftcard_value >= 0 ? $new_giftcard_value : 0;
+			// 		$this->sale_lib->set_giftcard_remainder($new_giftcard_value);
+			// 		$new_giftcard_value = str_replace('$', '\$', to_currency($new_giftcard_value));
+			// 		$data['warning'] = $this->lang->line('giftcards_remaining_balance', $giftcard_num, $new_giftcard_value);
+			// 		$amount_tendered = min($this->sale_lib->get_amount_due(), $this->Giftcard->get_giftcard_value($giftcard_num));
 
-					$this->sale_lib->add_payment($payment_type, $amount_tendered);
-				}
-			}
-			elseif($payment_type === $this->lang->line('sales_rewards'))
-			{
-				$customer_id = $this->sale_lib->get_customer();
-				$package_id = $this->Customer->get_info($customer_id)->package_id;
-				if(!empty($package_id))
-				{
-					$package_name = $this->Customer_rewards->get_name($package_id);
-					$points = $this->Customer->get_info($customer_id)->points;
-					$points = ($points == NULL ? 0 : $points);
+			// 		$this->sale_lib->add_payment($payment_type, $amount_tendered);
+			// 	}
+			// }
+			// elseif($payment_type === $this->lang->line('sales_rewards'))
+			// {
+			// 	$customer_id = $this->sale_lib->get_customer();
+			// 	$package_id = $this->Customer->get_info($customer_id)->package_id;
+			// 	if(!empty($package_id))
+			// 	{
+			// 		$package_name = $this->Customer_rewards->get_name($package_id);
+			// 		$points = $this->Customer->get_info($customer_id)->points;
+			// 		$points = ($points == NULL ? 0 : $points);
 
-					$payments = $this->sale_lib->get_payments();
-					$payment_type = $payment_type;
-					$current_payments_with_rewards = isset($payments[$payment_type]) ? $payments[$payment_type]['payment_amount'] : 0;
-					$cur_rewards_value = $points;
+			// 		$payments = $this->sale_lib->get_payments();
+			// 		$payment_type = $payment_type;
+			// 		$current_payments_with_rewards = isset($payments[$payment_type]) ? $payments[$payment_type]['payment_amount'] : 0;
+			// 		$cur_rewards_value = $points;
 
-					if(($cur_rewards_value - $current_payments_with_rewards) <= 0)
-					{
-						$data['error'] = $this->lang->line('rewards_remaining_balance') . to_currency($cur_rewards_value);
-					}
-					else
-					{
-						$new_reward_value = $points - $this->sale_lib->get_amount_due();
-						$new_reward_value = $new_reward_value >= 0 ? $new_reward_value : 0;
-						$this->sale_lib->set_rewards_remainder($new_reward_value);
-						$new_reward_value = str_replace('$', '\$', to_currency($new_reward_value));
-						$data['warning'] = $this->lang->line('rewards_remaining_balance'). $new_reward_value;
-						$amount_tendered = min($this->sale_lib->get_amount_due(), $points);
+			// 		if(($cur_rewards_value - $current_payments_with_rewards) <= 0)
+			// 		{
+			// 			$data['error'] = $this->lang->line('rewards_remaining_balance') . to_currency($cur_rewards_value);
+			// 		}
+			// 		else
+			// 		{
+			// 			$new_reward_value = $points - $this->sale_lib->get_amount_due();
+			// 			$new_reward_value = $new_reward_value >= 0 ? $new_reward_value : 0;
+			// 			$this->sale_lib->set_rewards_remainder($new_reward_value);
+			// 			$new_reward_value = str_replace('$', '\$', to_currency($new_reward_value));
+			// 			$data['warning'] = $this->lang->line('rewards_remaining_balance'). $new_reward_value;
+			// 			$amount_tendered = min($this->sale_lib->get_amount_due(), $points);
 
-						$this->sale_lib->add_payment($payment_type, $amount_tendered);
-					}
-				}
-			}
-			elseif($payment_type === $this->lang->line('sales_cash'))
-			{
-				$amount_due = $this->sale_lib->get_total();
+			// 			$this->sale_lib->add_payment($payment_type, $amount_tendered);
+			// 		}
+			// 	}
+			// }
+			if($payment_type === $this->lang->line('sales_cash'))
+			{ 				
+				//  $amount_due = $this->sale_lib->get_total();
 				$sales_total = $this->sale_lib->get_total(FALSE);
 
 				$amount_tendered = $this->input->post('amount_tendered');
 				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL);
-				$cash_adjustment_amount = $amount_due - $sales_total;
-				if($cash_adjustment_amount <> 0)
-				{
-					$this->session->set_userdata('cash_mode', CASH_MODE_TRUE);
-					$this->sale_lib->add_payment($this->lang->line('sales_cash_adjustment'), $cash_adjustment_amount, CASH_ADJUSTMENT_TRUE,NULL,NULL);
-				}
+				// $cash_adjustment_amount = $amount_due - $sales_total;
+				// if($cash_adjustment_amount <> 0)
+				// {
+				// 	$this->session->set_userdata('cash_mode', CASH_MODE_TRUE);
+				// 	$this->sale_lib->add_payment($this->lang->line('sales_cash_adjustment'), $cash_adjustment_amount, CASH_ADJUSTMENT_TRUE,NULL,NULL);
+				// }
+				
 			}
 			elseif($payment_type === $this->lang->line("sales_check"))
-			{  
-				 log_message('debug',print_r('check',TRUE));
+			{  				
 				$check_date=$this->input->post('cheque_date');
 				$check_number=$this->input->post('cheque_number');
 				$amount_tendered = $this->input->post('amount_tendered');
@@ -456,8 +444,7 @@ class Sales extends Secure_Controller
 				$amount_tendered = $this->input->post('amount_tendered');
 				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL);
 			}
-		}
-
+		}		
 		$this->_reload($data);
 	}
 
@@ -478,14 +465,13 @@ class Sales extends Secure_Controller
 		
 		// check if any discount is assigned to the selected customer
 		$customer_id = $this->sale_lib->get_customer();
-		// $comments=$this->input->post('item_comments');
-			// log_message('debug',print_r($comments,TRUE));
+		
 		if($customer_id != -1)
 		{
 			// load the customer discount if any
 			$customer_discount = $this->Customer->get_info($customer_id)->discount;
 			$customer_discount_type = $this->Customer->get_info($customer_id)->discount_type;
-			$category_id = $this->Customer->get_info($customer_id)->customer_category_id;
+			$category_id = $this->Customer->get_info($customer_id)->customer_category_name;
 			if($customer_discount != '')
 			{
 				$discount = $customer_discount;
@@ -500,7 +486,7 @@ class Sales extends Secure_Controller
 	
 		$this->token_lib->parse_barcode($quantity, $price, $item_id_or_number_or_item_kit_or_receipt);
 		$mode = $this->sale_lib->get_mode();
-		log_message('debug',print_r($mode,true));
+		
 		$quantity = ($mode == 'return') ? -$quantity : $quantity;
 		$item_location = $this->sale_lib->get_sale_location();
 
@@ -565,12 +551,12 @@ class Sales extends Secure_Controller
 			
 			if(!$this->sale_lib->add_item($item_id_or_number_or_item_kit_or_receipt, $quantity, $item_location, $discount, $discount_type, PRICE_MODE_STANDARD, NULL, NULL,NULL, NULL,NULL, NULL,NULL, NULL, $price,$sale_price,$mode))
 			{
-				// log_message('debug',print_r('add_item',true));
+				
 				$data['error'] = $this->lang->line('sales_unable_to_add_item');
 			}
 			else
 			{
-				// log_message('debug',print_r('add_item1',true));
+				
 				$data['warning'] = $this->sale_lib->out_of_stock($item_id_or_number_or_item_kit_or_receipt, $item_location);
 			}
 		}
@@ -594,18 +580,13 @@ class Sales extends Secure_Controller
 		$other_cost=parse_decimals($this->input->post('other_cost'));
 		$item_comment=$this->input->post('item_comments');
 		$tax=$this->input->post('tax');
-		// log_message('debug',print_r($naration,true));
 		$quantity = parse_quantity($this->input->post('quantity'));
 		$discount_type = $this->input->post('discount_type');
 		$discount = $discount_type ? parse_quantity($this->input->post('discount')) : parse_decimals($this->input->post('discount'));
 
 		$item_location = $this->input->post('location');
 		$discounted_total = $this->input->post('discounted_total') != '' ? $this->input->post('discounted_total') : NULL;
-		// $mode = $this->sale_lib->get_mode();
-		// log_message('debug',print_r('edit',true));
-
-		// log_message('debug',print_r($mode,true));
-
+	
 		if($this->form_validation->run() != FALSE)
 		{
 			$this->sale_lib->edit_item($item_id, $description, $serialnumber, $quantity, $discount, $discount_type, $price, $discounted_total,$other_cost,$tax,$item_comment);
@@ -646,7 +627,6 @@ class Sales extends Secure_Controller
 	public function complete()
 	{
 		$sale_id = $this->sale_lib->get_sale_id();
-		
 		if($sale_id==-1){
 			$sale_item_id=-1;
 			$sale_tax_id=-1;
@@ -654,9 +634,7 @@ class Sales extends Secure_Controller
 		$sale_type = $this->sale_lib->get_sale_type();
 		$data = array();
 		$data['dinner_table'] = $this->sale_lib->get_dinner_table();
-
 		$data['cart'] = $this->sale_lib->get_cart();
-
 		$data['include_hsn'] = ($this->config->item('include_hsn') == '1');
 		$__time = time();
 		$data['transaction_time'] = to_datetime($__time);
@@ -666,7 +644,6 @@ class Sales extends Secure_Controller
 		$employee_id = $this->Employee->get_logged_in_employee_info()->person_id;
 		$employee_info = $this->Employee->get_info($employee_id);
 		$data['employee'] = $employee_info->first_name . ' ' . mb_substr($employee_info->last_name, 0, 1);
-
 		$data['company_info'] = implode("\n", array(
 			$this->config->item('address'),
 			$this->config->item('phone')
@@ -694,11 +671,7 @@ class Sales extends Secure_Controller
 		$quote_number = $this->sale_lib->get_quote_number();
 		$data["quote_number"] = $quote_number;
 		$customer_info = $this->_load_customer_data($customer_id, $data);
-		$customer_opening_bal = $this->Sale->get_customer_opening_bal($customer_id);
-		$cus_opening_bal = 0;
-		foreach($customer_opening_bal as $customer_opening_bal){
-			$cus_opening_bal = $customer_opening_bal->closing_balance;
-		}
+			
 		if($customer_info != NULL)
 		{
 			$data["customer_comments"] = $customer_info->comments;
@@ -708,7 +681,7 @@ class Sales extends Secure_Controller
 		$data['taxes'] = $tax_details[0];
 		$data['discount'] = $this->sale_lib->get_discount();
 		$data['payments'] = $this->sale_lib->get_payments();
-
+	
 		// Returns 'subtotal', 'total', 'cash_total', 'payment_total', 'amount_due', 'cash_amount_due', 'payments_cover_total'
 		$totals = $this->sale_lib->get_totals($tax_details[0]);
 		
@@ -753,10 +726,9 @@ class Sales extends Secure_Controller
 
 		$data['print_price_info'] = TRUE;
 		
-
+		//tax Invoice
 		if($this->sale_lib->is_invoice_mode())
 		{
-			log_message('debug',print_r(1,TRUE));
 			$invoice_format = $this->config->item('sales_invoice_format');
 			// generate final invoice numbr (if using the invoice in sales by receipt mode then the invoice number can be manually entered or altered in some way
 			if(!empty($invoice_format) && $invoice_number == NULL)
@@ -764,8 +736,6 @@ class Sales extends Secure_Controller
 				// The user can retain the default encoded format or can manually override it.  It still passes through the rendering step.
 				$invoice_number = $this->token_lib->render($invoice_format);
 			}
-
-
 			if($sale_id == -1 && $this->Sale->check_invoice_number_exists($invoice_number))
 			{
 				$data['error'] = $this->lang->line('sales_invoice_number_duplicate', $invoice_number);
@@ -780,33 +750,33 @@ class Sales extends Secure_Controller
 				// The PHP file name is the same as the invoice_type key
 				$invoice_view = $this->config->item('invoice_type');
 
-				$opening_bal=$this->Sale->opening_bal($customer_id);	
-
-			foreach( $data['payments'] as $row)
-			{
-				
-				$payed_amount=$row['payment_amount'];
-				$payment_type=$row['payment_type'];
-			}	
-
-			if($payment_type =='Cheque')	
-			{
-				$closing=$opening_bal;
-				$total_bal=$opening_bal;
-			}	
-
-			$sale= $data['total'];
-			
-			   $closing=bcadd($opening_bal,$sale);
-			
-			 $total_bal=bcsub($closing,$payed_amount);
-			//  log_message('debug',print_r($opening_bal,TRUE));
-
-			
+				$opening_bal=$this->Sale->opening_bal($customer_id);
+				$sale= $data['total'];	
+				if( $data['payments'] == NULL)
+				{
+				   $payed_amount="";
+				   $payment_type="";
+				}				
+			   else
+			   {
+					foreach( $data['payments'] as $row)
+					{				
+						$payed_amount=$row['payment_amount'];
+						$payment_type=$row['payment_type'];
+					}	
+			   }			
+				if($payment_type =='Cheque')	
+				{
+					$closing=$opening_bal;
+					$total_bal=$opening_bal;
+				}			
+				else
+				{			
+				   $closing=bcadd($opening_bal,$sale);
+				 $total_bal=bcsub($closing,$payed_amount);
+				}
 				$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
-				
 				$data['sale_id'] = 'POS ' . $data['sale_id_num'];
-
 				// Resort and filter cart lines for printing
 				$data['cart'] = $this->sale_lib->sort_and_filter_cart($data['cart']);
 
@@ -826,7 +796,6 @@ class Sales extends Secure_Controller
 		}
 		elseif($this->sale_lib->is_work_order_mode())
 		{
-			log_message('debug',print_r(2,TRUE));
 			if(!($data['price_work_orders'] == 1))
 			{
 				$data['print_price_info'] = FALSE;
@@ -867,16 +836,14 @@ class Sales extends Secure_Controller
 				$this->sale_lib->clear_all();
 			}
 		}
+		//Estimate
 		elseif($this->sale_lib->is_quote_mode())
 		{
-			log_message('debug',print_r(3,TRUE));
-			
 			$data['sales_quote'] = $this->lang->line('sales_quote');
 			$data['quote_number_label'] = $this->lang->line('sales_quote_number');
 
 			if($quote_number == NULL)
 			{	
-				// log_message('debug',print_r('a',TRUE));
 				// generate quote number
 				$quote_format = $this->config->item('sales_quote_format');
 				$quote_number = $this->token_lib->render($quote_format);
@@ -884,17 +851,15 @@ class Sales extends Secure_Controller
 
 			if($sale_id == -1 && $this->Sale->check_quote_number_exists($quote_number))
 			{
-				// log_message('debug',print_r('b',TRUE));
 				$data['error'] = $this->lang->line('sales_quote_number_duplicate');
 				$this->_reload($data);
 			}
 			else
 			{
-				// log_message('debug',print_r('c',TRUE));
 				$data['quote_number'] = $quote_number;
 				$data['sale_status'] = SUSPENDED;
 				$sale_type = SALE_TYPE_QUOTE;
-				// $opening_bal=$this->Sale->opening_bal($customer_id);
+				
 				$opening_bal=0.00;
 				$total_bal=0.00;
 
@@ -904,9 +869,9 @@ class Sales extends Secure_Controller
 				$data['cart'] = $this->sale_lib->sort_and_filter_cart($data['cart']);
 
 				$data = $this->xss_clean($data);
-
+				$opening_bal=$this->Sale->opening_bal($customer_id);
 				$data['barcode'] = NULL;
-				$data['cus_opening_bal'] = $cus_opening_bal;
+				$data['cus_opening_bal'] = $opening_bal;
 
 				$this->load->view('sales/quote', $data);
 				$this->sale_lib->clear_mode();
@@ -915,71 +880,70 @@ class Sales extends Secure_Controller
 		}
 		else
 		{
-			// log_message('debug',print_r(4,TRUE));
 			// Save the data to the sales table
 			$data['sale_status'] = COMPLETED;
+			//Return
 			if($this->sale_lib->is_return_mode())
 			{
 				$sale_type = SALE_TYPE_RETURN;
 				$opening_bal=$this->Sale->opening_bal($customer_id);	
 
-			foreach( $data['payments'] as $row)
-			{
-				
-				$payed_amount=$row['payment_amount'];
-				
-			}			
-			$sale= $data['total'];
-			
-			$total_bal=bcadd($opening_bal,$sale);
-			//  /  log_message('debug',print_r($opening_bal,TRUE));
-			//    log_message('debug',print_r($total_bal,TRUE));
-			//  $total_bal=bcsub($closing,$payed_amount);
-			$opening_bal=$this->Sale->opening_bal($customer_id);	
+				foreach( $data['payments'] as $row)
+				{				
+					$payed_amount=$row['payment_amount'];				
+				}			
+					$sale= $data['total'];			
+					$total_bal=bcadd($opening_bal,$sale);
+					$opening_bal=$this->Sale->opening_bal($customer_id);
+					$sale= $data['total'];	
 
-			foreach( $data['payments'] as $row)
-			{
-				
-				$payed_amount=$row['payment_amount'];
-				$payment_type=$row['payment_type'];
-			}	
+				foreach( $data['payments'] as $row)
+				{				
+					$payed_amount=$row['payment_amount'];
+					$payment_type=$row['payment_type'];
+				}	
 
-			if($payment_type =='Cheque')	
-			{
-				$closing=$opening_bal;
-				$total_bal=$opening_bal;
-			}	
-
-			$sale= $data['total'];
+				if($payment_type =='Cheque')	
+				{
+					$closing=$opening_bal;
+					$total_bal=$opening_bal;
+				}				
 			
-			$total_bal=bcadd($opening_bal,$sale);
-			
-			//  $total_bal=bcsub($closing,$payed_amount);
+				$closing=bcsub($opening_bal,$sale);
+				$total_bal=bcsub($closing,-($payed_amount));		
 			}
+			//cash bill
 			else
 			{
 				$sale_type = SALE_TYPE_POS;
 				$opening_bal=$this->Sale->opening_bal($customer_id);	
-
-				foreach( $data['payments'] as $row)
+				$sale= $data['total'];				
+				 if( $data['payments'] == NULL)
+				 {
+					$payed_amount="";
+					$payment_type="";
+				 }				 
+				else
 				{
-					
-					$payed_amount=$row['payment_amount'];
-					$payment_type=$row['payment_type'];
-				}	
-	
+					foreach( $data['payments'] as $row)
+					{					
+						$payed_amount=$row['payment_amount'];
+						$payment_type=$row['payment_type'];
+					}	
+				}
+			
 				if($payment_type =='Cheque')	
 				{
 					$closing=$opening_bal;
 					$total_bal=$opening_bal;
 				}	
-	
-				$sale= $data['total'];
 				
+				else
+				{				
 				   $closing=bcadd($opening_bal,$sale);
-				
-				 $total_bal=bcsub($closing,$payed_amount);
-				
+					 $total_bal=bcsub($closing,$payed_amount);
+				}
+						
 			}
 			
 			$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
@@ -1260,33 +1224,22 @@ class Sales extends Secure_Controller
 
 		// cash_rounding indicates only that the site is configured for cash rounding
 		$data['cash_rounding'] = $cash_rounding;
-		// $data['item_comments'];
-
 		$data['cart'] = $this->sale_lib->get_cart();
-		log_message('debug',print_r($data['cart'],true));
 		$customer_info = $this->_load_customer_data($this->sale_lib->get_customer(), $data, TRUE);
-
 		$data['modes'] = $this->sale_lib->get_register_mode_options();
-		// log_message('debug',print_r($data['modes'],true));
 		$data['mode'] = $this->sale_lib->get_mode();
-	//	log_message('debug',print_r($data['mode'],true));
 		$data['selected_table'] = $this->sale_lib->get_dinner_table();
-	//	log_message('debug',print_r($data['selected_table'],true));
 		$data['empty_tables'] = $this->sale_lib->get_empty_tables($data['selected_table']);
 		$data['stock_locations'] = $this->Stock_location->get_allowed_locations('sales');
 		$data['stock_location'] = $this->sale_lib->get_sale_location();
 		$data['tax_exclusive_subtotal'] = $this->sale_lib->get_subtotal(TRUE, TRUE);
-	//	log_message('debug',print_r($data['selected_table'],true));
 		$tax_details = $this->tax_lib->get_taxes($data['cart']);
 		$data['taxes'] = $tax_details[0];
-	//  log_message('debug',print_r($data['taxes'],true));
 		$data['discount'] = $this->sale_lib->get_discount();
 		$data['payments'] = $this->sale_lib->get_payments();
-		//  $data['item_comments']="";
 
 		// Returns 'subtotal', 'total', 'cash_total', 'payment_total', 'amount_due', 'cash_amount_due', 'payments_cover_total'
 		$totals = $this->sale_lib->get_totals($tax_details[0]);
-
 		$data['item_count'] = $totals['item_count'];
 		$data['total_units'] = $totals['total_units'];
 		$data['subtotal'] = $totals['subtotal'];
@@ -1309,11 +1262,13 @@ class Sales extends Secure_Controller
 		{
 			$data['total'] = $totals['cash_total'];
 			$data['amount_due'] = $totals['cash_amount_due'];
+			// $data['payed_amount']=0.00;
 		}
 		else
 		{
 			$data['total'] = $totals['total'];
 			$data['amount_due'] = $totals['amount_due'];
+			// $data['payed_amount']=0.00;
 		}
 
 		$data['amount_change'] = $data['amount_due'] * -1;
@@ -1327,9 +1282,9 @@ class Sales extends Secure_Controller
 		}
 		else
 		{
-			$data['payment_options'] = $this->Sale->get_payment_options();
+			$data['payment_options'] = $this->Sale->get_payment_options();			
 		}
-
+		
 		$data['items_module_allowed'] = $this->Employee->has_grant('items', $this->Employee->get_logged_in_employee_info()->person_id);
 		$data['change_price'] = $this->Employee->has_grant('sales_change_price', $this->Employee->get_logged_in_employee_info()->person_id);
 
@@ -1376,8 +1331,7 @@ class Sales extends Secure_Controller
 			$data['mode_label'] = $this->lang->line('sales_receipt');
 			$data['customer_required'] = $this->lang->line('sales_customer_optional');
 		}
-		// $data['sale_price']=$data['price'];
-
+		
 		$data = $this->xss_clean($data);
 		
 		$this->load->view("sales/register", $data);
@@ -1439,16 +1393,9 @@ class Sales extends Secure_Controller
 		}
 
 		$data['payment_options'] = $this->xss_clean($payment_options);
-
 		// Set up a slightly modified list of payment types for new payment entry
 		$payment_options["--"] = $this->lang->line('common_none_selected_text');
-
-		// $data['new_payment_options'] = $this->xss_clean($payment_options);
-		// $customer_id = $this->input->post('customer');
-		// $item_id=$this->input->post('customer');
-		// $category_id=$this->sale->category_id($customer_id);
-		// $data['sale_price']=$this->sale->price($category_id,$item_id);
-
+		
 		$this->load->view('sales/form', $data);
 	}
 

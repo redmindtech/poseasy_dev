@@ -575,9 +575,7 @@ class Sale extends CI_Model
 	 */
 	public function save($sale_id, &$sale_status, &$items, $customer_id, $employee_id, $comment, $invoice_number,
 							$work_order_number, $quote_number, $sale_type, $payments, $dinner_table, &$sales_taxes,$sale_item_id,$sale_tax_id,$total,$opening_bal,$closing_bal)
-	{
-		
-		 log_message('debug',print_r($payments,TRUE));
+	{				
 		if($sale_id != -1)
 		{
 			$this->clear_suspended_sale_detail($sale_id);
@@ -643,29 +641,30 @@ class Sale extends CI_Model
 			$status='complete';
 			if($payment['payment_type']=='Cheque'){
 				$status='pending';
+				$cheque_number=$payment['sales_cheque_no'];
+				$cheque_date=$payment['sales_cheque_date'];
 			}
 			else{
-
+				$cheque_number=NULL;
+				$cheque_date=NULL;
 				$status='complete';
 			}
-
 			$sales_payments_data = array(
 				//  'id'		  => $sale_id,
 				'payment_type'	  => $payment['payment_type'],
 				'paid_amount'  => $payment['payment_amount'],
-				'sales_cheque_no'=>$payment['sales_cheque_no'],
-				'sales_cheque_date'=>	$payment['sales_cheque_date'],
+				'sales_cheque_no'=>$cheque_number,
+				'sales_cheque_date'=>$cheque_date,
 				'status'=>$status,
 				// 'cash_refund'     => $payment['cash_refund'],
 				// /'cash_adjustment' => $payment['cash_adjustment'],
 				'employee_id'	  => $employee_id
-			// 	sales_cheque_date] => 2022-12-01
-            // [sales_cheque_no] => 5677
+		
 			);
 			
 			$this->db->where('id',$sale_id);
 
-			$this->db->update('ro_sales', $sales_payments_data);
+			$this->db->update('ro_sales', $sales_payments_data);			
 			
 			// $total_amount = floatval($total_amount) + floatval($payment['payment_amount']) - floatval($payment['cash_refund']);
 
@@ -1014,16 +1013,17 @@ class Sale extends CI_Model
 	public function get_payment_options($giftcard = TRUE, $reward_points = FALSE)
 	{
 		$payments = get_payment_options();
+		// log_message('debug',print_r($payments,TRUE));
 
-		if($giftcard == TRUE)
-		{
-			$payments[$this->lang->line('sales_giftcard')] = $this->lang->line('sales_giftcard');
-		}
+		// if($giftcard == TRUE)
+		// {
+		// 	$payments[$this->lang->line('sales_giftcard')] = $this->lang->line('sales_giftcard');
+		// }
 
-		if($reward_points == TRUE)
-		{
-			$payments[$this->lang->line('sales_rewards')] = $this->lang->line('sales_rewards');
-		}
+		// if($reward_points == TRUE)
+		// {
+		// 	$payments[$this->lang->line('sales_rewards')] = $this->lang->line('sales_rewards');
+		// }
 
 		if($this->sale_lib->get_mode() == 'sale_work_order')
 		{
@@ -1542,29 +1542,6 @@ class Sale extends CI_Model
 		}
 		return $query;
 		
-}
-
-public function get_customer_opening_bal($customer_id){
-		
-	$this->db->select('max(id)');		
-	$this->db->from('ro_sales');
-	$this->db->where('customer_id ',$customer_id);
-	$this->db->group_by('customer_id');
-	
-	$sub_query = $this->db->get_compiled_select();
-	$this->db->select('closing_balance');
-	$this->db->from('ro_sales');
-	$this->db->where("Id IN ($sub_query)");		
-	$query = $this->db->get()->result();
-				
-	if($query==NULL || $query=='0')
-	{
-		$query='0.00';
-	 
-		return $query;
-	}
-	return $query;
-	
 }
 
 		
