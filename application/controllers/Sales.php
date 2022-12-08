@@ -471,7 +471,7 @@ class Sales extends Secure_Controller
 			// load the customer discount if any
 			$customer_discount = $this->Customer->get_info($customer_id)->discount;
 			$customer_discount_type = $this->Customer->get_info($customer_id)->discount_type;
-			$category_id = $this->Customer->get_info($customer_id)->customer_category_name;
+			$category_id = $this->Customer->get_info($customer_id)->customer_category_id;
 			if($customer_discount != '')
 			{
 				$discount = $customer_discount;
