@@ -32,11 +32,11 @@ $(document).ready(function()
 		pageSize: <?php echo $this->config->item('lines_per_page'); ?>,
 		uniqueId: 'sale_id',
 		onLoadSuccess: function(response) {
-			if($("#table tbody tr").length > 1) {
-				$("#payment_summary").html(response.payment_summary);
-				$("#table tbody tr:last td:first").html("");
-				$("#table tbody tr:last").css('font-weight', 'bold');
-			}
+			// if($("#table tbody tr").length > 1) {
+			// 	$("#payment_summary").html(response.payment_summary);
+			// 	$("#table tbody tr:last td:first").html("");
+			// 	$("#table tbody tr:last").css('font-weight', 'bold');
+			// }
 		},
 		queryParams: function() {
 			return $.extend(arguments[0], table_support.query_params());
@@ -66,7 +66,7 @@ $(document).ready(function()
 		</button>
 
 		<?php echo form_input(array('name'=>'daterangepicker', 'class'=>'form-control input-sm', 'id'=>'daterangepicker')); ?>
-		<?php echo form_multiselect('filters[]', $filters, '', array('id'=>'filters', 'data-none-selected-text'=>$this->lang->line('common_none_selected_text'), 'class'=>'selectpicker show-menu-arrow', 'data-selected-text-format'=>'count > 1', 'data-style'=>'btn-default btn-sm', 'data-width'=>'fit')); ?>
+		<?php //echo form_multiselect('filters[]', $filters, '', array('id'=>'filters', 'data-none-selected-text'=>$this->lang->line('common_none_selected_text'), 'class'=>'selectpicker show-menu-arrow', 'data-selected-text-format'=>'count > 1', 'data-style'=>'btn-default btn-sm', 'data-width'=>'fit')); ?>
 	</div>
 </div>
 
