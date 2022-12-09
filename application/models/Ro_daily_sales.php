@@ -197,7 +197,7 @@ class Ro_daily_sales extends CI_Model
 	public function search($search, $filters, $rows = 0, $limit_from = 0, $sort = 'ro_sales.date_added', $order = 'desc', $count_only = FALSE)
 	{
 
-		$where = 'ro_sales.sale_type = 0 AND ';	
+		$where = 'ro_sales.sales_cheque_no = 0 AND ';	
 		
 		
 
