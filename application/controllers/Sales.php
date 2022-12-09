@@ -767,8 +767,9 @@ class Sales extends Secure_Controller
 			   }			
 				if($payment_type =='Cheque')	
 				{
-					$closing=$opening_bal;
-					$total_bal=$opening_bal;
+					$closing=bcadd($opening_bal,$sale);
+					$total_bal=$closing;
+					
 				}			
 				else
 				{			
@@ -776,6 +777,7 @@ class Sales extends Secure_Controller
 				 $total_bal=bcsub($closing,$payed_amount);
 				}
 				$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
+				
 				$data['sale_id'] = 'POS ' . $data['sale_id_num'];
 				// Resort and filter cart lines for printing
 				$data['cart'] = $this->sale_lib->sort_and_filter_cart($data['cart']);
@@ -905,8 +907,9 @@ class Sales extends Secure_Controller
 
 				if($payment_type =='Cheque')	
 				{
-					$closing=$opening_bal;
-					$total_bal=$opening_bal;
+					$closing=bcadd($opening_bal,$sale);
+					$total_bal=$closing;
+					
 				}				
 			
 				$closing=bcsub($opening_bal,$sale);
@@ -934,8 +937,9 @@ class Sales extends Secure_Controller
 			
 				if($payment_type =='Cheque')	
 				{
-					$closing=$opening_bal;
-					$total_bal=$opening_bal;
+					$closing=bcadd($opening_bal,$sale);
+					$total_bal=$closing;
+					
 				}	
 				
 				else

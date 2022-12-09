@@ -489,5 +489,6 @@ class Customer extends Person
 		 return $close_bal;
 		
 	}
+	
 }
 ?>

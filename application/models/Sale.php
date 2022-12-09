@@ -607,9 +607,15 @@ class Sale extends CI_Model
 			 'status'=>'complete'
 			
 		);
+		// $customer_data=array('sales_amount'=>$total,
+		// 'opening_balance'=>$opening_bal,
+		// 'closing_balance'=>$closing_bal);
+
+
 
 		// Run these queries as a transaction, we want to make sure we do all or nothing
 		$this->db->trans_start();
+
 
 		if($sale_id == -1)
 		{
@@ -620,6 +626,7 @@ class Sale extends CI_Model
 		{
 			$this->db->where('id', $sale_id);
 			$this->db->update('ro_sales', $sales_data);
+			
 		}
 		$total_amount = 0;
 		$total_amount_used = 0;
@@ -643,11 +650,13 @@ class Sale extends CI_Model
 				$status='pending';
 				$cheque_number=$payment['sales_cheque_no'];
 				$cheque_date=$payment['sales_cheque_date'];
+				
 			}
 			else{
 				$cheque_number=NULL;
 				$cheque_date=NULL;
 				$status='complete';
+				
 			}
 			$sales_payments_data = array(
 				//  'id'		  => $sale_id,
@@ -664,7 +673,8 @@ class Sale extends CI_Model
 			
 			$this->db->where('id',$sale_id);
 
-			$this->db->update('ro_sales', $sales_payments_data);			
+			$this->db->update('ro_sales', $sales_payments_data);	
+			
 			
 			// $total_amount = floatval($total_amount) + floatval($payment['payment_amount']) - floatval($payment['cash_refund']);
 
@@ -694,7 +704,7 @@ class Sale extends CI_Model
 				// 'discount'			=> $item['discount'],
 				// 'discount_type'		=> $item['discount_type'],
 				// 'item_cost_price'	=> $item['cost_price'],
-				'unit_price'	=> $item['price'],
+				'unit_price'	=> $item['unit_price'],
 				'sales_amount'=>$item['total'],
 				'discount'=>$item['discount'] ,
 				'other_cost'=>$item['other_cost'],

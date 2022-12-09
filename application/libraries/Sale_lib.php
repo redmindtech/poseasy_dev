@@ -770,7 +770,7 @@ class Sale_lib
 		
 		$item_info = $this->CI->Item->get_info_by_id_or_number($item_id, $include_deleted);
 		//make sure item exists
-				
+				log_message('debug',print_r($item_info,TRUE));
 		if(empty($item_info))
 		{
 			$item_id = -1;
@@ -790,7 +790,16 @@ class Sale_lib
 		$item_type = $item_info->item_type;
 		$stock_type = $item_info->stock_type;
 
-		$price =$sale_price;
+		// $price =$sale_price;
+		log_message('debug',print_r($sale_price,TRUE));
+		if($sale_price == "")
+		{
+			$price=$item_info->unit_price;
+		}
+		else{
+			$price =$sale_price;
+		}
+		log_message('debug',print_r($price,TRUE));
 		$cost_price = $item_info->cost_price;
 		if($price_override != NULL)
 		{
@@ -943,6 +952,7 @@ class Sale_lib
 					'in_stock' => $this->CI->Item_quantity->get_item_quantity($item_id, $item_location)->quantity,
 					 'price' => $price,
 					 'cost_price' => $cost_price,
+					 'unit_price'=>$item_info->unit_price,
 					'total' => $net_amt,
 					'discounted_total' => $price_tax,
 					'print_option' => $print_option_selected,

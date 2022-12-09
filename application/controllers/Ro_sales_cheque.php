@@ -96,6 +96,7 @@ class Ro_sales_cheque extends Secure_Controller
 		
 		$customer_id = $_POST['customer_id'];
 		$final_val = $_POST['final_val'];
+		
 					
 		$this->Ro_sales_cheques->save_cheque($id,$final_val,$customer_id);	
 		
@@ -137,9 +138,13 @@ class Ro_sales_cheque extends Secure_Controller
 
 			}
 		 else{
+			log_message('debug',print_r($open_bal,TRUE));
+			log_message('debug',print_r($value->paid_amount,TRUE));
+			
 			
 			$sum=($open_bal)-($value->paid_amount);
 			$closing_bal=number_format($sum,2, ".", "");
+			log_message('debug',print_r($closing_bal,TRUE));
 			
 
 			// $sum1=($closing_bal-($value->purchase_return_amount))-($value->discount);

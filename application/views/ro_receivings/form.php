@@ -398,34 +398,17 @@ $(document).ready(function()
 
 $("form").on("change", "input","click", function(e)
 {       
-
-
-
 	var paid_amt_for_mode = parseFloat($('#paid_amount').val());
 	var purchase_amt_for_mode = parseFloat($('#purchase_amount').val());
-	
-	
-
 	if(purchase_amt_for_mode > 0 && paid_amt_for_mode < 1){
 		$("#payment_mode").attr('required',false);
 	}else{
 		$("#payment_mode").attr('required',true);
 	}
-
-
-	
-
-
-	
-	
-	
-
 	var payment_mode=$('#payment_mode').val();		
 		if(payment_mode=="Cheque")
 		{
-			
-			
-			
+					
 		var	open_bal=parseFloat($('#opening_balance').val());
 		var purchase_amt=parseFloat($('#purchase_amount').val());
 		var closing_bal = open_bal + purchase_amt;
@@ -435,8 +418,7 @@ $("form").on("change", "input","click", function(e)
 		var purchase_amt=parseFloat($('#purchase_amount').val());
 		var paid_amt=parseFloat($('#paid_amount').val());
 	
-		var discount= parseFloat($('#discount').val());
-		
+		var discount= parseFloat($('#discount').val());	
 
 
 	}else{

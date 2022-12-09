@@ -306,6 +306,7 @@ $lang['sales_gross_amount_symbol'] = "Gross Amt(₹)";
 $lang['sales_other_cost_symbol'] = "Other cost(₹)";
 $lang['sales_total_symbol'] = "Total(₹)";
 $lang['ro_sales_sales_amt'] = "Sales Amount";
+$lang['sales_neft']="NEFT";
 
 
 

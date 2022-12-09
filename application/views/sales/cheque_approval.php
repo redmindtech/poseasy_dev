@@ -71,7 +71,7 @@ $(document).ready(function()
 				opening_bal = parseFloat(row.find("td:eq(11)").text());
 				sales_amt = parseFloat(row.find("td:eq(9)").text());
 				
-				overall_val = (parseFloat(opening_bal) - parseFloat(paid_amt));
+				overall_val = (parseFloat(closing_bal) - parseFloat(paid_amt));
 				final_val = overall_val ;
 
 				
