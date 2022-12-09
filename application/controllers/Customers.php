@@ -83,6 +83,7 @@ class Customers extends Persons
 			$count = $offset + 1;
 
 			$data_rows[] = $this->xss_clean(get_customer_data_row($person, $stats, $count));
+			$count++;
 		}
 
 		echo json_encode(array('total' => $total_rows, 'rows' => $data_rows));
