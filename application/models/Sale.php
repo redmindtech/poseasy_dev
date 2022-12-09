@@ -83,7 +83,7 @@ class Sale extends CI_Model
 	public function search($search, $filters, $rows = 0, $limit_from = 0, $sort = 'sales.sale_time', $order = 'desc', $count_only = FALSE)
 	{
 		// Pick up only non-suspended records
-		$where = 'sales.sale_status = 0 AND ';
+		$where = 'sales.sales_cheque_no = 0 AND ';
 
 		if(empty($this->config->item('date_or_time_format')))
 		{
