@@ -60,7 +60,7 @@ function get_sales_manage_table_headers()
 	$CI =& get_instance();
 
 	$headers = array(
-		array('sale_id' => $CI->lang->line('common_id')),
+		array('sale_id' => $CI->lang->line('ro_sales_id')),
 		array('sale_time' => $CI->lang->line('sales_sale_time')),
 		array('customer_name' => $CI->lang->line('customers_customer')),
 		array('amount_due' => $CI->lang->line('sales_amount_due')),
@@ -79,6 +79,7 @@ function get_sales_manage_table_headers()
 
 	return transform_headers($headers);
 }
+
 
 
 /*
@@ -117,6 +118,74 @@ function get_sale_data_row($sale)
 
 	return $row;
 }
+
+function get_sales_daily_manage_table_headers()
+{
+	$CI =& get_instance();
+
+	$headers = array(
+		array('sale_id' => $CI->lang->line('ro_sales_id')),
+		array('ro_sales_invoice_no' => $CI->lang->line('ro_sales_invoice_no')),
+		array('sales_customer_name' => $CI->lang->line('customers_customer')),
+		
+		array('ro_sales_opening_balance' => $CI->lang->line('ro_sales_opening_balance'),'sortable' => FALSE),
+		array('ro_sales_sales_amt' => $CI->lang->line('ro_sales_sales_amt')),
+		array('ro_sales_paid_amount' => $CI->lang->line('ro_sales_paid_amount'),'sortable' => FALSE),
+		
+		array('ro_sales_closing_balance' => $CI->lang->line('ro_sales_closing_balance'),'sortable' => FALSE),
+		array('payment_type' => $CI->lang->line('sales_payment_type')),
+		array('sale_time' => $CI->lang->line('sales_sale_time')),
+	);
+
+	if($CI->config->item('invoice_enable') == TRUE)
+	{
+		// $headers[] = array('invoice_number' => $CI->lang->line('sales_invoice_number'));
+		$headers[] = array('invoice' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
+	}
+
+	$headers[] = array('receipt' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
+
+	return transform_headers($headers);
+}
+
+function get_sale_daily_data_row($daily_sale)
+{
+	$CI =& get_instance();
+
+	$controller_name = $CI->uri->segment(1);
+
+	$row = array (
+		'sale_id' => $daily_sale->id,
+		'ro_sales_invoice_no' => $daily_sale->voucher_no,
+		
+		'sales_customer_name' => $daily_sale->customer_name,
+		
+		'ro_sales_opening_balance' => to_currency($daily_sale->opening_balance),
+		'ro_sales_closing_balance' => to_currency($daily_sale->closing_balance),
+		'ro_sales_paid_amount' => to_currency($daily_sale->paid_amount),
+		'ro_sales_sales_amt' => to_currency($daily_sale->sales_amount),
+		'payment_type' => $daily_sale->payment_type,	
+		'sale_time' => to_datetime(strtotime($daily_sale->date_added)),
+	);
+
+	// if($CI->config->item('invoice_enable'))
+	// {
+	// 	$row['voucher_no'] = $daily_sale->voucher_no;
+	// 	$row['invoice'] = empty($daily_sale->voucher_no) ? '' : anchor($controller_name."/invoice/$daily_sale->id", '<span class="glyphicon glyphicon-list-alt"></span>',
+	// 		array('title'=>$CI->lang->line('sales_show_invoice'))
+	// 	);
+	// }
+
+	$row['receipt'] = anchor($controller_name."/receipt/$daily_sale->id", '<span class="glyphicon glyphicon-usd"></span>',
+		array('title' => $CI->lang->line('sales_show_receipt'))
+	);
+	// $row['edit'] = anchor($controller_name."/edit/$daily_sale->id", '<span class="glyphicon glyphicon-edit"></span>',
+	// 	array('class' => 'modal-dlg print_hide', 'data-btn-delete' => $CI->lang->line('common_delete'), 'data-btn-submit' => $CI->lang->line('common_submit'), 'title' => $CI->lang->line($controller_name.'_update'))
+	// );
+
+	return $row;
+}
+
 
 /*
 Get the html data last row for the sales
@@ -222,22 +291,23 @@ function get_customer_manage_table_headers()
 	$CI =& get_instance();
 
 	$headers = array(
+		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
 		array('people.person_id' => $CI->lang->line('customers_id')),
 		// array('first_name' => $CI->lang->line('customer_first')),
-		array('messages' => $CI->lang->line('customer_message')),
-		array('last_name' => $CI->lang->line('common_last_name')),
+		array('messages' => $CI->lang->line('customer_name')),
+		array('customer_company' => $CI->lang->line('customer_company')),
 		
 		array('customer_category_name'=>$CI->lang->line('common_category')),
 		array('email' => $CI->lang->line('common_email')),
+		
 		array('phone_number' => $CI->lang->line('common_phone_number')),
-		array('total' => $CI->lang->line('common_total_spent'), 'sortable' => FALSE),
-		//array('edit' => $CI->lang->line('customers_edit')),
+		
 	);
 
 	if($CI->Employee->has_grant('messages', $CI->session->userdata('person_id')))
 	{
 		
-		$headers[]= array('edit' => $CI->lang->line('customers_edit'));
+		// $headers[]= array('edit' => $CI->lang->line('customers_edit'));
 	}
 
 	return transform_headers($headers);
@@ -303,26 +373,17 @@ function get_customer_data_row($person, $stats, $count)
 	$controller_name = strtolower(get_class($CI));
 
 	return array (
+		'serial_number' => $count,
 		'people.person_id' =>$person->person_id,
-		
-		'last_name' => $person->last_name,
-		// 'first_name' => $person->first_name,
-
-		
-
 		'customer_category_name' => $person->customer_category_name,
 
-		'email' => empty($person->email) ? '' : mailto($person->email, $person->email),
-
+		'email' =>$person->email,
+		'customer_company' =>$person->company_name,
 		'phone_number' => $person->phone_number,
 
-		'messages' => anchor($controller_name."/customers_details/$person->person_id/$count", $person->first_name,
-		array('class'=>"modal-dlg", 'title'=>"Summary of ".$person->first_name)),	
+		'messages' => anchor($controller_name."/customers_details/$person->person_id/$count", $person->first_name . " " . $person->last_name,
+		array('class'=>"modal-dlg", 'title'=>"Summary of ".$person->first_name . " " . $person->last_name)),	
 
-
-		'total' => to_currency($stats->total),
-
-		
 			'edit' => anchor($controller_name."/view/$person->person_id", '<span class="glyphicon glyphicon-edit"></span>',
 			array('class'=>'modal-dlg', 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update'))
 		
@@ -1331,72 +1392,5 @@ function get_ro_sales_manage_table_headers()
 				// 'pending_payables' => $ro_sales->pending_payables,
 				
 			);
-}
-
-function get_sales_daily_manage_table_headers()
-{
-	$CI =& get_instance();
-
-	$headers = array(
-		array('sale_id' => $CI->lang->line('ro_sales_id')),
-		array('ro_sales_invoice_no' => $CI->lang->line('ro_sales_invoice_no')),
-		array('sales_customer_name' => $CI->lang->line('customers_customer')),
-		
-		array('ro_sales_opening_balance' => $CI->lang->line('ro_sales_opening_balance'),'sortable' => FALSE),
-		array('ro_sales_sales_amt' => $CI->lang->line('ro_sales_sales_amt')),
-		array('ro_sales_paid_amount' => $CI->lang->line('ro_sales_paid_amount'),'sortable' => FALSE),
-		
-		array('ro_sales_closing_balance' => $CI->lang->line('ro_sales_closing_balance'),'sortable' => FALSE),
-		array('payment_type' => $CI->lang->line('sales_payment_type')),
-		array('sale_time' => $CI->lang->line('sales_sale_time')),
-	);
-
-	if($CI->config->item('invoice_enable') == TRUE)
-	{
-		// $headers[] = array('invoice_number' => $CI->lang->line('sales_invoice_number'));
-		$headers[] = array('invoice' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
-	}
-
-	$headers[] = array('receipt' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
-
-	return transform_headers($headers);
-}
-
-function get_sale_daily_data_row($daily_sale)
-{
-	$CI =& get_instance();
-
-	$controller_name = $CI->uri->segment(1);
-
-	$row = array (
-		'sale_id' => $daily_sale->id,
-		'ro_sales_invoice_no' => $daily_sale->voucher_no,
-		
-		'sales_customer_name' => $daily_sale->customer_name,
-		
-		'ro_sales_opening_balance' => to_currency($daily_sale->opening_balance),
-		'ro_sales_closing_balance' => to_currency($daily_sale->closing_balance),
-		'ro_sales_paid_amount' => to_currency($daily_sale->paid_amount),
-		'ro_sales_sales_amt' => to_currency($daily_sale->sales_amount),
-		'payment_type' => $daily_sale->payment_type,	
-		'sale_time' => to_datetime(strtotime($daily_sale->date_added)),
-	);
-
-	// if($CI->config->item('invoice_enable'))
-	// {
-	// 	$row['voucher_no'] = $daily_sale->voucher_no;
-	// 	$row['invoice'] = empty($daily_sale->voucher_no) ? '' : anchor($controller_name."/invoice/$daily_sale->id", '<span class="glyphicon glyphicon-list-alt"></span>',
-	// 		array('title'=>$CI->lang->line('sales_show_invoice'))
-	// 	);
-	// }
-
-	$row['receipt'] = anchor($controller_name."/receipt/$daily_sale->id", '<span class="glyphicon glyphicon-usd"></span>',
-		array('title' => $CI->lang->line('sales_show_receipt'))
-	);
-	// $row['edit'] = anchor($controller_name."/edit/$daily_sale->id", '<span class="glyphicon glyphicon-edit"></span>',
-	// 	array('class' => 'modal-dlg print_hide', 'data-btn-delete' => $CI->lang->line('common_delete'), 'data-btn-submit' => $CI->lang->line('common_submit'), 'title' => $CI->lang->line($controller_name.'_update'))
-	// );
-
-	return $row;
 }
 ?>

@@ -10,17 +10,16 @@
 		padding:5px;
 		border:1px solid #999 !important;
 	}
-	#customer_table{
-		width:100%;
-		margin-top: 20px;
+@media (min-width: 768px)
+{
+	.modal-dlg .modal-dialog
+	{
+		width: 750px !important;
 	}
-	#customer_table{
-		width:100%;
-		margin-top: 20px;
-	}
+}
 </style>
 <?php
-	if ($controller_name == 'customers')
+	if ($controller_name == 'customers' && $customer_sales != NULL)
 	{
 	?>
 
@@ -104,5 +103,12 @@
 </div>
 
 <?php
+	}else{
+		$null_message = "This Customer has no transaction";
+	?>
+	
+	<h3><center><?php echo $null_message; ?></center></h3>
+
+	<?php
 	}
 	?>
