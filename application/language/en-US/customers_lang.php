@@ -62,3 +62,5 @@ $lang['customer_none']='None';
 $lang['customer_summary']='Summary';
 $lang['customer_message']="First Name";
 $lang['customer_first']="First Name";
+$lang['customer_company']="Company name";
+$lang['customer_name']="Customer Name";

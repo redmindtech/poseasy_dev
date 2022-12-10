@@ -48,10 +48,6 @@ class Item extends CI_Model
 	}
 	public function item_name_exists_edit($name_item,$assume)
 	{
-
-
-		$assume = preg_replace('/\s*/', '', $assume);
-		$assume = strtolower($assume);
 		$this->db->select('lower(REPLACE(name," ","")) as name');
 		 $this->db->from('items');
 		 $this->db->where('deleted',0);
@@ -139,7 +135,7 @@ class Item extends CI_Model
 	public function customer_category_name_exists($name_category)
 	{
 		$this->db->select('lower(REPLACE(customer_category_name," ","")) as customer_category_name');
-		 $this->db->from('customer_category ');
+		 $this->db->from('	customer_category ');
 		 $this->db->where('deleted',0);
 		 $query=$this->db->get();
 		 $category_name=$query->result();
@@ -683,7 +679,7 @@ class Item extends CI_Model
 	}
 	public function csv_customer_category_id()
 	{
-		$this->db->select('lower(REPLACE(customer_category_name," ","")) as customer_category_name,customer_category_id');
+		$this->db->select('lower(REPLACE(customer_category_name," ","")) as customer_category_name,customer_category_id ');
 		 $this->db->from('customer_category');
 		 $this->db->where('deleted',0);
 		 $query=$this->db->get();

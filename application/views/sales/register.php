@@ -547,7 +547,7 @@ if(isset($success))
 </div>
 	
 			</div>
-			<br><br><br><br>
+			
 <!-- Sale Items List -->
 <div class="row">
 	<table class="sales_table_100" id="register">
@@ -885,7 +885,10 @@ $(document).ready(function()
 			return false;
 		}
 	});
-
+	if($('#mode').val()=='sale')
+	{
+		$("input[name='tax']").attr('disabled', true);
+	}
 	
 
 
@@ -1143,7 +1146,8 @@ $(document).ready(function()
 		$('#payment_details').hide();
 		$('#finish_invoice_quote_button').attr('disabled', TRUE);
 		
-	}			
+	}		
+	
 
 	if($("#payment_types").val() == "<?php echo $this->lang->line('sales_giftcard'); ?>")
 	{

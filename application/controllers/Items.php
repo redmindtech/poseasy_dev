@@ -257,8 +257,8 @@ class Items extends Secure_Controller
 			$data['default_tax_1_rate'] = $this->config->item('default_tax_1_rate');
 			$data['default_tax_2_rate'] = $this->config->item('default_tax_2_rate');
 
-			$item_info->receiving_quantity = 0;
-			$item_info->reorder_level = 10;
+			$item_info->receiving_quantity = 1;
+			$item_info->reorder_level = 1;
 			$item_info->item_type = ITEM;	//Standard
 			$item_info->item_id = $item_id;
 			$item_info->stock_type = HAS_STOCK;
@@ -526,48 +526,28 @@ class Items extends Secure_Controller
 		 $this->Item->save_supplier_details($item_id,$supplier_id,$items_add_quantity );
 
 	}
-	public function cost_price_validate(){
-		$cost_price= $this->input->post('cost_price');
-		if(preg_match("/^[0-9 ,.]*$/",$cost_price)){
-
-			echo "true";
-		}else{
-			echo "false";
-		}
-	}
-	public function sale_price_validate(){
-		$sale_price= $this->input->post('unit_price');
-		if(preg_match("/^[0-9 ,.]*$/",$sale_price)){
-
-			echo "true";
-		}else{
-			echo "false";
-		}
-	}
 	public function item_name_stringcmp()
 	{ 
+		var_dump($this->input->post('name_old'));
+		log_message('error_debug',$this->input->post('name_old'));
+		// $strings=explode('..',$flag);
 		
-		$name_change = $this->input->post('name');
-		$name_change_nospace = str_replace(' ', '', $name_change);
-		$name = $this->input->post('item_name');
-		$mode = $this->input->post('mode');
-		//log_message('info',$name_change);
-		$name_nospace = str_replace(' ', '', $name);
-		//log_message('info',$mode);
-		//log_message('info',$name_nospace);
-		if($mode == 0)
-		 {
-	      $exists = $this->Item->item_name_exists($name_change_nospace);
-		  echo $exists ;
-		 }
-		 else if($mode==1){
-		 	$exists = $this->Item->item_name_exists_edit($name_change_nospace, $name_nospace);
-		 	echo $exists ;
-		 }
-		 else{
-			echo True;
-		 }
-		
+		// $strings[1] = preg_replace('/\s*/', '', $strings[1]);
+		// $strings[1]  = strtolower($strings[1]);
+		// $strings[1] = preg_replace('/%20/', '', $strings[1]);
+		// //var_dump($strings[1]);
+		// if($strings[0]==0)
+		// {
+	    //  $exists = $this->Item->item_name_exists($this->input->post('name'));
+		//  echo $exists ;
+		// }elseif($strings[0]==1){
+		// 	$exists = $this->Item->item_name_exists_edit($this->input->post('name'),$strings[1]);
+		// 	echo $exists ;
+		// }
+		// else
+		// {
+		 	echo "true";
+		// }
 	}
 
 	public function category_name_stringcmp($flag)
@@ -587,7 +567,7 @@ class Items extends Secure_Controller
 
 	public function save($item_id = NEW_ITEM)
 	{
-	
+		// log_message('info', 'item_id_save_new' .$item_id);
 
 
 		$mode = "add";
@@ -633,7 +613,7 @@ class Items extends Secure_Controller
 		
 		
  
-		
+		// log_message('info', 'item_id_before' .$item_id);
 		$cus_cat_counter =	$this->input->post('counter');	
 
 				if($item_data['item_type'] == ITEM_TEMP)

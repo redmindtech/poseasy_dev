@@ -792,7 +792,7 @@ class Sale_lib
 
 		// $price =$sale_price;
 		log_message('debug',print_r($sale_price,TRUE));
-		if($sale_price == "")
+		if($sale_price == ""|| $sale_price == 0)
 		{
 			$price=$item_info->unit_price;
 		}
