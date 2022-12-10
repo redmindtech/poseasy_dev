@@ -69,23 +69,24 @@ class Ro_sales_cheque extends Secure_Controller
 		//$discount = $_POST['discount'];
 		//$closing_bal = $overall_val;
 				
-		$this->Ro_sales_cheques->reject_cheque($id,$final_val);
+		$this->Ro_sales_cheques->reject_cheque($id);
 
-		$check_id= $this->Ro_sales_cheques->transaction_cheque($customer_id);
-		$next_row=$this->Ro_sales_cheques->remainding_ids($id,$customer_id);	
+		// $check_id= $this->Ro_sales_cheques->transaction_cheque($customer_id);
+		
+		// $next_row=$this->Ro_sales_cheques->remainding_ids($id,$customer_id);	
 
-		foreach($check_id as $check_id){
-			$next_id=$check_id;
-		}
-		if($next_id==$id)
-		{
-			log_message('debug',print_r($id,TRUE));
-		}
-		else{			
-			$next_row=$this->Ro_sales_cheques->remainding_ids($id,$customer_id);
-			$this->adjust_balance($final_val,$next_row);
+		// foreach($check_id as $check_id){
+		// 	$next_id=$check_id;
+		// }
+		// if($next_id==$id)
+		// {
+		// 	log_message('debug',print_r($id,TRUE));
+		// }
+		// else{			
+		// 	$next_row=$this->Ro_sales_cheques->remainding_ids($id,$customer_id);
+		// 	$this->adjust_balance($final_val,$next_row);
 				
-			}
+		// 	}
 	}
 
 	
@@ -137,20 +138,11 @@ class Ro_sales_cheque extends Secure_Controller
 				$this->Ro_sales_cheques->after_cheque_pass_ids($id,$open_bal,$closing_bal);
 
 			}
-		 else{
-			log_message('debug',print_r($open_bal,TRUE));
-			log_message('debug',print_r($value->paid_amount,TRUE));
+		 else{		
 			
-			
-			$sum=($open_bal)-($value->paid_amount);
+			$sum=(($open_bal)+ ($value->sales_amount))-($value->paid_amount);
 			$closing_bal=number_format($sum,2, ".", "");
-			log_message('debug',print_r($closing_bal,TRUE));
 			
-
-			// $sum1=($closing_bal-($value->purchase_return_amount))-($value->discount);
-			// $closing_bal=number_format($sum1,2, ".", "");
-		
-
 			$this->Ro_sales_cheques->after_cheque_pass_ids($id,$open_bal,$closing_bal);
 			$open_bal=$closing_bal;
 			

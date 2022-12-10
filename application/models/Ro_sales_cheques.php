@@ -97,14 +97,14 @@ class Ro_sales_cheques extends CI_Model
 
 		
 	// Cheque Reject
-	public function reject_cheque($id,$final_val){
+	public function reject_cheque($id){
 
 
 		$data = array(
 			'paid_amount'=>0,
-			'status' => 'rejected',
+			'status' => 'rejected'
 			// 'closing_balance'=> $closing_bal,
-			'closing_balance'=> $final_val
+			// 'closing_balance'=> $final_val
 			);
 		$this->db->where('id', $id);		
 		$result = $this->db->update('ro_sales', $data);
@@ -130,7 +130,7 @@ class Ro_sales_cheques extends CI_Model
 			// 'pending_payables'=>$final_val,
 			  'status'=>'complete'
 			);
-			log_message('debug',print_r($data,TRUE));
+			
 		$this->db->where('id', $id);		
 		$result = $this->db->update('ro_sales', $data);
 		return $result;
@@ -176,11 +176,11 @@ class Ro_sales_cheques extends CI_Model
 			// 'pending_payables'=>$pending_pay,
 			 'status'=>'complete'
 			);
-			log_message('debug',print_r($data,TRUE));
+		
 		$this->db->where('id', $id);		
 		 $result = $this->db->update('ro_sales', $data);
 
-		//  log_message('debug',print_r($result,TRUE));
+	
 		 return $result;
 	}
 	

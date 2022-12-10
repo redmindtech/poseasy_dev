@@ -587,7 +587,7 @@ class Items extends Secure_Controller
 
 	public function save($item_id = NEW_ITEM)
 	{
-		// log_message('info', 'item_id_save_new' .$item_id);
+	
 
 
 		$mode = "add";
@@ -633,7 +633,7 @@ class Items extends Secure_Controller
 		
 		
  
-		// log_message('info', 'item_id_before' .$item_id);
+		
 		$cus_cat_counter =	$this->input->post('counter');	
 
 				if($item_data['item_type'] == ITEM_TEMP)

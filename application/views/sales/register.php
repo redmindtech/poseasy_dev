@@ -275,11 +275,11 @@ if(isset($success))
 		?>
 			<table class="sales_table_100" id="payment_totals">
 				<tr>
-					<th style="width: 55%;"><?php echo $this->lang->line('sales_payments_total'); ?></th>
-					<th style="width: 45%; text-align: right;"><?php echo to_currency($payments_total); ?></th>
+					<th style="width: 55%;"><span id="sales_payments_total_lable"><?php echo $this->lang->line('sales_payments_total'); ?></span></th>
+					<th style="width: 45%; text-align: right;"><span id="sales_payments_total"><?php echo to_currency($payments_total); ?></span></th>
 				</tr>
 				<tr>
-					<th style="width: 55%; font-size: 120%"><?php echo $this->lang->line('sales_amount_due'); ?></th>
+					<th style="width: 55%; font-size: 120%"><span id="sale_amount_due_lable"><?php echo $this->lang->line('sales_amount_due'); ?></span></th>
 					<th style="width: 45%; font-size: 120%; text-align: right;"><span id="sale_amount_due"><?php echo to_currency($amount_due); ?></span></th>
 				</tr>
 			</table>
@@ -660,7 +660,7 @@ if(isset($success))
 							<td>
 								 <?php
 								
-									echo form_input(array('name'=>'tax','type'=>'number','oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','class'=>'form-control input-sm', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['tax']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
+									echo form_input(array('name'=>'tax','id'=>'tax','type'=>'number','oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','class'=>'form-control input-sm', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['tax']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
 								
 								
 								?>
@@ -801,6 +801,7 @@ $(document).ready(function()
 	const redirect = function() {
 		window.location.href = "<?php echo site_url('sales'); ?>";
 	};
+	
 	
 	$("#remove_customer_button").click(function()
 	{
@@ -1121,6 +1122,8 @@ $(document).ready(function()
 	$('#cheque_number').hide();
 	$('#lable_cheque_date').hide();
 	$('#lable_cheque_number').hide();
+	
+
 	if($('#mode').val()=='sale'||$('#mode').val()=='sale_invoice'||$('#mode').val()=='return')
 	{ 
 		if( is_add == '0')
@@ -1130,12 +1133,13 @@ $(document).ready(function()
 		}
 		else
 		{		
-			 
+						 
 			 $('#payment_details').hide();
 			$('#finish_invoice_quote_button').attr('disabled', false);
 		}
 	}
 	else{
+		$('#payment_totals').hide();		
 		$('#payment_details').hide();
 		$('#finish_invoice_quote_button').attr('disabled', TRUE);
 		
