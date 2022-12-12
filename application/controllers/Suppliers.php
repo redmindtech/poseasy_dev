@@ -71,6 +71,7 @@ class Suppliers extends Persons
 		 
 		if(preg_match("/^([0-9]{10})$/",$phone_no)){
 			echo "true";
+			
 		}else{
 			echo "false";
 		}

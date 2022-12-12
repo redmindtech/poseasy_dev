@@ -81,11 +81,13 @@ class Customers extends Persons
 				$stats->quantity = 0;
 			}
 			$count = $offset + 1;
-
+		}
+			foreach($customers->result() as $person)
+			{
 			$data_rows[] = $this->xss_clean(get_customer_data_row($person, $stats, $count));
 			$count++;
 		}
-
+	
 		echo json_encode(array('total' => $total_rows, 'rows' => $data_rows));
 	}
 
@@ -303,6 +305,7 @@ class Customers extends Persons
 				echo json_encode(array('success' => TRUE,
 								'message' => $this->lang->line('customers_successful_updating') . ' ' . $first_name . ' ' . $last_name,
 								'id' => $customer_id));
+								
 			}
 		}
 		else // Failure
@@ -319,6 +322,13 @@ class Customers extends Persons
 	public function ajax_check_email()
 	{
 		$exists = $this->Customer->check_email_exists(strtolower($this->input->post('email')), $this->input->post('person_id'));
+
+		echo !$exists ? 'true' : 'false';
+	}
+
+	public function ajax_check_phone_no()
+	{
+		$exists = $this->Customer->check_phone_no_exists(strtolower($this->input->post('phone_number')), $this->input->post('person_id'));
 
 		echo !$exists ? 'true' : 'false';
 	}

@@ -239,7 +239,7 @@ $lang['customers_message']="Message";
 
 $lang["customers_date"]="Date";
 $lang["customers_balance"] = "Opening Balance";
-$lang["customers_purchase_amount"] = "Purchase Amount";
+$lang["customers_purchase_amount"] = "Sales Amount";
 $lang["customers_paid_amount"] = "Paid Amount";
 $lang["customers_rate_difference"] = "Rate Difference";
 $lang["customers_payment_mode"] = "Payment Mode";

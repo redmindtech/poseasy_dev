@@ -64,3 +64,9 @@ $lang['customer_message']="First Name";
 $lang['customer_first']="First Name";
 $lang['customer_company']="Company name";
 $lang['customer_name']="Customer Name";
+$lang["customers_phone_number_duplicate"] = "Your Phone No is already exists.";
+$lang['customers_phone_number_valid']="Please Enter the valid Phone No";
+$lang['company_name']="Company Name";
+$lang['customer_category_name_valid']= "Please Select the category";
+
+

@@ -257,6 +257,7 @@ class Customers_category extends CI_Model
 
 		$this->db->from('customer_category AS customer_category');
 		$this->db->group_start();
+			$this->db->like('customer_category_price', $search);
 			$this->db->like('customer_category_name', $search);
 			$this->db->or_like('customer_category_disc', $search);
 		$this->db->group_end();

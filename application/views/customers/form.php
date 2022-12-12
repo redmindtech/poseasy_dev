@@ -101,9 +101,9 @@
 
 
 		<div class="form-group form-group-sm" id="supplierdiv">
-			<?php echo form_label($this->lang->line('common_category'), 'customer_category_name', array('class'=>' control-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('common_category'), 'customer_category_name', array('class'=>'required control-label col-xs-3')); ?>
 			<div class='col-xs-8'>
-				<?php echo form_dropdown('customer_category_id', $customer_category, $selected_category, array('class'=>'form-control' ,'id'=>'customer_category_id')); ?>
+				<?php echo form_dropdown('customer_category_id', $customer_category, $selected_category, array('class'=>'form-control required' ,'id'=>'customer_category_id')); ?>
 			</div>
 		</div>
 
@@ -536,8 +536,10 @@ $(document).ready(function()
 				{
 					dialog_support.hide();
 					table_support.handle_submit("<?php echo site_url($controller_name); ?>", response);
+					window.location.reload();
 				},
 				dataType: 'json'
+
 			});
 		},
 
@@ -545,6 +547,7 @@ $(document).ready(function()
 
 		rules:
 		{
+			customer_category_id: 'required',
 			first_name: 'required',
 			last_name: 'required',
 			consent: 'required',
@@ -560,6 +563,24 @@ $(document).ready(function()
 					}
 				}
 			},
+			
+			phone_number:
+			{
+				minlength: 10,
+				maxlength: 13,
+				number: true,
+
+				remote:
+				{ 
+					url: "<?php echo site_url($controller_name . '/ajax_check_phone_no') ?>",
+					type: 'POST',
+					data: {
+						'person_id': "<?php echo $person_info->person_id; ?>"
+						// email is posted by default
+					}
+				}
+			},
+
 			account_number:
 			{
 				remote:
@@ -576,10 +597,18 @@ $(document).ready(function()
 
 		messages:
 		{
+			customer_category_id:
+	{
+		required: "<?php echo $this->lang->line('customer_category_name_valid'); ?>"
+
+	},
+			
 			first_name: "<?php echo $this->lang->line('common_first_name_required'); ?>",
 			last_name: "<?php echo $this->lang->line('common_last_name_required'); ?>",
 			consent: "<?php echo $this->lang->line('customers_consent_required'); ?>",
 			email: "<?php echo $this->lang->line('customers_email_duplicate'); ?>",
+			// phone_number: "<?php echo $this->lang->line('customers_phone_number_duplicate'); ?>",
+			phone_number: "<?php echo $this->lang->line('customers_phone_number_valid'); ?>",
 			account_number: "<?php echo $this->lang->line('customers_account_number_duplicate'); ?>"
 		}
 	}, form_support.error));

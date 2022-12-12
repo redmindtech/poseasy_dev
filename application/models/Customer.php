@@ -53,7 +53,7 @@ class Customer extends Person
 		$this->db->from('customers');
 		$this->db->join('people', 'customers.person_id = people.person_id');
 		$this->db->where('deleted', 0);
-		$this->db->order_by('last_name', 'asc');
+		$this->db->order_by('company_name', 'asc');
 
 		if($rows > 0)
 		{
@@ -151,7 +151,7 @@ class Customer extends Person
 		$this->db->join('customer_category AS customer_category', 'customer_category.customer_category_id = customers.customer_category_id', 'left');
 	
 		$this->db->where_in('customers.person_id', $customer_ids);
-		$this->db->order_by('last_name', 'asc');
+		$this->db->order_by('company_name', 'asc');
 
 		return $this->db->get();
 	}
@@ -170,6 +170,27 @@ class Customer extends Person
 		$this->db->from('customers');
 		$this->db->join('people', 'people.person_id = customers.person_id');
 		$this->db->where('people.email', $email);
+		$this->db->where('customers.deleted', 0);
+
+		if(!empty($customer_id))
+		{
+			$this->db->where('customers.person_id !=', $customer_id);
+		}
+
+		return ($this->db->get()->num_rows() == 1);
+	}
+
+	public function check_phone_no_exists($phone_number, $customer_id = '')
+	{
+		// if the email is empty return like it is not existing
+		if(empty($phone_number))
+		{
+			return FALSE;
+		}
+
+		$this->db->from('customers');
+		$this->db->join('people', 'people.person_id = customers.person_id');
+		$this->db->where('people.phone_number', $phone_number);
 		$this->db->where('customers.deleted', 0);
 
 		if(!empty($customer_id))
@@ -304,7 +325,7 @@ class Customer extends Person
 			}
 		$this->db->group_end();
 		$this->db->where('deleted', 0);
-		$this->db->order_by('last_name', 'asc');
+		$this->db->order_by('company_name', 'asc');
 		foreach($this->db->get()->result() as $row)
 		{
 			$suggestions[] = array('value' => $row->person_id, 'label' => $row->first_name . ' ' . $row->last_name . (!empty($row->company_name) ? ' [' . $row->company_name . ']' : ''). (!empty($row->phone_number) ? ' [' . $row->phone_number . ']' : ''));
@@ -378,14 +399,14 @@ class Customer extends Person
 	*/
 	public function get_found_rows($search)
 	{
-		return $this->search($search, 0, 0, 'last_name', 'asc', TRUE);
+		return $this->search($search, 0, 0, 'company_name', 'asc', TRUE);
 	}
 
 	/*
 	Performs a search on customers
 	*/
 	
-	public function search($search, $rows = 0, $limit_from = 0, $sort = 'last_name', $order = 'asc', $count_only = FALSE)
+	public function search($search, $rows = 0, $limit_from = 0, $sort = 'company_name', $order = 'asc', $count_only = FALSE)
 	{
 		// get_found_rows case
 		if($count_only == TRUE)
@@ -398,7 +419,8 @@ class Customer extends Person
 		$this->db->join('people', 'customers.person_id = people.person_id');
 		$this->db->join('customer_category', 'customer_category.customer_category_id = customers.customer_category_id');
 		$this->db->group_start();
-			$this->db->like('first_name', $search);
+			// $this->db->like('person_id', $search);
+			$this->db->or_like('first_name', $search);
 			$this->db->or_like('last_name', $search);
 			$this->db->or_like('email', $search);
 			$this->db->or_like('customer_category_name', $search);

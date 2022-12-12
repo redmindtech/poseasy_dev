@@ -294,8 +294,8 @@ function get_customer_manage_table_headers()
 		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
 		array('people.person_id' => $CI->lang->line('customers_id')),
 		// array('first_name' => $CI->lang->line('customer_first')),
-		array('messages' => $CI->lang->line('customer_name')),
-		array('customer_company' => $CI->lang->line('customer_company')),
+		array('messages' => $CI->lang->line('customer_name'), 'sortable' => FALSE),
+		array('company_name' => $CI->lang->line('customer_company')),
 		
 		array('customer_category_name'=>$CI->lang->line('common_category')),
 		array('email' => $CI->lang->line('common_email')),
@@ -304,11 +304,11 @@ function get_customer_manage_table_headers()
 		
 	);
 
-	if($CI->Employee->has_grant('messages', $CI->session->userdata('person_id')))
-	{
+	// if($CI->Employee->has_grant('messages', $CI->session->userdata('person_id')))
+	// {
 		
-		// $headers[]= array('edit' => $CI->lang->line('customers_edit'));
-	}
+		$headers[]= array('edit' => $CI->lang->line('customers_edit'), 'sortable' => FALSE);
+	// }
 
 	return transform_headers($headers);
 }
@@ -378,7 +378,7 @@ function get_customer_data_row($person, $stats, $count)
 		'customer_category_name' => $person->customer_category_name,
 
 		'email' =>$person->email,
-		'customer_company' =>$person->company_name,
+		'company_name' =>$person->company_name,
 		'phone_number' => $person->phone_number,
 
 		'messages' => anchor($controller_name."/customers_details/$person->person_id/$count", $person->first_name . " " . $person->last_name,
