@@ -95,12 +95,12 @@ $(document).ready(function()
                     $(this).find('th').eq(-1).after('<th style=display:none;>Less Quantity</th>');
                     $(this).find('th').eq(7).after('<th class=""  style=display:none;><div class="th-inner sortable both">&nbsp;Current Qty &nbsp;</div><div class="fht-cell"></div></th>');
                     $(this).find('td').eq(6).after('<td style=width:100px;height:50px;><input type="number" style="background-color:#FFFFE0;" id="items_add_quantity" name="'+item_id+'" class="form-control input-sm" min="null" max="null" step="0.50" value="" placeholder="0.00" required></td>');			
-                    if($('#table tr'). length != 2){
+                    if($('#table tr').length != 2 || item_id >0){
                                             
                         $(this).find('td').eq(-1).after('<td><a href id="submit_qty" name="'+item_id+'" title="Save Quantity" class="btn btn-success btn-sm disabled"><span class="glyphicon glyphicon-ok id="submit_span"></span></a></td>');
                     }
                     $(this).find('td').eq(-1).after('<td><input type="hidden" id="items_less_quantity" class="form-control input-sm" value="0"></td>');
-                    $(this).find('td').eq(7).after('<td style=width:100px;height:50px;><input type="text" name="supplier_name" style="background-color:#FFFFE0;" id="supplier_name" class="form-control input-sm" placeholder="Type Supplier Name" value="" style=width:150px; required></td>');	
+                    $(this).find('td').eq(7).after('<td style=width:100px;height:50px;><input autocomplete="off" type="text" name="supplier_name" style="background-color:#FFFFE0;" id="supplier_name" class="form-control input-sm" placeholder="Type Supplier Name" value="" style=width:150px; required></td>');	
                         row.find("td:eq(3)").hide();
                         row.find("th:eq(2)").hide();
                    
@@ -134,9 +134,9 @@ $(document).ready(function()
 
                 
             $(document).on("change", '#items_add_quantity',  function(e){
-               console.log($(this).attr("name"));
+            //    console.log($(this).attr("name"));
                 var current_row = $(this).attr("name");
-               // alert('input[name='+current_row+']');
+                alert('input[name='+current_row+']');
                 $('a[name='+current_row+']').removeClass('btn btn-success btn-sm disabled').addClass( "btn btn-success btn-sm" );
                 var valid= RegExp(/^[+-]?\d*(\.5\d{0,0})?(\.0\d{0,0})?$/);
                 var quantity_reg = e.target.value ;        
@@ -153,7 +153,7 @@ $(document).ready(function()
                         row.find("#items_current_quantity").val(final_val);                
                         e.preventDefault();                
                            
-                        console.log(row.closest('td'));               
+                        // console.log(row.closest('td'));               
                 }
                 else{           
                     alert('Please Enter the Correct Quantity .0 or .5');
@@ -188,8 +188,7 @@ $(document).ready(function()
         // console.log(items_add_quantity);
         // console.log(final_val);
         
-       
-        if(supplier_id == 0){
+        if(supplier_id == 0 && items_add_quantity>0){
             alert("Please select supplier name");
             //evt.preventDefault();
            // return FALSE;

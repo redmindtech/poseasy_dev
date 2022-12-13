@@ -168,12 +168,12 @@
 			<div class="col-xs-4">
 				<div class="input-group input-group-sm">
 					
-					<?php echo form_input(array(
+					<?php echo form_input(array('type'=>'number', 'min'=>1,
 							'name'=>'cost_price',
 							'id'=>'cost_price',
 							'class'=>'form-control input-sm',
 							'onClick'=>'this.select();',
-							'value'=>to_currency_no_money($item_info->cost_price))
+							'value'=>$item_info->cost_price)
 							);?>
 					<?php if (currency_side()): ?>
 						<span class="input-group-addon input-sm"><b><?php echo $this->config->item('currency_symbol'); ?></b></span>
@@ -189,12 +189,12 @@
 					<?php if (!currency_side()): ?>
 						<span class="input-group-addon input-sm"><b><?php echo $this->config->item('currency_symbol'); ?></b></span>
 					<?php endif; ?>
-					<?php echo form_input(array(
+					<?php echo form_input(array('type'=>'number', 'min'=>1,
 							'name'=>'unit_price',
 							'id'=>'unit_price',
 							'class'=>'form-control input-sm',
 							'onClick'=>'this.select();',
-							'value'=>to_currency_no_money($item_info->unit_price))
+							'value'=>$item_info->unit_price)
 							);?>
 					<?php if (currency_side()): ?>
 						<span class="input-group-addon input-sm"><b><?php echo $this->config->item('currency_symbol'); ?></b></span>
@@ -331,7 +331,7 @@
 		?>
 
 		<div class="form-group form-group-sm" id="receiving_quantity_display">
-			<?php echo form_label($this->lang->line('items_receiving_quantity'), 'receiving_quantity', array('class'=>'required control-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('items_receiving_quantity'), 'receiving_quantity', array('class'=>' control-label col-xs-3')); ?>
 			<div class='col-xs-4'>
 				<?php echo form_input(array(
 						'name'=>'receiving_quantity',
@@ -344,7 +344,7 @@
 		</div>
 
 		<div class="form-group form-group-sm">
-			<?php echo form_label($this->lang->line('items_reorder_level'), 'reorder_level', array('class'=>'required control-label col-xs-3')); ?>
+			<?php echo form_label($this->lang->line('items_reorder_level'), 'reorder_level', array('class'=>' control-label col-xs-3')); ?>
 			<div class='col-xs-4'>
 				<?php echo form_input(array(
 						'name'=>'reorder_level',
@@ -801,7 +801,18 @@ rules:
 	name:
 	{
 		required: true,
-		
+		remote: {
+			url: "<?php echo site_url($controller_name . '/item_name_stringcmp')?>",
+			type: 'POST',
+			data: {
+				'item_name' : "<?php echo $item_info->name; ?>",
+				'mode' : "<?php echo $check_null_flag; ?>",
+				'name' : function()
+				{ 
+					return $('#name').val();
+				},
+			}
+		}
 	},
 	
 	 
@@ -847,15 +858,43 @@ rules:
 	
 	cost_price:
 	{	
-		min:1,
+		
+		
 		required: true,
-		remote: "<?php echo site_url($controller_name . '/check_numeric')?>"
+		remote: 
+		{
+			url: "<?php echo site_url($controller_name . '/cost_price_validate')?>",
+			type: 'POST',
+			data: {
+						
+						'cost_price' : function()
+						{
+						
+							//alert($('#category').val());
+							return  $('#cost_price').val();
+						},
+				}
+		}
 	},
 	unit_price:
 	{
-		min:1,
+		
 		required: true,
-		remote: "<?php echo site_url($controller_name . '/check_numeric')?>"
+		remote: 
+		{
+			url: "<?php echo site_url($controller_name . '/sale_price_validate')?>",
+			type: 'POST',
+			data: {
+						
+						'unit_price' : function()
+						{
+						
+							//alert($('#category').val());
+							return  $('#unit_price').val();
+						},
+				}
+
+		}
 	},
 	<?php
 	foreach($stock_locations as $key=>$location_detail)
