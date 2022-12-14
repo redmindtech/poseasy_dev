@@ -35,7 +35,7 @@ class Customer_category extends Secure_Controller
 		
 		foreach($customer_category->result() as $customer_category)
 		{
-			$data_rows[] = $this->xss_clean(get_customer_category_data_row($customer_category,$count));
+			$data_rows[] = $this->xss_clean(get_customer_category_data_row($customer_category, $count));
 			$count++;
 		}
 
@@ -66,6 +66,7 @@ class Customer_category extends Secure_Controller
 	public function get_row($row_id)
 	{
 		$data_row = $this->xss_clean(get_customer_category_data_row($this->Customers_category->get_info($row_id)));
+		
 		echo json_encode($data_row);
 	}
 

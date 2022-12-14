@@ -42,6 +42,9 @@ class Masters extends Secure_Controller
 
 		echo json_encode(array('total' => $total_rows, 'rows' => $data_rows));
 	}
+
+	
+
    //Get row
 	public function get_row($row_id)
 	{
@@ -85,6 +88,14 @@ class Masters extends Secure_Controller
 			echo json_encode(array('success' => FALSE, 'message' => $this->lang->line('item_categories_error_adding_updating') . ' ' . $master_category_data['item_master_name'], 'id' => -1));
 		}
 	}
+
+	public function ajax_check_item_category_name()
+	{
+		$exists = $this->Master->check_category_name_exists(strtolower($this->input->post('item_category_name')), $this->input->post('item_master_id'));
+
+		echo !$exists ? 'true' : 'false';
+	}
+
     //Delete data from formtable
 	public function delete()
 	{

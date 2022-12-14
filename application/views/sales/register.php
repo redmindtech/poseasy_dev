@@ -892,14 +892,6 @@ $(document).ready(function()
 	
 
 
-	// $("#amount_tendered").keydown(function (event) {
-			
-	// 	$('input[name=quantity]').focus();
-            
-            
-    //  });
-
-
 	var clear_fields = function() {
 		if($(this).val().match("<?php echo $this->lang->line('sales_start_typing_item_name') . '|' . $this->lang->line('sales_start_typing_customer_name'); ?>"))
 		{
@@ -1025,20 +1017,24 @@ $(document).ready(function()
 		}
 	});
 
-	$('#add_payment_button').click(function(e) {
+	$('#add_payment_button').click(function(e) 
+	{
+		var isAdjust = false;
 		if($("#payment_types").val() == "Cheque")
-		{
-			if($('#cheque_number').val()=="")
+		{	if($('#cheque_number').val()=="")
 			{
 				alert("please enter the check number");
 				e.preventDefault();
 			}
-			else{
-				$('#add_payment_form').submit();
-			}
+
+			else{					
+			
+			$('#add_payment_form').submit();	
+				
 		}
+	}
 		else{
-	
+			var isAdjust = false;
 		$('#add_payment_form').submit();	
 		}	
 	});
@@ -1130,13 +1126,13 @@ $(document).ready(function()
 	if($('#mode').val()=='sale'||$('#mode').val()=='sale_invoice'||$('#mode').val()=='return')
 	{ 
 		if( is_add == '0')
-		{			
+		{
+
 		$('#finish_invoice_quote_button').attr('disabled', true);
 		
 		}
 		else
-		{		
-						 
+		{								 
 			 $('#payment_details').hide();
 			$('#finish_invoice_quote_button').attr('disabled', false);
 		}
@@ -1174,7 +1170,8 @@ $(document).ready(function()
 		$('#cheque_date').show();
 		$('#cheque_number').show();
 		$('#lable_cheque_date').show();
-		$('#lable_cheque_number').show();		
+		$('#lable_cheque_number').show();	
+
  		
 	}
 	

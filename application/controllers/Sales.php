@@ -433,7 +433,10 @@ class Sales extends Secure_Controller
 				
 			}
 			elseif($payment_type === $this->lang->line("sales_check"))
-			{  				
+			{  	
+				// $is_adjust=$this->input->post('cheque_processing');	
+				// log_message('debug',print_r('add_payment',true));
+				// log_message('debug',print_r($is_adjust,true));
 				$check_date=$this->input->post('cheque_date');
 				$check_number=$this->input->post('cheque_number');
 				$amount_tendered = $this->input->post('amount_tendered');

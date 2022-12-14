@@ -43,74 +43,68 @@ $(document).ready(function()
 	<?php echo anchor("sales/manage", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . $this->lang->line('sales_takings'), array('class'=>'btn btn-info btn-sm', 'id'=>'show_takings_button')); ?>
 </div>
 
+
+
 <div id="page-wrap">
-<div id="header"><?php echo $this->lang->line('sales_cash_bill'); ?></div>
-
-		
-	
-	
-				
-
-
+<div id="header">
+		<?php echo $this->lang->line('sales_cash_bill'); ?></div>		
 
 	<table id="items">
 
-	<tr>
+		<tr>
+					
 			<td style='border:none;'>
-			<div><?php
+		<div id="image_div" style='display: flex; justify-content: left;'>
+			<?php
 			if($this->Appconfig->get('company_logo') != '')
 			{
 			?>
 				<img id="image" width="70" height="80" src="<?php echo base_url('uploads/' . $this->Appconfig->get('company_logo')); ?>" alt="company_logo" />
 			<?php
 			}
-			?></div></td>
+			?>
+			
+			</div></td>
 			<td colspan="7" style='border:none; text-align:center;'><b><?php echo nl2br("ROYAL OPTICALS\n18-1/2, A.R.Building(1st floor)\nMelapudur main road, Trichy-620001.\n"); ?></b></td>
-			<td  style='border:none;'></td>
-		</tr>
-
-		<tr>
+	
+			</tr><tr>
+			<td colspan="2" style='border:none; text-align:left;'><?php echo "GSTIN : 33AHVPM5189L1ZG"; ?></td>			
 			
-			<td colspan="4" style='border:none; text-align:left;'><?php echo "GSTIN:33AHVPM5189L1ZG"; ?></td>			
-			
+			<!-- <td colspan="5" style='border:none; text-align:center;'><?php //echo $this->lang->line('sales_invoice_number');?><?php// echo "  :  " .  $invoice_number; ?></td> -->
+		
 			<td style='border:none;'></td>
-			
-			<td colspan="4"style='border:none; text-align:right;'><?php echo "E-mail:royalopticalstrichy@gmail.com";  ?></td>
+			<td style='border:none; text-align:right;' colspan="7"><?php echo "E-mail : royalopticalstrichy@gmail.com";  ?></td>
 		</tr>
-
-
+		
 		<tr>
-			<th colspan="9" style='text-align:center;'><?php echo $this->lang->line('sales_cash_bill'); ?></th>
-
+			<th colspan="9"><?php echo $this->lang->line('sales_cash_bill'); ?></th>
 		</tr>
-
 
 		<tr>
 			<td colspan="7" rowspan="4" style='border:none;'><?php echo nl2br($customer_info) ?></td>
 			<td style='border:none;'></td>
 			<td style='border:none;'></td>
+			
 		</tr>
 		<tr>
 			
 			<td style='border:none;'></td>
 			<td style='border:none;'></td>
+		</tr>
+		<tr>
+		<td style='border:none; text-align:right;'></td>
+		<td style='border:none; text-align:right;'></td>
 		</tr>
 		<tr>
 			
 			<td style='border:none; text-align:right;'></td>
-			<td style='border:none; text-align:left;'></td>
+			<td style='border:none; text-align:right;'colspan="6"><?php echo $this->lang->line('common_date'); ?><?php echo ":".$transaction_date; ?></td>
 		</tr>
-		<tr>
-		
-		<td style='border:none; text-align:right;'><?php echo $this->lang->line('common_date'); ?></td>
-		<td style='border:none; text-align:left;'><?php echo ":".$transaction_date; ?></td>
-			
-		
+
 		</tr>
 
 		<tr>
-			<th><?php echo $this->lang->line('sales_s_no'); ?></th>
-			<th><?php echo $this->lang->line('sales_item_name'); ?></th>
+			
 			<?php
 				$invoice_columns = 8;
 				if($include_hsn)
@@ -121,17 +115,20 @@ $(document).ready(function()
 					<?php
 				}
 			?>
+			<th><?php echo $this->lang->line('serialno'); ?></th>
+			<th><?php echo $this->lang->line('sales_item_name'); ?></th>
 			<th><?php echo $this->lang->line('sales_hsn'); ?></th>
 			<th><?php echo $this->lang->line('sales_quantity'); ?></th>
 			<th><?php echo $this->lang->line('sales_price'); ?></th>
+			<!-- <th><?php //echo $this->lang->line('sales_tax_percent'); ?></th> -->
 			<th><?php echo $this->lang->line('sales_sub_total'); ?></th>
-			<!-- <th><?php //echo $this->lang->line('sales_discount'); ?></th> -->
+			<th><?php echo $this->lang->line('sales_discount'); ?></th>
 			<th><?php echo $this->lang->line('sales_other_cost'); ?></th>
-			<th><?php echo $this->lang->line('sales_tax_percent'); ?></th>
+			
 			<?php
 			if($discount > 0)
 			{
-				$invoice_columns += 1;
+				$invoice_columns += 2;
 				?>
 				<!-- <th><?php //echo $this->lang->line('sales_customer_discount'); ?></th> -->
 			<?php
@@ -148,7 +145,7 @@ $(document).ready(function()
 			if($item['print_option'] == PRINT_YES)
 			{
 			?>
-				<tr>
+				<tr><?php log_message('debug',print_r($item['discounted_total'] ,TRUE)); ?>
 					
 					<td  style='text-align:center;border-bottom:none;border-top:none;'><?php echo "$count"; ?></td> 
 					<?php if($include_hsn): ?>
@@ -159,14 +156,16 @@ $(document).ready(function()
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo $item['hsn_code']; ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_quantity_decimals($item['quantity']); ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['price']); ?></td>
-					<td style='text-align:center;border-bottom:none;border-top:none;' id="subtotal"><?php echo to_currency($item['price']); ?></td>
-					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['discount_type']==FIXED)?to_currency($item['discount']):to_decimals($item['discount']) . '%';?></td>
+					<!-- <td style='text-align:center;border-bottom:none;border-top:none;'><?php //echo ($item['tax']) . '%'; ?></td> -->
+					<td style='text-align:center;border-bottom:none;border-top:none;' id="subtotal"><?php echo to_currency($item['discounted_total']); ?></td>
+					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['discount_type']==FIXED)?to_currency($item['discount']):to_decimals($item['discount']) ;?></td>
 					<?php if($discount > 0): ?>
-					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['discount'] / $item['quantity']); ?></td>
 					<?php endif; ?>
-					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo $this->config->item('discount') . '%'; ?></td>
+					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['other_cost']) ;?></td>
 					
-					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['discounted_total']); ?></td>
+				
+					
+					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['total']); ?></td>
 					
 				</tr>
 				<?php
@@ -182,13 +181,14 @@ $(document).ready(function()
 			}
 		}
 		?>
-
 		
+
+			
 
 		<tr>
 			<td colspan="8" style='text-align:right;'><?php echo $this->lang->line('sales_sub_total'); ?> </td>
 			
-			<td class="total-value" id="subtotal"><?php echo to_currency($subtotal); ?></td>
+			<td style='text-align:center;' class="total-value" id="subtotal"><?php echo to_currency($total); ?></td>
 		</tr>
 
 		<?php
@@ -198,7 +198,7 @@ $(document).ready(function()
 			<tr>
 				
 				<td colspan="8" style='text-align:right;'><?php echo (float)$tax['tax_rate'] . '% ' . $tax['tax_group']; ?></td>
-				<td id="taxes" style='text-align:right;'><?php echo to_currency_tax($tax['sale_tax_amount']); ?></td>
+				<td id="taxes" style='text-align:center;'><?php echo to_currency_tax($tax['sale_tax_amount']); ?></td>
 			</tr>
 		<?php
 		}
@@ -207,10 +207,11 @@ $(document).ready(function()
 		<tr>
 			
 			<td colspan="8"  style='text-align:right;'><?php echo $this->lang->line('sales_total'); ?></td>
-			<td id="total" style='text-align:right;'><?php echo to_currency($total); ?></td>
+			<td id="total" style='text-align:center;'><?php echo to_currency($total); ?></td>
 		</tr>
-
+		
 		<?php
+		
 		$only_sale_check = FALSE;
 		$show_giftcard_remainder = FALSE;
 		foreach($payments as $payment_id=>$payment)
@@ -221,8 +222,8 @@ $(document).ready(function()
 		?>
 			<tr>
 				
-				<td colspan="8"  style='text-align:right;'><?php echo $splitpayment[0]; ?></td>
-				<td style='text-align:right;' id="paid"><?php echo to_currency( $payment['payment_amount'] * -1 ); ?></td>
+				<td colspan="8" style='text-align:right;'><p>Paid <?php echo $splitpayment[0]; ?></p></td>
+				<td style='text-align:center;' id="paid"><?php echo to_currency( $payment['payment_amount'] * -1 ); ?></td>
 			</tr>
 		<?php
 		}
@@ -233,7 +234,7 @@ $(document).ready(function()
 			<tr>
 				
 				<td colspan="8"  style='text-align:right;'><?php echo $this->lang->line('sales_giftcard_balance'); ?></td>
-				<td id="giftcard"><?php echo to_currency($cur_giftcard_value); ?></td>
+				<td style='text-align:center;' id="giftcard"><?php echo to_currency($cur_giftcard_value); ?></td>
 			</tr>
 			<?php
 		}
@@ -244,7 +245,7 @@ $(document).ready(function()
 		<tr>
 			
 			<td colspan="8" style='text-align:right;'><?php echo $this->lang->line($amount_change >= 0 ? ($only_sale_check ? 'sales_check_balance' : 'sales_change_due') : 'sales_amount_due') ; ?></td>
-			<td id="change"><?php echo to_currency($amount_change); ?></td>
+			<td style='text-align:center;' id="change"><?php echo to_currency($amount_change); ?></td>
 		</tr>
 		<?php
 		}
@@ -255,7 +256,6 @@ $(document).ready(function()
 	<div id="terms">
 		<div id="sale_return_policy">
 			<h5>
-				
 				
 				
 			</h5>

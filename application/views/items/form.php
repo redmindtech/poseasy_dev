@@ -25,7 +25,7 @@
 			</div>
 		</div>
 
-		<div class="form-group form-group-sm">
+		<div class="form-group form-group-sm " name="name">
 			<?php echo form_label($this->lang->line('items_name'), 'name', array('class'=>'required control-label col-xs-3')); ?>
 			<div class='col-xs-8'>
 				<?php echo form_input(array(
@@ -154,12 +154,7 @@
 			</div>
 		</div>
 
-		<div class="form-group form-group-sm" id="supplierdiv">
-			<?php echo form_label($this->lang->line('items_supplier'), 'supplier', array('class'=>'required control-label col-xs-3')); ?>
-			<div class='col-xs-8'>
-				<?php echo form_dropdown('supplier_id', $suppliers, $selected_supplier, array('class'=>'form-control')); ?>
-			</div>
-		</div>
+		
 
 		
 
@@ -340,6 +335,12 @@
 						'onClick'=>'this.select();',
 						'value'=>isset($item_info->item_id) ? to_quantity_decimals($item_info->receiving_quantity) : to_quantity_decimals(0))
 						);?>
+			</div>
+		</div>
+		<div class="form-group form-group-sm" id="supplierdiv">
+			<?php echo form_label($this->lang->line('items_supplier'), 'supplier', array('class'=>'control-label col-xs-3')); ?>
+			<div class='col-xs-8'>
+				<?php echo form_dropdown('supplier_id', $suppliers, $selected_supplier, array('id'=>'supplier_id' ,'class'=>'form-control')); ?>
 			</div>
 		</div>
 
@@ -578,16 +579,21 @@ function stock_quantity_editable_fun(){
 	var stk_qty = document.getElementById("stock_qty");
 	var sup_disp = document.getElementById("supplierdiv");
 	var stock_quantity_editable = document.getElementById("quantity_1");
+	var name =document.getElementById("name");
 	var flag = <?php echo $check_null_flag; ?>;
 
 	if(flag == 0){
 		//alert("new");
 		stk_qty.style.display = "none";
+		
 	}
 	if(flag == 1){
 		//alert("edit");
 		stock_quantity_editable.setAttribute('readonly',true);
 		sup_disp.style.display = "none";
+		name.setAttribute('readonly',true);
+
+
 		
 	}
 
@@ -692,20 +698,33 @@ $(document).ready(function()
 	receiving_quantity_display_fun();
 	addFields();
 	
-
+$('#supplierdiv').hide();
 	$('#new').click(function() {
 		
 		stay_open = true;
 		$('#item_form').submit();
 	});
-
+	
 	$('#submit').click(function() {
+	
 		stay_open = false;
+	
+	});
+	$('#receiving_quantity').change(function(){
+	var receiving_qty=$('#receiving_quantity').val();
+		if(receiving_qty == 0)
+		{
+			$('#supplierdiv').hide();
+		}
+		else{
+		$('#supplierdiv').show();
+		}
 	});
 
 	$("input[name='tax_category']").change(function() {
 		!$(this).val() && $(this).val('');
 	});
+	
 
 	var fill_value = function(event, ui) {
 		event.preventDefault();
@@ -763,14 +782,21 @@ $(document).ready(function()
 	}, "<?php echo $this->lang->line('attributes_attribute_value_invalid_chars'); ?>");
 
 	var init_validation = function() {
+		
 		$('#item_form').validate($.extend({
+			// alert($('#receiving_quantity'),val());
 			submitHandler: function(form, event) {
+				
 				$(form).ajaxSubmit({
+					
 					success: function(response) {
-						
+						console.log('success');
 						var stay_open = dialog_support.clicked_id() != 'submit';
+						// console.log('hi');
 						if(stay_open)
-						{
+						{  
+							// alert($('#receiving_quantity').val());
+							console.log('if');
 							// set action of item_form to url without item id, so a new one can be created
 							$('#item_form').attr('action', "<?php echo site_url('items/save/')?>");
 							// use a whitelist of fields to minimize unintended side effects
@@ -781,39 +807,44 @@ $(document).ready(function()
 						}
 						else
 						{
+							 console.log('else');
 							dialog_support.hide();
 						}
 						// console.log(response);
+					  console.log('out of else');
 						table_support.handle_submit('<?php echo site_url('items'); ?>', response, stay_open);
 						 window.location.reload();
 						init_validation();
 						
 					},
+					
 					dataType: 'json'
 				});
 			},
-
+			
 			errorLabelContainer: '#error_message_box',
 
 rules:
 {
 	supplier_id: 'required',
-	name:
-	{
-		required: true,
-		remote: {
-			url: "<?php echo site_url($controller_name . '/item_name_stringcmp')?>",
-			type: 'POST',
-			data: {
-				'item_name' : "<?php echo $item_info->name; ?>",
-				'mode' : "<?php echo $check_null_flag; ?>",
-				'name' : function()
-				{ 
-					return $('#name').val();
-				},
-			}
-		}
-	},
+	hsn_code:'required',
+	
+	// name:
+	// {
+	// 	required: true,
+	// 	remote: {
+	// 		url: "<?php echo site_url($controller_name . '/item_name_stringcmp')?>",
+	// 		type: 'POST',
+	// 		data: {
+	// 			'item_name' : "<?php echo $item_info->name; ?>",
+	// 			'mode' : "<?php echo $check_null_flag; ?>",
+	// 			'name' : function()
+	// 			{ 
+	// 				return $('#name').val();
+	// 			},
+	// 		}
+	// 	}
+	// },
 	
 	 
 	category:
@@ -911,32 +942,38 @@ rules:
 	receiving_quantity:
 	{
 		required: true,
-		remote: "<?php echo site_url($controller_name . '/check_numeric')?>"
+		remote: "<?php echo site_url($controller_name . '/check_numeric');?>"
 	},
 	reorder_level:
 	{
 		required: true,
-		remote: "<?php echo site_url($controller_name . '/check_numeric')?>"
+		remote: "<?php echo site_url($controller_name . '/check_numeric');?>"
 	},
 	tax_percent:
 	{
 		required: true,
-		remote: "<?php echo site_url($controller_name . '/check_numeric')?>"
+		remote: "<?php echo site_url($controller_name . '/check_numeric');?>"
 	}
 },
 
 messages:
 {
+	hsn_code:
+	{
+		required: "<?php echo $this->lang->line('hsn_code_required'); ?>"
+
+	},
 	supplier_id:
 	{
 		required: "<?php echo $this->lang->line('supplier_name_required'); ?>"
 
 	},
-	name:
-	{ 
-		required:  "<?php echo $this->lang->line('items_name_required'); ?>",
-		remote: "<?php echo $this->lang->line('item_name_message'); ?>",
-	},
+	
+	// name:
+	// { 
+	// 	required:  "<?php echo $this->lang->line('items_name_required'); ?>",
+	// 	remote: "<?php echo $this->lang->line('item_name_message'); ?>",
+	// },
 	item_number: "<?php echo $this->lang->line('items_item_number_duplicate'); ?>",
 	category:{
 		required: "<?php echo $this->lang->line('items_category_required'); ?>",

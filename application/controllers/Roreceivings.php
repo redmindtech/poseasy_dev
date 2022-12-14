@@ -234,6 +234,9 @@ class Roreceivings extends Secure_Controller
 			$date=$this->input->post('cheque_date');
   
 			$is_adjust = $this-> input -> post('cheque_processing');
+			log_message('debug',print_r('PURCHASE',TRUE));
+			log_message('debug',print_r($is_adjust,TRUE));
+
 			if($is_adjust == 'true'){
  
 				$mode = 'complete';

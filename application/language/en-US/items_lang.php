@@ -131,4 +131,5 @@ $lang["item_name_message"]="Item is already in the table...Please Enter new item
 $lang["serial_number"]="S.no";
 $lang["supplier_name_required"]="Supplier name is required";
 $lang["items_category_exits"] = "Category does not exist. Please select from dropdown";
+$lang["hsn_code_required"]="HSN Code is a required field";
 

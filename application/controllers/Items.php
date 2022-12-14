@@ -587,7 +587,8 @@ class Items extends Secure_Controller
 
 	public function save($item_id = NEW_ITEM)
 	{
-		// log_message('info', 'item_id_save_new' .$item_id);
+		log_message('debug',print_r('$item_id',TRUE));
+	 log_message('debug',print_r($item_id,TRUE));
 
 
 		$mode = "add";
@@ -675,20 +676,19 @@ class Items extends Secure_Controller
 			{
 				$item_id_success= $item_data['item_id'];
 			}
-
+       if($receiving_quantity !=0){
 			
 			$supplier_details = array(		
 				'supplier_id' => empty($this->input->post('supplier_id')) ? NULL : intval($this->input->post('supplier_id')),
 				'add_quantity' => $receiving_quantity,
 				 'item_id' => $item_id_success
 		);
+		$result = $this->Item->save_supplier_form_details($supplier_details );
 
-	
-				 
-		  $result = $this->Item->save_supplier_form_details($supplier_details );
+	   }  
 
 
-			log_message('info', 'item_data_save11' .$item_data['item_id']);	
+			// log_message('info', 'item_data_save11' .$item_data['item_id']);	
 
 			if($mode == "edit"){
 				$this->Item->delete_customer_catagory($item_id);
@@ -711,11 +711,11 @@ class Items extends Secure_Controller
 			  $result = $this->Item->save_customer_category_price_slab($customer_category_price_data, $item_id);		
 			}
 
-			$hsn_code_table_data = array(
-				'hsn_code' => $this->input->post('hsn_code'),
+			// $hsn_code_table_data = array(
+			// 	'hsn_code' => $this->input->post('hsn_code'),
 					
-			);		
-			 $result = $this->Item->save_hsn($hsn_code_table_data, $item_id);
+			// );		
+			//  $result = $this->Item->save_hsn($hsn_code_table_data, $item_id);
 			$success = TRUE;
 			$new_item = FALSE;
 

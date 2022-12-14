@@ -57,7 +57,20 @@ $(document).ready(function()
 
 		rules:
 		{
-			item_category_name: 'required'
+			
+		item_category_name:
+			{
+				required: true,
+				remote:
+				{ 
+					url: "<?php echo site_url($controller_name. '/ajax_check_item_category_name') ?>",
+					type: 'POST',
+					data: {
+						'item_master_id': "<?php echo $Master_category_info->item_master_id; ?>"
+						
+					}
+				}
+			}
 		},
 
 		messages:

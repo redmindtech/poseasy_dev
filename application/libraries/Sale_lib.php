@@ -389,7 +389,7 @@ class Sale_lib
 			//add to existing array
 			$payment = array($payment_id => array('payment_type' => $payment_id, 'payment_amount' => $payment_amount,
 				'cash_refund' => 0, 'cash_adjustment' => $cash_adjustment,'sales_cheque_date'=>$check_date,'sales_cheque_no'=>$check_number));
-
+				// log_message('debug',print_r($is_adjust,true));
 			$payments += $payment;
 		}
 
@@ -784,6 +784,7 @@ class Sale_lib
 		
 		 $hsn_tax=$hsn[0]->tax_percentage;
 		 $applied_discount = $discount;
+		 
 		 
 	
 		$item_id = $item_info->item_id;

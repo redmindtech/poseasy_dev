@@ -100,7 +100,7 @@ $(document).ready(function()
                         $(this).find('td').eq(-1).after('<td><a href id="submit_qty" name="'+item_id+'" title="Save Quantity" class="btn btn-success btn-sm disabled"><span class="glyphicon glyphicon-ok id="submit_span"></span></a></td>');
                     }
                     $(this).find('td').eq(-1).after('<td><input type="hidden" id="items_less_quantity" class="form-control input-sm" value="0"></td>');
-                    $(this).find('td').eq(7).after('<td style=width:100px;height:50px;><input autocomplete="off" type="text" name="supplier_name" style="background-color:#FFFFE0;" id="supplier_name" class="form-control input-sm" placeholder="Type Supplier Name" value="" style=width:150px; required></td>');	
+                    $(this).find('td').eq(7).after('<td style=width:100px;height:50px;><input autocomplete="off"  type="text" name="'+item_id+'" style="background-color:#FFFFE0;" id="supplier_name" class="form-control input-sm" placeholder="Type Supplier Name" value="" style=width:150px; required></td>');	
                         row.find("td:eq(3)").hide();
                         row.find("th:eq(2)").hide();
                    
@@ -128,16 +128,12 @@ $(document).ready(function()
                 });
                 $('[data-type="delete"]').click(function(event) {
                         window.location.reload();
-                        alert('hi')
                         console.log('[data-type="delete"]');
                 });
 
                 
             $(document).on("change", '#items_add_quantity',  function(e){
-            //    console.log($(this).attr("name"));
-                var current_row = $(this).attr("name");
-                alert('input[name='+current_row+']');
-                $('a[name='+current_row+']').removeClass('btn btn-success btn-sm disabled').addClass( "btn btn-success btn-sm" );
+            
                 var valid= RegExp(/^[+-]?\d*(\.5\d{0,0})?(\.0\d{0,0})?$/);
                 var quantity_reg = e.target.value ;        
                 if(status = valid.test(parseFloat(e.target.value))){
@@ -157,11 +153,24 @@ $(document).ready(function()
                 }
                 else{           
                     alert('Please Enter the Correct Quantity .0 or .5');
+
                     $("#items_add_quantity").val('0.00');
+                    // window.location.reload();
                 }
             }); 
 
-    $(document).on("click", '#supplier_name',  function(e){
+    $(document).on("click" , '#supplier_name',  function(e){
+        var current_row = $(this).attr("name");
+       var check_add_qty= $('input[name='+current_row+']').val();
+      if(check_add_qty =="" || check_add_qty =='0.00' )
+      {
+        alert('Please enter update quantity');
+        window.location.reload();
+      }
+    else{
+            
+                $('a[name='+current_row+']').removeClass('btn btn-success btn-sm disabled').addClass( "btn btn-success btn-sm" );
+    }
          
 		$(this).attr('value', '');
 		$('input#supplier_name').autocomplete({
@@ -177,13 +186,14 @@ $(document).ready(function()
 			return false;
 		}
 	});
+
  
     });
    
     $(document).on('click',"#submit_qty",function(evt){
         //console.log("i am in");
-        console.log(supplier_id);
-        console.log(item_id);
+        // console.log(supplier_id);
+        // console.log(item_id);
         // console.log(receiving_quantity);
         // console.log(items_add_quantity);
         // console.log(final_val);

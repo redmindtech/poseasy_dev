@@ -17,6 +17,28 @@ class Master extends CI_Model
 		return ($this->db->get()->num_rows() == 1);
 	}
 
+
+	public function check_category_name_exists($item_category_name, $item_master_id = '')
+	{
+		// if the email is empty return like it is not existing
+		if(empty($item_category_name))
+		{
+			return FALSE;
+		}
+
+		$this->db->from('master_category');
+		// $this->db->join('people', 'people.person_id = customers.person_id');
+		$this->db->where('master_category.item_category_name', $item_category_name);
+		$this->db->where('master_category.deleted', 0);
+
+		if(!empty($item_master_id))
+		{
+			$this->db->where('master_category.item_master_id !=', $item_master_id);
+		}
+
+		return ($this->db->get()->num_rows() == 1);
+	}
+
 	/*
 	Gets total of rows
 	*/

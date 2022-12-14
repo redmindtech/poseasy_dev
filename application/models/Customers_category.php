@@ -123,8 +123,6 @@ class Customers_category extends CI_Model
 	public function item_customer_category_price_fetch($item_id)
 	{
 
-		
-
 		$this->db->select('sales_price');
 		$this->db->from('item_customer_category_price');
 		$this->db->where('item_id',$item_id);		
@@ -257,9 +255,10 @@ class Customers_category extends CI_Model
 
 		$this->db->from('customer_category AS customer_category');
 		$this->db->group_start();
-			$this->db->like('customer_category_price', $search);
+			// $this->db->or_like('first_name', $search);
+			$this->db->or_like('customer_category_price', $search);
 			$this->db->like('customer_category_name', $search);
-			$this->db->or_like('customer_category_disc', $search);
+			$this->db->like('customer_category_disc', $search);
 		$this->db->group_end();
 		$this->db->where('deleted', 0);
 

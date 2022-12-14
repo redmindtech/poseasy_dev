@@ -576,7 +576,7 @@ $(document).ready(function()
 					type: 'POST',
 					data: {
 						'person_id': "<?php echo $person_info->person_id; ?>"
-						// email is posted by default
+						// phone_number is posted by default
 					}
 				}
 			},
