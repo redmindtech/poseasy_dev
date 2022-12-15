@@ -188,7 +188,7 @@ $(document).ready(function()
 		<tr>
 			<td colspan="8" style='text-align:right;'><?php echo $this->lang->line('sales_sub_total'); ?> </td>
 			
-			<td style='text-align:center;' class="total-value" id="subtotal"><?php echo to_currency($total); ?></td>
+			<td style='text-align:center;' class="total-value" id="subtotal"><?php echo to_currency($prediscount_subtotal); ?></td>
 		</tr>
 
 		<?php

@@ -375,8 +375,9 @@ class Sale_lib
 	 * @param $payment_amount
 	 * @param int $cash_adjustment
 	 */
-	public function add_payment($payment_id, $payment_amount, $cash_adjustment = CASH_ADJUSTMENT_FALSE,$check_date,$check_number)
-	{
+	public function add_payment($payment_id, $payment_amount, $cash_adjustment = CASH_ADJUSTMENT_FALSE,$check_date,$check_number,$isadjust)
+	{	
+		
 		$payments = $this->get_payments();
 		if(isset($payments[$payment_id]))
 		{
@@ -388,8 +389,8 @@ class Sale_lib
 		{
 			//add to existing array
 			$payment = array($payment_id => array('payment_type' => $payment_id, 'payment_amount' => $payment_amount,
-				'cash_refund' => 0, 'cash_adjustment' => $cash_adjustment,'sales_cheque_date'=>$check_date,'sales_cheque_no'=>$check_number));
-				// log_message('debug',print_r($is_adjust,true));
+				'cash_refund' => 0, 'cash_adjustment' => $cash_adjustment,'sales_cheque_date'=>$check_date,'sales_cheque_no'=>$check_number,'isadjust'=>$isadjust));
+			
 			$payments += $payment;
 		}
 
@@ -520,7 +521,7 @@ class Sale_lib
 			$other_cost=bcadd($discount_totals,$item['other_cost']);
 			
 			
-			$other_cost_total=bcadd($other_cost_total,$item['other_cost']);
+			// $other_cost_total=bcadd($other_cost_total,$item['other_cost']);
 			
 			$net_amt=bcadd($net_amt,$other_cost);
 			
@@ -531,6 +532,8 @@ class Sale_lib
 		
 			$subtotal = bcadd($subtotal, $extended_discounted_amount);
 		}
+
+		$totals['state_gst'] = bcdiv($subtotal, -2);
 
 		$totals['prediscount_subtotal'] = $prediscount_subtotal;
 		$totals['total_discount'] = $total_discount;

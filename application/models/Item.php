@@ -419,6 +419,24 @@ class Item extends CI_Model
 		return $this->db->get();
 	}
 
+	public function get_hsn_code($code)
+	{ 
+		
+		$this->db->select('hsn_code');
+		$this->db->from('item_hsn_code');
+		$query=$this->db->get();
+ 		$result=$query->result();
+		//  return $result;
+		foreach($result as $row){
+			$hsn_code=$row->hsn_code;
+			if($hsn_code == $code)
+			{
+				return true;
+
+			}	
+		}
+		return false;
+	}
 
 	//editable text
 	public function save_qty_db($item_id,$receiving_quantity,$items_add_quantity,$items_current_quantity,$supplier_id){

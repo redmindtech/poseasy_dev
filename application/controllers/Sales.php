@@ -423,7 +423,7 @@ class Sales extends Secure_Controller
 				$sales_total = $this->sale_lib->get_total(FALSE);
 
 				$amount_tendered = $this->input->post('amount_tendered');
-				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL);
+				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL,NULL);
 				// $cash_adjustment_amount = $amount_due - $sales_total;
 				// if($cash_adjustment_amount <> 0)
 				// {
@@ -434,18 +434,18 @@ class Sales extends Secure_Controller
 			}
 			elseif($payment_type === $this->lang->line("sales_check"))
 			{  	
-				// $is_adjust=$this->input->post('cheque_processing');	
+				$is_adjust=$this->input->post('cheque_processing');	
 				// log_message('debug',print_r('add_payment',true));
 				// log_message('debug',print_r($is_adjust,true));
 				$check_date=$this->input->post('cheque_date');
 				$check_number=$this->input->post('cheque_number');
 				$amount_tendered = $this->input->post('amount_tendered');
-				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,$check_date,$check_number);
+				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,$check_date,$check_number,$is_adjust);
 			}
 			else
 			{
 				$amount_tendered = $this->input->post('amount_tendered');
-				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL);
+				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL,NULL);
 			}
 		}		
 		$this->_reload($data);
@@ -759,19 +759,34 @@ class Sales extends Secure_Controller
 				{
 				   $payed_amount="";
 				   $payment_type="";
+				   $isadjust="";
 				}				
 			   else
 			   {
 					foreach( $data['payments'] as $row)
-					{				
+					{	
+						// log_message('debug',print_r($row,true));			
 						$payed_amount=$row['payment_amount'];
 						$payment_type=$row['payment_type'];
+						$isadjust=$row['isadjust'];
+						
+						
 					}	
-			   }			
-				if($payment_type =='Cheque')	
+					
+			   }	
+				
+				if($payment_type =='Cheque' )	
 				{
+					if($isadjust =='true'){
+						$closing=bcadd($opening_bal,$sale);
+						$total_bal=bcsub($closing,$payed_amount);
+					}
+					else
+					{
+						
 					$closing=bcadd($opening_bal,$sale);
 					$total_bal=$closing;
+					}
 					
 				}			
 				else
@@ -780,7 +795,7 @@ class Sales extends Secure_Controller
 				 $total_bal=bcsub($closing,$payed_amount);
 				}
 				$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
-				
+				$data['state_gst'] = bcdiv($data['subtotal'], -2);
 				$data['sale_id'] = 'POS ' . $data['sale_id_num'];
 				// Resort and filter cart lines for printing
 				$data['cart'] = $this->sale_lib->sort_and_filter_cart($data['cart']);
@@ -893,66 +908,89 @@ class Sales extends Secure_Controller
 				$sale_type = SALE_TYPE_RETURN;
 				$opening_bal=$this->Sale->opening_bal($customer_id);	
 
-				foreach( $data['payments'] as $row)
-				{				
-					$payed_amount=$row['payment_amount'];				
-				}			
-					$sale= $data['total'];			
-					$total_bal=bcadd($opening_bal,$sale);
-					$opening_bal=$this->Sale->opening_bal($customer_id);
+				// foreach( $data['payments'] as $row)
+				// {				
+				// 	$payed_amount=$row['payment_amount'];				
+				// }			
+					// $sale= $data['total'];			
+					// $total_bal=bcadd($opening_bal,$sale);
+					// $opening_bal=$this->Sale->opening_bal($customer_id);
 					$sale= $data['total'];	
 
 				foreach( $data['payments'] as $row)
 				{				
 					$payed_amount=$row['payment_amount'];
 					$payment_type=$row['payment_type'];
+					$isadjust=$row['isadjust'];
 				}	
 
 				if($payment_type =='Cheque')	
 				{
+					if($isadjust =='true'){
+						$closing=bcsub($opening_bal,$sale);
+						$total_bal=bcsub($closing,$payed_amount);	
+					}
+					else{
 					$closing=bcadd($opening_bal,$sale);
 					$total_bal=$closing;
+					}
 					
-				}				
+				}	
+				else{			
 			
 				$closing=bcsub($opening_bal,$sale);
-				$total_bal=bcsub($closing,-($payed_amount));		
+				$total_bal=bcsub($closing,$payed_amount);	
+				}	
 			}
 			//cash bill
 			else
 			{
 				$sale_type = SALE_TYPE_POS;
 				$opening_bal=$this->Sale->opening_bal($customer_id);	
-				$sale= $data['total'];				
-				 if( $data['payments'] == NULL)
-				 {
-					$payed_amount="";
-					$payment_type="";
-				 }				 
-				else
+				$sale= $data['total'];	
+				if( $data['payments'] == NULL)
 				{
+				   $payed_amount="";
+				   $payment_type="";
+				   $isadjust="";
+				}				
+			   else
+			   {
 					foreach( $data['payments'] as $row)
-					{					
+					{	
+						// log_message('debug',print_r($row,true));			
 						$payed_amount=$row['payment_amount'];
 						$payment_type=$row['payment_type'];
+						$isadjust=$row['isadjust'];
+						
+						
 					}	
-				}
-			
-				if($payment_type =='Cheque')	
+					
+			   }	
+				
+				if($payment_type =='Cheque' )	
 				{
+					if($isadjust =='true'){
+						$closing=bcadd($opening_bal,$sale);
+						$total_bal=bcsub($closing,$payed_amount);
+					}
+					else
+					{
+						
 					$closing=bcadd($opening_bal,$sale);
 					$total_bal=$closing;
+					}
 					
-				}	
-				
+				}			
 				else
-				{				
+				{			
 				   $closing=bcadd($opening_bal,$sale);
-					 $total_bal=bcsub($closing,$payed_amount);
-				}
+				 $total_bal=bcsub($closing,$payed_amount);
+				}			
+			
 						
 			}
-			
+			$sale_type='5';
 			$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
 
 			$data['sale_id'] = 'POS ' . $data['sale_id_num'];
@@ -1188,27 +1226,27 @@ class Sales extends Secure_Controller
 		if($this->sale_lib->get_mode() == 'sale_invoice')
 		{
 			$data['mode_label'] = $this->lang->line('sales_invoice');
-			$data['customer_required'] = $this->lang->line('sales_customer_required');
+			 $data['customer_required'] = $this->lang->line('sales_customer_required');
 		}
 		elseif($this->sale_lib->get_mode() == 'sale_quote')
 		{
 			$data['mode_label'] = $this->lang->line('sales_quote');
-			$data['customer_required'] = $this->lang->line('sales_customer_required');
+			 $data['customer_required'] = $this->lang->line('sales_customer_required');
 		}
 		elseif($this->sale_lib->get_mode() == 'sale_work_order')
 		{
 			$data['mode_label'] = $this->lang->line('sales_work_order');
-			$data['customer_required'] = $this->lang->line('sales_customer_required');
+			 $data['customer_required'] = $this->lang->line('sales_customer_required');
 		}
 		elseif($this->sale_lib->get_mode() == 'return')
 		{
 			$data['mode_label'] = $this->lang->line('sales_return');
-			$data['customer_required'] = $this->lang->line('sales_customer_optional');
+			 $data['customer_required'] = $this->lang->line('sales_customer_optional');
 		}
 		else
 		{
 			$data['mode_label'] = $this->lang->line('sales_receipt');
-			$data['customer_required'] = $this->lang->line('sales_customer_optional');
+			 $data['customer_required'] = $this->lang->line('sales_customer_optional');
 		}
 
 		$invoice_type = $this->config->item('invoice_type');

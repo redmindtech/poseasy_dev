@@ -83,7 +83,7 @@ class Sale extends CI_Model
 	public function search($search, $filters, $rows = 0, $limit_from = 0, $sort = 'sales.sale_time', $order = 'desc', $count_only = FALSE)
 	{
 		// Pick up only non-suspended records
-		$where = 'sales.sale_status = 0 AND ';
+		$where = 'ro_sales.type AND ';
 
 		if(empty($this->config->item('date_or_time_format')))
 		{
@@ -646,8 +646,16 @@ class Sale extends CI_Model
 			// 	$total_amount_used = floatval($total_amount_used) + floatval($payment['payment_amount']);
 			// }
 			$status='complete';
+
 			if($payment['payment_type']=='Cheque'){
+                if($payment['isadjust'] == 'true')
+				{
+					$status='complete';
+				
+				}
+				else{
 				$status='pending';
+				}
 				$cheque_number=$payment['sales_cheque_no'];
 				$cheque_date=$payment['sales_cheque_date'];
 				

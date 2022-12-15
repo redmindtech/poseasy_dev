@@ -306,10 +306,10 @@ $lang['sales_gross_amount_symbol'] = "Gross Amt(₹)";
 $lang['sales_other_cost_symbol'] = "Other cost(₹)";
 $lang['sales_total_symbol'] = "Total(₹)";
 $lang['ro_sales_sales_amt'] = "Sales Amount";
-$lang['sales_neft']="NEFT";
+$lang['sales_neft']= "NEFT";
 $lang['Ro_daily_sale_no_Ro_daily_sale_to_display']= "No records found";
-
-
+$lang['sales_cgst_1']= "CGST";
+$lang['sales_sgst_1']= "SGST";
 
 
 

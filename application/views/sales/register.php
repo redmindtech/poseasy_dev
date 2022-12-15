@@ -888,8 +888,40 @@ $(document).ready(function()
 	if($('#mode').val()=='sale')
 	{
 		$("input[name='tax']").attr('disabled', true);
+		
 	}
 	
+	// var mode= $('#mode option:selected').text();
+	//  alert(mode);
+	 
+	
+// $('#mode').change(function(event){
+	
+// 	if(confirm("Do you want to change the mode?"))
+// 		{ 
+// 				console.log('mode_if');
+// 			$('#buttons_form').attr('action', "<?php echo site_url($controller_name.'/cancel'); ?>");
+// 			$('#buttons_form').submit();
+// 		}
+		
+// 		else{
+// 			console.log('mode else');
+// 			// table_support.refresh();
+// 			//  window.location.reload();
+// 		 event.preventDefault()
+// 		 return false;
+			
+// 		}
+		
+	
+// });
+
+	// $("#amount_tendered").keydown(function (event) {
+			
+	// 	$('input[name=quantity]').focus();
+            
+            
+    //  });
 
 
 	var clear_fields = function() {
@@ -1025,10 +1057,31 @@ $(document).ready(function()
 			{
 				alert("please enter the check number");
 				e.preventDefault();
+				
 			}
 
-			else{					
+			else{		
+
 			
+			var cheque_date = $("input[name='cheque_date']").val();
+			// alert(cheque_date);
+			var today = new Date().toISOString().slice(0, 10);
+			// alert(today);
+			var $payed_amt =$('#amount_tendered').val();
+			// alert($payed_amt);
+			if(cheque_date <= today){
+				if(confirm("It seems the cheque is Pre-Dated. Press Ok if the amount is already settled.")){
+								isAdjust = true;
+								$('<input>').attr({
+									type: 'hide',
+									id: 'cheque_processing',
+									name: 'cheque_processing',
+									value: isAdjust
+								}).appendTo('form');
+								
+							}
+			}
+
 			$('#add_payment_form').submit();	
 				
 		}
@@ -1140,7 +1193,7 @@ $(document).ready(function()
 	else{
 		$('#payment_totals').hide();		
 		$('#payment_details').hide();
-		$('#finish_invoice_quote_button').attr('disabled', TRUE);
+		$('#finish_invoice_quote_button').attr('disabled', true);
 		
 	}		
 	
@@ -1174,7 +1227,7 @@ $(document).ready(function()
 
  		
 	}
-	
+	else
 	{
 		$("#sale_total").html("<?php echo to_currency($non_cash_total); ?>");
 		$("#sale_amount_due").html("<?php echo to_currency($amount_due); ?>");
@@ -1184,7 +1237,11 @@ $(document).ready(function()
 		$(".non-giftcard-input").attr('disabled', false);
 		// $('#finish_invoice_quote_button').attr('disabled', true);
 	}
-	
+	if($('#mode').val()=='return')
+	{
+	$("#amount_tendered_label").html("<?php echo "Return Amount" ?>");
+		$("#amount_tendered:enabled").val("<?php echo to_currency_no_money(-$amount_due); ?>");
+	}
 }
 
 });

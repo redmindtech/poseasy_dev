@@ -175,7 +175,7 @@ $(document).ready(function()
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo $item['hsn_code']; ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_quantity_decimals($item['quantity']); ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['price']); ?></td>
-					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['tax']) . '%'; ?></td>
+					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['tax']); ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;' id="subtotal"><?php echo to_currency($item['total']); ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['discount_type']==FIXED)?to_currency($item['discount']):to_decimals($item['discount']) . '%';?></td>
 					<?php if($discount > 0): ?>
@@ -206,26 +206,44 @@ $(document).ready(function()
 		<tr>
 			<td colspan="9" style='text-align:right;'><?php echo $this->lang->line('sales_sub_total'); ?> </td>
 			
-			<td class="total-value" id="subtotal"><?php echo to_currency($total); ?></td>
+			<td class="total-value" id="subtotal" style='text-align:center;'><?php echo to_currency($prediscount_subtotal); ?></td>
 		</tr>
 
-		<?php
-		foreach($taxes as $tax_group_index=>$tax)
+		<!-- <?php
+		// foreach($taxes as $tax_group_index=>$tax)
 		{
 		?>
 			<tr>
 				
-				<td colspan="9" style='text-align:right;'><?php echo (float)$tax['tax_rate'] . '% ' . $tax['tax_group']; ?></td>
-				<td id="taxes" style='text-align:right;'><?php echo to_currency_tax($tax['sale_tax_amount']); ?></td>
+				<td colspan="9" style='text-align:right;'><?php //echo (float)$tax['tax_rate'] . '% ' . $tax['tax_group']; ?></td>
+				<td id="taxes" style='text-align:right;'><?php //echo to_currency_tax($tax['sale_tax_amount']); ?></td>
 			</tr>
 		<?php
 		}
-		?>
+		?> -->
+
+		<tr>
+			<td colspan="9" style='text-align:right;'><?php echo $this->lang->line('sales_cgst_1'); ?> </td>
+			
+			<td class="total-value" id="state_gst" style='text-align:center;'><?php echo to_currency($state_gst); ?></td>
+		</tr>
+
+		<tr>
+			<td colspan="9" style='text-align:right;'><?php echo $this->lang->line('sales_sgst_1'); ?> </td>
+			
+			<td class="total-value" id="state_gst" style='text-align:center;'><?php echo to_currency($state_gst); ?></td>
+		</tr>
+
+		<!-- <tr>
+			<td colspan="9" style='text-align:right;'><?php //echo $this->lang->line('sales_other_cost'); ?> </td>
+			
+			<td class="total-value" id="sales_other_cost"><?php //echo to_currency($other_cost_total); ?></td>
+		</tr> -->
 
 		<tr>
 			
 			<td colspan="9"  style='text-align:right;'><?php echo $this->lang->line('sales_total'); ?></td>
-			<td id="total" style='text-align:right;'><?php echo to_currency($total); ?></td>
+			<td id="total" style='text-align:center;'><?php echo to_currency($total); ?></td>
 		</tr>
 
 		<?php
@@ -239,8 +257,8 @@ $(document).ready(function()
 		?>
 			<tr>
 				
-				<td colspan="9"  style='text-align:right;'><?php echo $splitpayment[0]; ?></td>
-				<td style='text-align:right;' id="paid"><?php echo to_currency( $payment['payment_amount'] * -1 ); ?></td>
+				<td colspan="9"  style='text-align:right;'><p>Paid <?php echo $splitpayment[0]; ?></p></td>
+				<td style='text-align:center;' id="paid"><?php echo to_currency( $payment['payment_amount'] * -1 ); ?></td>
 			</tr>
 		<?php
 		}
@@ -262,7 +280,7 @@ $(document).ready(function()
 		<tr>
 			
 			<td colspan="9" style='text-align:right;'><?php echo $this->lang->line($amount_change >= 0 ? ($only_sale_check ? 'sales_check_balance' : 'sales_change_due') : 'sales_amount_due') ; ?></td>
-			<td id="change"><?php echo to_currency($amount_change); ?></td>
+			<td id="change" style='text-align:center;'><?php echo to_currency($amount_change); ?></td>
 		</tr>
 		<?php
 		}

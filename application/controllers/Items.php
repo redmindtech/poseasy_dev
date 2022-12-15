@@ -84,6 +84,21 @@ class Items extends Secure_Controller
 		echo json_encode(array('total' => $total_rows, 'rows' => $data_rows));
 	}
 
+
+	public function hsn_code_check()
+	 {
+	 $hsn_code=$this->input->post('hsn_code');	 	
+
+		$exists=$this->Item->get_hsn_code($hsn_code);
+		if($exists == 1)
+		{
+			echo "true";
+		}
+		else{
+			echo "false";
+		}
+	}
+
 	public function pic_thumb($pic_filename)
 	{
 		$this->load->helper('file');

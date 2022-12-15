@@ -827,24 +827,42 @@ $('#supplierdiv').hide();
 rules:
 {
 	supplier_id: 'required',
-	hsn_code:'required',
+	hsn_code:
+	{
+	required: true,
+		remote: 
+		{
+			
+			url: "<?php echo site_url($controller_name . '/hsn_code_check')?>",
+			type: 'POST',
+			data: {
+				
+				'hsn_code' : function()
+				{
+				
+					// alert($('#hsn_code').val());
+					 return  $('#hsn_code').val();
+				}	
+			},
+		}
+	},
 	
-	// name:
-	// {
-	// 	required: true,
-	// 	remote: {
-	// 		url: "<?php echo site_url($controller_name . '/item_name_stringcmp')?>",
-	// 		type: 'POST',
-	// 		data: {
-	// 			'item_name' : "<?php echo $item_info->name; ?>",
-	// 			'mode' : "<?php echo $check_null_flag; ?>",
-	// 			'name' : function()
-	// 			{ 
-	// 				return $('#name').val();
-	// 			},
-	// 		}
-	// 	}
-	// },
+	name:
+	{
+		required: true,
+		remote: {
+			url: "<?php echo site_url($controller_name . '/item_name_stringcmp')?>",
+			type: 'POST',
+			data: {
+				'item_name' : "<?php echo $item_info->name; ?>",
+				'mode' : "<?php echo $check_null_flag; ?>",
+				'name' : function()
+				{ 
+					return $('#name').val();
+				},
+			}
+		}
+	},
 	
 	 
 	category:
@@ -960,7 +978,8 @@ messages:
 {
 	hsn_code:
 	{
-		required: "<?php echo $this->lang->line('hsn_code_required'); ?>"
+		required: "<?php echo $this->lang->line('hsn_code_required'); ?>",
+		remote:"Your hsn code  is not in database please add this hsn code in database or enter other hsn code"
 
 	},
 	supplier_id:
@@ -969,11 +988,11 @@ messages:
 
 	},
 	
-	// name:
-	// { 
-	// 	required:  "<?php echo $this->lang->line('items_name_required'); ?>",
-	// 	remote: "<?php echo $this->lang->line('item_name_message'); ?>",
-	// },
+	name:
+	{ 
+		required:  "<?php echo $this->lang->line('items_name_required'); ?>",
+		remote: "<?php echo $this->lang->line('item_name_message'); ?>",
+	},
 	item_number: "<?php echo $this->lang->line('items_item_number_duplicate'); ?>",
 	category:{
 		required: "<?php echo $this->lang->line('items_category_required'); ?>",
