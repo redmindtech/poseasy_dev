@@ -27,13 +27,15 @@ if(isset($success))
 				<li class="pull-left first_li">
 					<label class="control-label"><?php echo $this->lang->line('sales_mode'); ?></label>
 				</li>
+				
 				<li class="pull-left">
-					<?php echo form_dropdown('mode', $modes, $mode, array('onchange'=>"$('#mode_form').submit();",'id'=>'mode', 'class'=>'selectpicker show-menu-arrow', 'data-style'=>'btn-default btn-sm', 'data-width'=>'fit')); ?>
-				</li>				
-				<li class="pull-left ">	
+					<?php echo form_dropdown('mode', $modes, $mode, array('onchange'=>"$('#mode_form').submit();",'id'=>'mode', 'class'=>'selectpicker show-menu-arrow mode', 'data-style'=>'btn-default btn-sm', 'data-width'=>'fit')); ?>
+				</li>
+				
+				<!-- <li class="pull-left ">	
 					<input type="checkbox">
 					<label class="control-label"><b><?php echo $this->lang->line('sales_ebill_with_address'); ?></b></label>
-                </li>			 
+                </li>			  -->
 												 
 				<?php
 				if($this->config->item('dinner_table_enable') == TRUE)
@@ -74,10 +76,15 @@ if(isset($success))
 				</li>
 
 				<li class="pull-right">
-					<?php echo anchor($controller_name."/bulk_entry_view", '<span class="glyphicon glyphicon-tags">&nbsp</span>' . $this->lang->line('sales_bulk_entry'),
+					<?php echo anchor($controller_name."/bulk_entry_view", '<span class="glyphicon glyphicon-book">&nbsp</span>' . $this->lang->line('sales_bulk_entry'),
 					array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('sales_bulk_entry'))); ?>
 			
 				</li>
+				<li class="pull-right">
+					
+				<div class='btn btn-info btn-sm pull-right' id='new_button' name='new_button'><span class="glyphicon glyphicon-tasks">&nbsp</span><?php echo $this->lang->line('new_sale'); ?></div>			
+
+			</li>
 
 
 				<?php
@@ -85,8 +92,8 @@ if(isset($success))
 				{
 				?>
 					<li class="pull-right">
-						<?php echo anchor("Ro_daily_sale/manage", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . $this->lang->line('sales_takings'),
-									array('class'=>'btn btn-primary btn-sm', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('sales_takings'))); ?>
+						<?php echo anchor("Ro_daily_sale/manage", '<span class="glyphicon glyphicon-tags">&nbsp</span>' . $this->lang->line('sales_takings'),
+									array('class'=>'btn btn-info btn-sm', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('sales_takings'))); ?>
 					</li>
 				<?php
 				}
@@ -797,6 +804,28 @@ if(isset($success))
 $(document).ready(function()
 {
 	var is_add=<?php echo json_encode($is_add_payment);?>;
+	var cart_val=<?php echo json_encode($cart);?>;
+	// alert(cart_val);
+	// console.log(cart_val);
+	if(cart_val == "")
+	{
+		$('#mode').attr('disabled', false);
+	}
+	else{
+		$('#mode').attr('disabled',true);
+	}
+	$('#new_button').click(function() {
+		if(cart_val == ""){
+			window.location.reload();
+		}
+		else{
+		if(confirm("<?php echo $this->lang->line('sales_confirm_cancel_sale'); ?>"))
+		{
+			$('#buttons_form').attr('action', "<?php echo site_url($controller_name.'/cancel'); ?>");
+			$('#buttons_form').submit();
+		}
+		}
+	});
 	
 	const redirect = function() {
 		window.location.href = "<?php echo site_url('sales'); ?>";

@@ -119,8 +119,8 @@
 	</style>
 </head>
 
-<body>
-	<div class="wrapper">
+<body >
+	<div class="wrapper" style="display: flex;  min-height: 100vh;  flex-direction: column; justify-content: flex-start;">
 		<div class="topbar">
 			<div class="container">
 				<div class="navbar-left">

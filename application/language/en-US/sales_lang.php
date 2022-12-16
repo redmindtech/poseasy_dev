@@ -72,7 +72,7 @@ $lang["sales_employee"] = "Employee";
 $lang["sales_entry"] = "Entry";
 $lang["sales_error_editing_item"] = "Error editing item";
 $lang["sales_find_or_scan_item"] = "Find or Scan Item";
-$lang["sales_find_or_scan_item_or_receipt"] = "Find or Scan Item or Receipt";
+$lang["sales_find_or_scan_item_or_receipt"] = "Find or Scan Item ";
 $lang["sales_giftcard"] = "Gift Card";
 $lang["sales_giftcard_balance"] = "Gift Card Balance";
 $lang["sales_giftcard_filter"] = "";
@@ -310,6 +310,7 @@ $lang['sales_neft']= "NEFT";
 $lang['Ro_daily_sale_no_Ro_daily_sale_to_display']= "No records found";
 $lang['sales_cgst_1']= "CGST";
 $lang['sales_sgst_1']= "SGST";
+$lang['new_sale']= "New Sale";
 
 
 

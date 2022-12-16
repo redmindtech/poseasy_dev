@@ -65,3 +65,7 @@ $lang["ro_receivings_total_neft"]  = "Total NEFT";
 $lang["ro_receivings_total_upi"]  = "Total UPI";
 $lang["ro_receivings_paid_amount_required"] = "Paid amount is required for cheque transactions";
 $lang["cheque_number_required"] = "Please enter Cheque number";
+$lang["ro_receivings_purchase_return_amount_required"]="Enter purchase return amount (or) enter minimum amount 0";
+$lang["ro_receivings_discount_required"]="Enter discount amount (or) enter minimum amount 0";
+$lang["paid_amount_required"]="Please enter paid amount";
+

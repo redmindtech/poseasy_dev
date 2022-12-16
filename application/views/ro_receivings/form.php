@@ -61,12 +61,6 @@
 			</div>
 			</div>
 
-		
-		
-		
-
-
-
 		<div class="form-group form-group-sm">
 				  <?php echo form_label($this->lang->line('ro_receivings_voucher_no'), 'invoice no', array('class' => 'control-label col-xs-3')); ?>
 					  <div class='col-xs-8'>
@@ -119,7 +113,7 @@
 					</div>
                 </div>
         
-                <div class="form-group form-group-sm">
+                <div class="form-group form-group-sm payment_mode">
 			        <?php echo form_label($this->lang->line('ro_receivings_payment_mode'), 'payment_mode', array('class'=>'control-label col-xs-3')); ?>
 			         <div class='col-xs-8'>
 			           <select name="payment_mode" id="payment_mode" required="" class='form-control'>
@@ -347,6 +341,8 @@ $(document).ready(function()
 	
 	$('.cheque_number'). hide();
 	$('.cheque_date'). hide();
+	$('.payment_mode').hide();
+	
 	$('#payment_mode').on("change",function()
 {
 
@@ -391,7 +387,15 @@ $(document).ready(function()
 			   $('#opening_balance').val('0');
         });
 });		
-	
+	$('#paid_amount,#purchase_return_amount').change(function(){
+		if($('#paid_amount').val() ==0.00 && $('#purchase_return_amount').val()==0.00)
+		{
+			$('.payment_mode').hide();
+		}
+		else{
+		$('.payment_mode').show();
+		}
+	})
 
 
 
@@ -421,7 +425,8 @@ $("form").on("change", "input","click", function(e)
 		var discount= parseFloat($('#discount').val());	
 
 
-	}else{
+	}
+	else{
 		
                 var	open_bal=parseFloat($('#opening_balance').val());
 				var purchase_amt=parseFloat($('#purchase_amount').val());
@@ -451,10 +456,11 @@ $("form").on("change", "input","click", function(e)
 		submitHandler: function(form,event) {
 			
 			if($('#purchase_amount').val()==0 && $('#purchase_return_amount').val()==0){
-
+				$('#submit').attr('disabled',false);
 				alert("Please enter puchase amount or purchase return amount");
-				dialog_support.show();
-				event.preventDefault();
+				// dialog_support.show();
+				 $('#submit').attr('disabled',false);
+			 event.preventDefault();
 			}
 
 			else{
@@ -504,6 +510,10 @@ $("form").on("change", "input","click", function(e)
 						
 			company_name:"required",	
 			cheque_number:"required",
+			paid_amount:"required",
+			purchase_return_amount:"required",
+			discount:"required",
+
 			paid_amount :
 			{
 				remote: {
@@ -551,11 +561,16 @@ $("form").on("change", "input","click", function(e)
 		},
 		messages:
 	{ 	 
-		
-		 company_name: "<?php echo $this->lang->line('supplier_name_required'); ?>",		
+		paid_amount :
+			{
+				remote:"<?php echo $this->lang->line('paid_amount_required'); ?>"
+			},
+		company_name: "<?php echo $this->lang->line('supplier_name_required'); ?>",		
 		 payment_mode:"<?php echo $this->lang->line('ro_receivings_payment_mode_required'); ?>",
 		 cheque_number:	"<?php echo $this->lang->line('cheque_number_required'); ?>",	
-		 paid_amount: "<?php echo $this->lang->line('ro_receivings_paid_amount_required'); ?>"
+		 paid_amount: "<?php echo $this->lang->line('ro_receivings_paid_amount_required'); ?>",
+		 purchase_return_amount: "<?php echo $this->lang->line('ro_receivings_purchase_return_amount_required'); ?>",
+		 discount: "<?php echo $this->lang->line('ro_receivings_discount_required'); ?>"
 
 	}	
 	}, form_support.error));	

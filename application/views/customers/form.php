@@ -618,7 +618,7 @@ $(document).ready(function()
 { 
 
 	$('select').on('change', function () {
-		console.log($customer_category_id);
+		// console.log($customer_category_id);
 	});
 });
 
