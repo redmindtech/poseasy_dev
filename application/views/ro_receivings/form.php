@@ -19,7 +19,7 @@
 			<div class='col-xs-6'>
 				<div class="input-group">
 					<span class="input-group-addon input-sm"><span class="glyphicon glyphicon-calendar"></span></span>
-					<?php echo form_input(array('type'=>'date',
+					<?php echo form_input(array('type'=>'date','id'=>'date',
 							'name'=>'date',
 							'class'=>'required form-control input-sm datetime',
  							'value'=>date('Y-m-d')
@@ -338,10 +338,15 @@ $('#supplier_name').click(function() {
 	
 $(document).ready(function()
 {
+	// var today = new Date().toISOString().slice(0, 10);
+	var today = new Date().toISOString().split('T')[0];
+	//  document.getElementsByName("cheque_date")[0].setAttribute('min',today);
+	$('#cheque_date').attr('min',today);
 	
 	$('.cheque_number'). hide();
 	$('.cheque_date'). hide();
 	$('.payment_mode').hide();
+	
 	
 	$('#payment_mode').on("change",function()
 {
@@ -455,41 +460,41 @@ $("form").on("change", "input","click", function(e)
 	$('#ro_receivings_edit_form').validate($.extend({
 		submitHandler: function(form,event) {
 			
-			if($('#purchase_amount').val()==0 && $('#purchase_return_amount').val()==0){
+			if($('#purchase_amount').val()==0 && $('#purchase_return_amount').val()==0 && $('#paid_amount').val()==0){
 				$('#submit').attr('disabled',false);
-				alert("Please enter puchase amount or purchase return amount");
+				alert("Please enter puchase amount or purchase return amount or receiving amount");
 				// dialog_support.show();
 				 $('#submit').attr('disabled',false);
 			 event.preventDefault();
 			}
 
-			else{
+			 else{
 
 
-				var isAdjust = false;
-				var cheque_date = $("input[name='cheque_date']").val();
+				// var isAdjust = false;
+				// var cheque_date = $("input[name='cheque_date']").val();
 				//alert(cheque_date);
-				var today = new Date().toISOString().slice(0, 10);
+				// var today = new Date().toISOString().slice(0, 10);
 
-			    if (cheque_date <= today) {
+			    // if (cheque_date <= today) {
 
-					var payment_mode=$('#payment_mode').val();
+				// 	var payment_mode=$('#payment_mode').val();
 
-					if(payment_mode=="Cheque"){
+				// 	// if(payment_mode=="Cheque"){
 
-							if(confirm("It seems the cheque is predated. Press Ok if the amount is already settled.")){
-								isAdjust = true;
-								$('<input>').attr({
-									type: 'hidden',
-									id: 'cheque_processing',
-									name: 'cheque_processing',
-									value: isAdjust
-								}).appendTo('form');
+				// 	// 		if(confirm("It seems the cheque is predated. Press Ok if the amount is already settled.")){
+				// 	// 			isAdjust = true;
+				// 	// 			// $('<input>').attr({
+				// 	// 			// 	type: 'hidden',
+				// 	// 			// 	id: 'cheque_processing',
+				// 	// 			// 	name: 'cheque_processing',
+				// 	// 			// 	value: isAdjust
+				// 	// 			// }).appendTo('form');
 								
-							}
-					}
+				// 	// 		}
+				// 	// }
 
-			    }
+			     
 
 			$(form).ajaxSubmit({
 				success: function(response)
@@ -499,7 +504,8 @@ $("form").on("change", "input","click", function(e)
 					location.reload();
 				},
 				dataType: 'json'
-			});}
+			});
+		 }
 		},
 
 		errorLabelContainer: '#error_message_box',

@@ -85,19 +85,6 @@ class Items extends Secure_Controller
 	}
 
 
-	public function hsn_code_check()
-	 {
-	 $hsn_code=$this->input->post('hsn_code');	 	
-
-		$exists=$this->Item->get_hsn_code($hsn_code);
-		if($exists == 1)
-		{
-			echo "true";
-		}
-		else{
-			echo "false";
-		}
-	}
 
 	public function pic_thumb($pic_filename)
 	{
@@ -213,6 +200,7 @@ class Items extends Secure_Controller
 		{
 			$data = [];
 		}
+	
 		
 		//allow_temp_items is set in the index function of items.php or sales.php
 		$data['allow_temp_item'] = $this->session->userdata('allow_temp_items');
@@ -390,6 +378,8 @@ class Items extends Secure_Controller
 		
 	   
 		}
+
+		
 		$this->load->view('items/form', $data);
 	}
 
@@ -414,6 +404,7 @@ class Items extends Secure_Controller
 			$data['stock_locations'][$location['location_id']] = $location['location_name'];
 			$data['item_quantities'][$location['location_id']] = $quantity;
 		}
+
 
 		$this->load->view('items/form_inventory', $data);
 	}
@@ -562,14 +553,13 @@ class Items extends Secure_Controller
 	public function item_name_stringcmp()
 	{ 
 		
-		$name_change = $this->input->post('name');
+		$name_change = $this->input->get('name');
 		$name_change_nospace = str_replace(' ', '', $name_change);
-		$name = $this->input->post('item_name');
-		$mode = $this->input->post('mode');
-		//log_message('info',$name_change);
+		$name = $this->input->get('item_name');
+		$mode = $this->input->get('mode');
+	
 		$name_nospace = str_replace(' ', '', $name);
-		//log_message('info',$mode);
-		//log_message('info',$name_nospace);
+	
 		if($mode == 0)
 		 {
 	      $exists = $this->Item->item_name_exists($name_change_nospace);
@@ -585,25 +575,28 @@ class Items extends Secure_Controller
 		
 	}
 
-	public function category_name_stringcmp($flag)
+	public function category_name_stringcmp()
 	{  
 		
-		if($flag==0)
-		{
-	     $exists = $this->Item->category_name_exists($this->input->post('category'));
-		 echo $exists ;
-		}
-		else
-		{
-			echo "true";
-		}
+	     $exists = $this->Item->category_name_exists($this->input->get('category'));
+	
+		 echo !$exists ? 'true' : 'false';
+		
+	}
+	
+	public function hsn_code_check()
+	 {
+	 $hsn_code=$this->input->get('hsn_code');	 	
+
+		$exists=$this->Item->get_hsn_code($hsn_code);
+				
+		echo !$exists ? 'true' : 'false';
 	}
 	
 
 	public function save($item_id = NEW_ITEM)
 	{
-		log_message('debug',print_r('$item_id',TRUE));
-	 log_message('debug',print_r($item_id,TRUE));
+	
 
 
 		$mode = "add";
@@ -649,7 +642,7 @@ class Items extends Secure_Controller
 		
 		
  
-		// log_message('info', 'item_id_before' .$item_id);
+		
 		$cus_cat_counter =	$this->input->post('counter');	
 
 				if($item_data['item_type'] == ITEM_TEMP)
@@ -679,6 +672,7 @@ class Items extends Secure_Controller
 		}
 
 		$employee_id = $this->Employee->get_logged_in_employee_info()->person_id;
+	
 
 		if($this->Item->save($item_data, $item_id))
 
@@ -703,7 +697,7 @@ class Items extends Secure_Controller
 	   }  
 
 
-			// log_message('info', 'item_data_save11' .$item_data['item_id']);	
+	
 
 			if($mode == "edit"){
 				$this->Item->delete_customer_catagory($item_id);
@@ -841,7 +835,7 @@ class Items extends Secure_Controller
 	public function check_item_number()
 	{
 		$exists = $this->Item->item_number_exists($this->input->post('item_number'), $this->input->post('item_id'));
-		
+			
 		echo !$exists ? 'true' : 'false';
 	}
 

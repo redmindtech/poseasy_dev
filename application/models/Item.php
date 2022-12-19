@@ -97,26 +97,47 @@ class Item extends CI_Model
 		 }
 		 return "true";		 
 	}
-	public function category_name_exists($name_item)
+	public function category_name_exists($input_item_category_name)
 	{
 		$this->db->select('item_category_name as item_category_name');
 		 $this->db->from('master_category');
 		 
 		 $query=$this->db->get();
-		 $item_name=$query->result();
-		 foreach($item_name as $item_name)
+		 $result=$query->result();
+		
+		 foreach($result as $category_name)
 		 { 		
-			$item_name=$item_name->item_category_name;
+			$name=$category_name->item_category_name;
 
 			// $name_item = preg_replace('/\s*/', '', $name_item);
 			// $name_item = strtolower($name_item);
 			
-			if($item_name ==$name_item)
+			if($name == $input_item_category_name)
 			{
-				return "true";
-			}			
+				return false;
+			}				
+					
 		 }
-		 return "false";		 
+		 return true;
+		 	 
+	}
+	public function get_hsn_code($code)
+	{ 
+		
+		$this->db->select('hsn_code');
+		$this->db->from('item_hsn_code');
+		$query=$this->db->get();
+ 		$result=$query->result();
+		//  return $result;
+		foreach($result as $row){
+			$hsn_code=$row->hsn_code;
+			if($hsn_code == $code)
+			{
+				return false;
+
+			}	
+		}
+		return true;
 	}
 	public function supplier_name_exists($name_supplier)
 	{
@@ -148,10 +169,10 @@ class Item extends CI_Model
 			$category_name=$category_name->customer_category_name;
 			if($category_name == $name_category)
 			{
-				return "false";
+				return 'false';
 			}			
 		 }
-		 return "true";
+		 return 'true';
 	}	
 	
 	public function delete_customer_catagory($id)
@@ -165,7 +186,7 @@ class Item extends CI_Model
 
 
 	public function save_customer_category_price_slab(&$customer_category_price_data, $id )
-	{		//log_message('error',$e->getMessage());
+	{	
 		
 		if(!$id || !$this->exists($id))
 		{
@@ -210,18 +231,18 @@ class Item extends CI_Model
 			}
 			
 			}
-			public function save_hsn(&$hsn_code_table,$item_data){
+			// public function save_hsn(&$hsn_code_table,$item_data){
 
-				$success = FALSE;
-				$this->db->trans_start();		
+			// 	$success = FALSE;
+			// 	$this->db->trans_start();		
 		
-				$success = $this->db->insert('item_hsn_code',$hsn_code_table);
-				$this->db->trans_complete();
+			// 	$success = $this->db->insert('item_hsn_code',$hsn_code_table);
+			// 	$this->db->trans_complete();
 		
-				$success &= $this->db->trans_status();
-				return $success;
+			// 	$success &= $this->db->trans_status();
+			// 	return $success;
 		
-			}
+			// }
 	public function fetch_item_id()
 	{
 
@@ -419,24 +440,7 @@ class Item extends CI_Model
 		return $this->db->get();
 	}
 
-	public function get_hsn_code($code)
-	{ 
-		
-		$this->db->select('hsn_code');
-		$this->db->from('item_hsn_code');
-		$query=$this->db->get();
- 		$result=$query->result();
-		//  return $result;
-		foreach($result as $row){
-			$hsn_code=$row->hsn_code;
-			if($hsn_code == $code)
-			{
-				return true;
-
-			}	
-		}
-		return false;
-	}
+	
 
 	//editable text
 	public function save_qty_db($item_id,$receiving_quantity,$items_add_quantity,$items_current_quantity,$supplier_id){

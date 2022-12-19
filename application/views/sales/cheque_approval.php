@@ -33,11 +33,12 @@ $(document).ready(function()
 					var col2=row.find("td:eq(12)").hide();
 					var col2=row.find("th:eq(12)").hide();
 
-					//if($('#table tr'). length != 2){
+					// if($('#table tr'). length != 2){
+						if(id>0){
 					
 					$(this).find('td').eq(-1).after('<td><a href id="submit_qty" name="'+id+'" title="Approve" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok id="submit_span"></span></a></td>');
 					$(this).find('td').eq(-1).after('<td><a href id="reject_cheque" name="'+id+'" title="Reject" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove id="submit_span"></span></a></td>');
-					//}
+					 }
 					
 			}); 
 

@@ -185,9 +185,9 @@ if(isset($success))
 					?>
 				</table>
 
-				<!-- <button class="btn btn-danger btn-sm" id="remove_customer_button" title="<?php echo $this->lang->line('common_remove').' '.$this->lang->line('customers_customer')?>">
+				<button class="btn btn-danger btn-sm" id="remove_customer_button" name="remove_customer_button" title="<?php echo $this->lang->line('common_remove').' '.$this->lang->line('customers_customer')?>">
 					<span class="glyphicon glyphicon-remove">&nbsp</span><?php echo $this->lang->line('common_remove').' '.$this->lang->line('customers_customer') ?>
-				</button> -->
+				</button>
 				
 			<?php
 			}
@@ -556,8 +556,8 @@ if(isset($success))
 			</div>
 			
 <!-- Sale Items List -->
-<div class="row">
-	<table class="sales_table_100" id="register">
+<div class="row" name="cart_save">
+	<table class="sales_table_100" id="register"  >
 		<thead>
 			<tr>
 				<th style="width: 5%; "><?php echo $this->lang->line('common_delete'); ?></th>
@@ -579,7 +579,7 @@ if(isset($success))
 			</tr>
 		</thead>
 
-		<tbody id="cart_contents">
+		<tbody id="cart_contents" name='cart_contents'>
 			<?php
 			$serial_no_counter=1;
 			if(count($cart) == 0)
@@ -600,7 +600,7 @@ if(isset($success))
 					<?php echo form_open($controller_name."/edit_item/$line", array('class'=>'form-horizontal', 'id'=>'cart_'.$line)); ?>
 						<tr>
 							<td>
-								<span data-item-id="<?php echo $line; ?>" class="delete_item_button"><span class="glyphicon glyphicon-trash"></span></span>
+								<span data-item-id="<?php echo $line; ?>" class="delete_item_button" name="delete_item_button"><span class="glyphicon glyphicon-trash" name="delete_item_button"></span></span>
 								<?php
 								echo form_hidden('location', $item['item_location']);
 								echo form_input(array('type'=>'hidden', 'name'=>'item_id', 'value'=>$item['item_id']));
@@ -747,19 +747,19 @@ if(isset($success))
 									<?php
 									if($item['allow_alt_description'])
 									{
-										echo form_input(array('name'=>'description', 'class'=>'form-control input-sm', 'value'=>$item['description'], 'onClick'=>'this.select();'));
+										// echo form_input(array('name'=>'description', 'class'=>'form-control input-sm', 'value'=>$item['description'], 'onClick'=>'this.select();'));
 									}
 									else
 									{
 										if($item['description'] != '')
 										{
-											echo $item['description'];
-											echo form_hidden('description', $item['description']);
+											// echo $item['description'];
+											// echo form_hidden('description', $item['description']);
 										}
 										else
 										{
-											echo $this->lang->line('sales_no_description');
-											echo form_hidden('description','');
+											// echo $this->lang->line('sales_no_description');
+											// echo form_hidden('description','');
 										}
 									}
 									?>
@@ -805,23 +805,36 @@ $(document).ready(function()
 {
 	var is_add=<?php echo json_encode($is_add_payment);?>;
 	var cart_val=<?php echo json_encode($cart);?>;
+	var today = new Date().toISOString().split('T')[0];
+	//  document.getElementsByName("cheque_date")[0].setAttribute('min',today);
+	$('#cheque_date').attr('min',today);
+	
 	// alert(cart_val);
 	// console.log(cart_val);
 	if(cart_val == "")
 	{
 		$('#mode').attr('disabled', false);
+		$('#remove_customer_button').show();
+		$('#new_button').hide();
+
+	
 	}
 	else{
-		$('#mode').attr('disabled',true);
+		$('#mode').attr('disabled',true);		
+		$('#remove_customer_button').hide();
+		$('#new_button').show();
 	}
 	$('#new_button').click(function() {
+		// alert(cart_val);
 		if(cart_val == ""){
 			window.location.reload();
 		}
 		else{
-		if(confirm("<?php echo $this->lang->line('sales_confirm_cancel_sale'); ?>"))
+		if(confirm("Are sure want to start new sale ?"))
 		{
+			
 			$('#buttons_form').attr('action', "<?php echo site_url($controller_name.'/cancel'); ?>");
+			
 			$('#buttons_form').submit();
 		}
 		}
@@ -895,6 +908,8 @@ $(document).ready(function()
 	});
 
 	$('#item').autocomplete( {
+		
+		
 		source: "<?php echo site_url($controller_name . '/item_search'); ?>",
 		minChars: 0,
 		autoFocus: false,
@@ -956,11 +971,13 @@ $(document).ready(function()
 	var clear_fields = function() {
 		if($(this).val().match("<?php echo $this->lang->line('sales_start_typing_item_name') . '|' . $this->lang->line('sales_start_typing_customer_name'); ?>"))
 		{
+			
 			$(this).val('');
 		}
 	};
 
 	$('#item, #customer').click(clear_fields).dblclick(function(event) {
+		
 		$(this).autocomplete('search');
 	});
 	
@@ -1080,6 +1097,8 @@ $(document).ready(function()
 
 	$('#add_payment_button').click(function(e) 
 	{
+		// $("input[name='item']").attr('disabled', true);
+		// $("input[name='item']").hide();
 		var isAdjust = false;
 		if($("#payment_types").val() == "Cheque")
 		{	if($('#cheque_number').val()=="")
@@ -1089,27 +1108,27 @@ $(document).ready(function()
 				
 			}
 
-			else{		
+			 else{		
 
 			
-			var cheque_date = $("input[name='cheque_date']").val();
-			// alert(cheque_date);
-			var today = new Date().toISOString().slice(0, 10);
-			// alert(today);
-			var $payed_amt =$('#amount_tendered').val();
-			// alert($payed_amt);
-			if(cheque_date <= today){
-				if(confirm("It seems the cheque is Pre-Dated. Press Ok if the amount is already settled.")){
-								isAdjust = true;
-								$('<input>').attr({
-									type: 'hide',
-									id: 'cheque_processing',
-									name: 'cheque_processing',
-									value: isAdjust
-								}).appendTo('form');
+			// var cheque_date = $("input[name='cheque_date']").val();
+			// // alert(cheque_date);
+			// var today = new Date().toISOString().slice(0, 10);
+			// // alert(today);
+			// var $payed_amt =$('#amount_tendered').val();
+			// // alert($payed_amt);
+			// if(cheque_date <= today){
+			// 	if(confirm("It seems the cheque is Pre-Dated. Press Ok if the amount is already settled.")){
+			// 					isAdjust = true;
+			// 					$('<input>').attr({
+			// 						type: 'hide',
+			// 						id: 'cheque_processing',
+			// 						name: 'cheque_processing',
+			// 						value: isAdjust
+			// 					}).appendTo('form');
 								
-							}
-			}
+			// 				}
+			// }
 
 			$('#add_payment_form').submit();	
 				
@@ -1117,7 +1136,15 @@ $(document).ready(function()
 	}
 		else{
 			var isAdjust = false;
+			
+			if(confirm("After payment you cannot add or delete items..Are you sure want to add payment."))
+			{						
+				// $("input[name='item']").attr('disabled', true);		
+				// $("input[name='register']").hide()	;
 		$('#add_payment_form').submit();	
+		
+			}
+			
 		}	
 	});
 	
@@ -1199,6 +1226,7 @@ $(document).ready(function()
 
 {	
 	var cash_mode = <?php echo json_encode($cash_mode); ?>;
+	
 	 $('#cheque_date').hide();
 	$('#cheque_number').hide();
 	$('#lable_cheque_date').hide();
@@ -1214,9 +1242,12 @@ $(document).ready(function()
 		
 		}
 		else
-		{								 
-			 $('#payment_details').hide();
+		{		
+			$("input[name='delete_item_button']").attr('disabled', true);	
+			$("input[name='item']").attr('disabled', true);				 
+			$('#payment_details').hide();
 			$('#finish_invoice_quote_button').attr('disabled', false);
+			
 		}
 	}
 	else{

@@ -579,7 +579,7 @@ function stock_quantity_editable_fun(){
 	var stk_qty = document.getElementById("stock_qty");
 	var sup_disp = document.getElementById("supplierdiv");
 	var stock_quantity_editable = document.getElementById("quantity_1");
-	var name =document.getElementById("name");
+	// var name =document.getElementById("name");
 	var flag = <?php echo $check_null_flag; ?>;
 
 	if(flag == 0){
@@ -591,7 +591,7 @@ function stock_quantity_editable_fun(){
 		//alert("edit");
 		stock_quantity_editable.setAttribute('readonly',true);
 		sup_disp.style.display = "none";
-		name.setAttribute('readonly',true);
+		// name.setAttribute('readonly',true);
 
 
 		
@@ -784,15 +784,16 @@ $('#supplierdiv').hide();
 	var init_validation = function() {
 		
 		$('#item_form').validate($.extend({
+			
 			// alert($('#receiving_quantity'),val());
 			submitHandler: function(form, event) {
 				
 				$(form).ajaxSubmit({
 					
 					success: function(response) {
-						console.log('success');
+						
 						var stay_open = dialog_support.clicked_id() != 'submit';
-						// console.log('hi');
+						
 						if(stay_open)
 						{  
 							// alert($('#receiving_quantity').val());
@@ -807,11 +808,11 @@ $('#supplierdiv').hide();
 						}
 						else
 						{
-							 console.log('else');
+							
 							dialog_support.hide();
 						}
 						// console.log(response);
-					  console.log('out of else');
+					 
 						table_support.handle_submit('<?php echo site_url('items'); ?>', response, stay_open);
 						 window.location.reload();
 						init_validation();
@@ -819,7 +820,9 @@ $('#supplierdiv').hide();
 					},
 					
 					dataType: 'json'
+
 				});
+				
 			},
 			
 			errorLabelContainer: '#error_message_box',
@@ -834,7 +837,7 @@ rules:
 		{
 			
 			url: "<?php echo site_url($controller_name . '/hsn_code_check')?>",
-			type: 'POST',
+			type: 'GET',
 			data: {
 				
 				'hsn_code' : function()
@@ -852,7 +855,7 @@ rules:
 		required: true,
 		remote: {
 			url: "<?php echo site_url($controller_name . '/item_name_stringcmp')?>",
-			type: 'POST',
+			type: 'GET',
 			data: {
 				'item_name' : "<?php echo $item_info->name; ?>",
 				'mode' : "<?php echo $check_null_flag; ?>",
@@ -867,12 +870,12 @@ rules:
 	 
 	category:
 	{
-		required: true,
+		 required: true,
 		remote: 
 		{
 			
-			url: "<?php echo site_url($controller_name . '/category_name_stringcmp/'.$one)?>",
-			type: 'POST',
+			url: "<?php echo site_url($controller_name . '/category_name_stringcmp')?>",
+			type: 'GET',
 			data: {
 				
 				'category' : function()
@@ -883,7 +886,6 @@ rules:
 				},
 		}
 	}
-		
 
 
 	},
@@ -910,40 +912,40 @@ rules:
 		
 		
 		required: true,
-		remote: 
-		{
-			url: "<?php echo site_url($controller_name . '/cost_price_validate')?>",
-			type: 'POST',
-			data: {
+		// remote: 
+		// {
+		// 	url: "<?php echo site_url($controller_name . '/cost_price_validate')?>",
+		// 	type: 'POST',
+		// 	data: {
 						
-						'cost_price' : function()
-						{
+		// 				'cost_price' : function()
+		// 				{
 						
-							//alert($('#category').val());
-							return  $('#cost_price').val();
-						},
-				}
-		}
+		// 					//alert($('#category').val());
+		// 					return  $('#cost_price').val();
+		// 				},
+		// 		}
+		// }
 	},
 	unit_price:
 	{
 		
 		required: true,
-		remote: 
-		{
-			url: "<?php echo site_url($controller_name . '/sale_price_validate')?>",
-			type: 'POST',
-			data: {
+		// remote: 
+		// {
+		// 	url: "<?php echo site_url($controller_name . '/sale_price_validate')?>",
+		// 	type: 'POST',
+		// 	data: {
 						
-						'unit_price' : function()
-						{
+		// 				'unit_price' : function()
+		// 				{
 						
-							//alert($('#category').val());
-							return  $('#unit_price').val();
-						},
-				}
+		// 					//alert($('#category').val());
+		// 					return  $('#unit_price').val();
+		// 				},
+		// 		}
 
-		}
+		// }
 	},
 	<?php
 	foreach($stock_locations as $key=>$location_detail)
@@ -957,6 +959,7 @@ rules:
 	<?php
 	}
 	?>
+	
 	receiving_quantity:
 	{
 		required: true,
