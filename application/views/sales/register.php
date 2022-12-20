@@ -246,8 +246,17 @@ if(isset($success))
 
 		<table class="sales_table_100">
 			<tr>
+			<?php	if($mode=='return')
+				{?>
 				<th style="width: 55%;"><?php echo $this->lang->line('sales_quantity_of_items',$item_count); ?></th>
+				<th style="width: 45%; text-align: right;"><?php echo -$total_units; ?></th>
+			<?php	}
+				else
+				{?>
+					<th style="width: 55%;"><?php echo $this->lang->line('sales_quantity_of_items',$item_count); ?></th>
 				<th style="width: 45%; text-align: right;"><?php echo $total_units; ?></th>
+				<?php
+			}?>
 			</tr>
 			<!-- <tr>
 				<th style="width: 55%;"><?php echo $this->lang->line('sales_sub_total'); ?></th>
@@ -267,8 +276,10 @@ if(isset($success))
 			?>
 
 			<tr>
+				
 				<th style="width: 55%; font-size: 150%"><?php echo $this->lang->line('sales_total'); ?></th>
 				<th style="width: 45%; font-size: 150%; text-align: right;"><span id="sale_total"><?php echo to_currency($total); ?></span></th>
+				
 			</tr>
 		</table>
 
@@ -285,10 +296,10 @@ if(isset($success))
 					<th style="width: 55%;"><span id="sales_payments_total_lable"><?php echo $this->lang->line('sales_payments_total'); ?></span></th>
 					<th style="width: 45%; text-align: right;"><span id="sales_payments_total"><?php echo to_currency($payments_total); ?></span></th>
 				</tr>
-				<tr>
+				<!-- <tr>
 					<th style="width: 55%; font-size: 120%"><span id="sale_amount_due_lable"><?php echo $this->lang->line('sales_amount_due'); ?></span></th>
 					<th style="width: 45%; font-size: 120%; text-align: right;"><span id="sale_amount_due"><?php echo to_currency($amount_due); ?></span></th>
-				</tr>
+				</tr> -->
 			</table>
 
 			<div id="payment_details">
@@ -317,6 +328,7 @@ if(isset($success))
 							</tr>
 						</table>
 					<?php echo form_close(); ?>
+					
 					
 
 					<?php
@@ -557,7 +569,7 @@ if(isset($success))
 			
 <!-- Sale Items List -->
 <div class="row" name="cart_save">
-	<table class="sales_table_100" id="register"  >
+	<table class="sales_table_100" id="register" name="register" >
 		<thead>
 			<tr>
 				<th style="width: 5%; "><?php echo $this->lang->line('common_delete'); ?></th>
@@ -600,7 +612,7 @@ if(isset($success))
 					<?php echo form_open($controller_name."/edit_item/$line", array('class'=>'form-horizontal', 'id'=>'cart_'.$line)); ?>
 						<tr>
 							<td>
-								<span data-item-id="<?php echo $line; ?>" class="delete_item_button" name="delete_item_button"><span class="glyphicon glyphicon-trash" name="delete_item_button"></span></span>
+								<span data-item-id="<?php echo $line; ?>" class="delete_item_button" name="delete_item_button" id="delete_item_button<?php echo $line; ?>" ><span class="glyphicon glyphicon-trash" name="delete_item_button" ></span></span>
 								<?php
 								echo form_hidden('location', $item['item_location']);
 								echo form_input(array('type'=>'hidden', 'name'=>'item_id', 'value'=>$item['item_id']));
@@ -641,6 +653,20 @@ if(isset($success))
 
 							<td>
 								<?php
+								if($mode=='return')
+								{
+									if($item['is_serialized'])
+								{
+									echo to_quantity_decimals($item['quantity']);
+									echo form_hidden('quantity', $item['quantity']);
+								}
+								else
+								{
+									echo form_input(array('name'=>'quantity','id'=>'quantity','min'=>'-9999','max'=>'-1','type'=>'number','class'=>'form-control input-sm', 'value'=>to_quantity_decimals(-$item['quantity']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
+								}
+								}
+								else
+								{
 								if($item['is_serialized'])
 								{
 									echo to_quantity_decimals($item['quantity']);
@@ -649,6 +675,7 @@ if(isset($success))
 								else
 								{
 									echo form_input(array('name'=>'quantity','id'=>'quantity','min'=>'0','type'=>'number','oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','class'=>'form-control input-sm', 'value'=>to_quantity_decimals($item['quantity']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
+								}
 								}
 								?>
 							</td><td>
@@ -806,7 +833,10 @@ $(document).ready(function()
 	var is_add=<?php echo json_encode($is_add_payment);?>;
 	var cart_val=<?php echo json_encode($cart);?>;
 	var today = new Date().toISOString().split('T')[0];
-	//  document.getElementsByName("cheque_date")[0].setAttribute('min',today);
+	var cart_count=<?php echo json_encode($serial_no_counter);?>;
+	var serial_no=cart_count-1;
+	// alert(cart_count-1);
+	//  docart_countcument.getElementsByName("cheque_date")[0].setAttribute('min',today);
 	$('#cheque_date').attr('min',today);
 	
 	// alert(cart_val);
@@ -1137,10 +1167,12 @@ $(document).ready(function()
 		else{
 			var isAdjust = false;
 			
-			if(confirm("After payment you cannot add or delete items..Are you sure want to add payment."))
+			if(confirm("Items in the cart can't be added or modified after payment. Do you want to make payment?"))
 			{						
 				// $("input[name='item']").attr('disabled', true);		
 				// $("input[name='register']").hide()	;
+				// document.getElementsByClassName('single_add_to_cart_button')[0].disabled = true;
+				// $('#delete_item_button').hide();
 		$('#add_payment_form').submit();	
 		
 			}
@@ -1243,17 +1275,23 @@ $(document).ready(function()
 		}
 		else
 		{		
-			$("input[name='delete_item_button']").attr('disabled', true);	
+			// console.log(cart_val.lenght());
 			$("input[name='item']").attr('disabled', true);				 
 			$('#payment_details').hide();
 			$('#finish_invoice_quote_button').attr('disabled', false);
-			
+		
+		for(var i=1; i<=serial_no;i++)
+		{		
+		$('#delete_item_button'+i).hide();
+		}
+		   $("#register *").attr("disabled",true);
+		  
 		}
 	}
 	else{
 		$('#payment_totals').hide();		
 		$('#payment_details').hide();
-		$('#finish_invoice_quote_button').attr('disabled', true);
+		$('#finish_invoice_quote_button').attr('disabled',false);
 		
 	}		
 	
@@ -1299,6 +1337,7 @@ $(document).ready(function()
 	}
 	if($('#mode').val()=='return')
 	{
+		$("#sale_total").html("<?php echo to_currency(-$non_cash_total); ?>");
 	$("#amount_tendered_label").html("<?php echo "Return Amount" ?>");
 		$("#amount_tendered:enabled").val("<?php echo to_currency_no_money(-$amount_due); ?>");
 	}

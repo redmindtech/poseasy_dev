@@ -938,8 +938,8 @@ class Sales extends Secure_Controller
 				}	
 				else{			
 			
-				$closing=bcsub($opening_bal,$sale);
-				$total_bal=bcsub($closing,$payed_amount);	
+				$closing=bcadd($opening_bal,$sale);
+				$total_bal=bcadd($closing,$payed_amount);	
 				}	
 			}
 			//cash bill

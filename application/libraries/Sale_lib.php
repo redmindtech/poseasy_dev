@@ -933,6 +933,13 @@ class Sale_lib
 			$total_tax=0.00;
 			
 		}
+		if($mode=='return')
+		{
+			//  $quantity = 1;
+			 $net_amt=-$net_amt;
+			$price_tax=-$price_tax;
+			
+		}
 		
 		//Item already exists and is not serialized, add to quantity
 		if(!$itemalreadyinsale || $item_info->is_serialized)
@@ -983,9 +990,13 @@ class Sale_lib
 			$line['total'] = $total;
 			$line['discounted_total'] =$price_tax ;
 		}
+		//  if($mode=='return'){
 
-		$this->set_cart($items);
-
+		// $this->set_cart($items);
+		//  }
+		//  else{
+			$this->set_cart($items);
+		//  }
 		return TRUE;
 	}
 	public function total_tax($quantity, $price, $tax)
@@ -1147,7 +1158,7 @@ class Sale_lib
 
 		foreach($this->CI->Sale->get_sale_items_ordered($sale_id)->result() as $row)
 		{
-			$this->add_item($row->item_id, -$row->quantity_purchased, $row->item_location, $row->discount, $row->discount_type, PRICE_MODE_STANDARD, NULL, NULL, $row->item_unit_price, $row->description, $row->serialnumber, NULL, TRUE,NULL);
+			$this->add_item($row->item_id,-$row->quantity_purchased, $row->item_location, $row->discount, $row->discount_type, PRICE_MODE_STANDARD, NULL, NULL, $row->item_unit_price, $row->description, $row->serialnumber, NULL, TRUE,NULL);
 		}
 
 		$this->set_customer($this->CI->Sale->get_customer($sale_id)->person_id);
