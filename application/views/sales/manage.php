@@ -25,7 +25,7 @@ $(document).ready(function()
 			filters: $("#filters").val() || [""]
 		}
 	};
-
+	
 	table_support.init({
 		resource: '<?php echo site_url($controller_name);?>',
 		headers: <?php echo $table_headers; ?>,
@@ -47,6 +47,21 @@ $(document).ready(function()
 			}
 		}
 	});
+	var myClasses = document.querySelectorAll('.btn.btn-default.btn-sm.dropdown-toggle');
+               
+			   myClasses[0].style.display = 'none';
+
+	$('ul li:contains(JSON)').first().remove();
+                $('ul li:contains(XML)').first().remove();
+                $('ul li:contains(TXT)').first().remove();
+                $('ul li:contains(CSV)').first().remove();
+                $('ul li:contains(SQL)').first().remove();
+
+				$('[data-type="pdf"]').click(function(event) {
+                        window.location.reload();
+                        console.log('[data-type="pdf"]');
+                });
+
 });
 </script>
 

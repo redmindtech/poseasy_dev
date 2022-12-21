@@ -322,8 +322,8 @@ if(isset($success))
 							<tr>
 								<td><span id="amount_tendered_label"><?php echo $this->lang->line('sales_amount_tendered'); ?></span></td>
 								<td>
-								<?php echo form_input(array('name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm non-giftcard-input', 'value'=>to_currency_no_money($amount_due), 'size'=>'5', 'tabindex'=>++$tabindex, 'onClick'=>'this.select();')); ?>
-									<?php echo form_input(array('name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm giftcard-input', 'disabled' => true, 'value'=>to_currency_no_money($amount_due), 'size'=>'5', 'tabindex'=>++$tabindex)); ?>
+								<?php echo form_input(array('type'=>'number','name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm non-giftcard-input', 'oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','value'=>to_currency_no_money($amount_due), 'size'=>'5','min'=>'0', 'tabindex'=>++$tabindex, 'onClick'=>'this.select();')); ?>
+									<?php echo form_input(array('type'=>'number','name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm giftcard-input', 'disabled' => true, 'oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','value'=>to_currency_no_money($amount_due), 'size'=>'5','min'=>'0', 'tabindex'=>++$tabindex)); ?>
 								</td>
 							</tr>
 						</table>
@@ -374,8 +374,8 @@ if(isset($success))
 							<tr>
 								<td><span id="amount_tendered_label"><?php echo $this->lang->line('sales_amount_tendered'); ?></span></td>
 								<td>
-									<?php echo form_input(array('name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm non-giftcard-input', 'value'=>to_currency_no_money($amount_due), 'size'=>'5',  'onClick'=>'this.select();')); ?>
-									<?php echo form_input(array('name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm giftcard-input', 'disabled' => true, 'value'=>to_currency_no_money($amount_due), 'size'=>'5')); ?>
+									<?php echo form_input(array('type'=>'number','name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm non-giftcard-input', 'oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','value'=>to_currency_no_money($amount_due), 'size'=>'5','min'=>'0' , 'onClick'=>'this.select();')); ?>
+									<?php echo form_input(array('type'=>'number','name'=>'amount_tendered', 'id'=>'amount_tendered', 'class'=>'form-control input-sm giftcard-input', 'disabled' => true,'oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null', 'value'=>to_currency_no_money($amount_due),'min'=>'0' ,'size'=>'5')); ?>
 								</td>
 							</tr>
 							<tr>
@@ -638,7 +638,7 @@ if(isset($success))
 								<td style="align: center;">
 									<?php echo $item['name'] . ' '. implode(' ', array($item['attribute_values'], $item['attribute_dtvalues'])); ?>
 									<br/>
-									<?php if ($item['stock_type'] == '0'): echo '[' . to_quantity_decimals($item['in_stock']) . ' in ' . $item['stock_name'] . ']'; endif; ?>
+									<!-- <?php if ($item['stock_type'] == '0'): echo '[' . to_quantity_decimals($item['in_stock']) . ' in ' . $item['stock_name'] . ']'; endif; ?> -->
 								</td>
 							<?php
 							}
@@ -657,12 +657,12 @@ if(isset($success))
 								{
 									if($item['is_serialized'])
 								{
-									echo to_quantity_decimals($item['quantity']);
-									echo form_hidden('quantity', $item['quantity']);
+									echo to_quantity_decimals(-$item['quantity']);
+									echo form_hidden('quantity', -$item['quantity']);
 								}
 								else
 								{
-									echo form_input(array('name'=>'quantity','id'=>'quantity','min'=>'-9999','max'=>'-1','type'=>'number','class'=>'form-control input-sm', 'value'=>to_quantity_decimals(-$item['quantity']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
+									echo form_input(array('name'=>'quantity','id'=>'quantity','min'=>'0','type'=>'number','oninput'=>'this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null','class'=>'form-control input-sm', 'value'=>to_quantity_decimals(-$item['quantity']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
 								}
 								}
 								else
@@ -700,14 +700,16 @@ if(isset($success))
 								?>
 							</td>
 							<td>
+								
 								<?php
+
 								if($item['item_type'] == ITEM_AMOUNT_ENTRY)
 								{
-									echo form_input(array('name'=>'discounted_total', 'class'=>'form-control input-sm', 'value'=>to_currency_no_money($item['discounted_total']), 'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
+									echo form_input(array('name'=>'discounted_total', 'class'=>'form-control input-sm', 'value'=>number_format($item['discounted_total']),'tabindex'=>++$tabindex, 'onClick'=>'this.select();'));
 								}
 								else
 								{
-									echo to_currency($item['discounted_total']);
+									echo number_format($item['discounted_total']);
 								}
 								?>
 							</td>
@@ -963,6 +965,11 @@ $(document).ready(function()
 	{
 		$("input[name='tax']").attr('disabled', true);
 		
+	}
+	if($('#mode').val()=='return')
+	{
+		$("input[name='discount']").attr('disabled', true);
+		$("input[name='other_cost']").attr('disabled', true);
 	}
 	
 	// var mode= $('#mode option:selected').text();
@@ -1294,6 +1301,7 @@ $(document).ready(function()
 		$('#finish_invoice_quote_button').attr('disabled',false);
 		
 	}		
+	
 	
 
 	if($("#payment_types").val() == "<?php echo $this->lang->line('sales_giftcard'); ?>")

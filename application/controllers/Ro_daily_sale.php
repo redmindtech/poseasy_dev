@@ -74,7 +74,7 @@ class Ro_daily_sale extends Secure_Controller
    
 	//Get row
 	public function get_row($row_id)
-	{
+	{ 
 		$data_row = $this->xss_clean(get_sale_daily_data_row($this->Ro_daily_sales->get_info($row_id)));
 		echo json_encode($data_row);
 	}

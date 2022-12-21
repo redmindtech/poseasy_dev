@@ -222,7 +222,7 @@ class Ro_daily_sales extends CI_Model
 		{
 		$this->db->select('
 		ro_sales.id AS id,
-		MAX(DATE(ro_sales.date_added)) AS date_added,
+		 MAX(DATE(ro_sales.date_added)) AS date_added,
 		MAX(ro_sales.date_added) AS date_added,
 		MAX(ro_sales.voucher_no) AS voucher_no,
 		MAX(CONCAT(customer_p.first_name, " ", customer_p.last_name)) AS customer_name,

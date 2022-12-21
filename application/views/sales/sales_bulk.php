@@ -17,6 +17,11 @@
 <ul id="error_message_box" class="error_message_box"></ul>
 <?php echo form_open('Sales/sales_bulk_save/'.$ro_sale_info->id, array('id'=>'ro_sales_edit_form', 'class'=>'form-horizontal')); ?>
 	
+<div id="title_bar" class="btn-toolbar ">
+<?php echo anchor("sales", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . "Single Sale Entry",
+			array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('ro_sales_register'))); ?>
+					
+</div>
 <fieldset id="sales_basic_info">
 
 	

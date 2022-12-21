@@ -451,7 +451,7 @@ class Customer extends Person
 
 	public function customer_sales($id)
 	{ 
-		$this->db->select('*')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id);
+		$this->db->select('*')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id)->where('type!=3');
 		$query = $this->db->get();			
 		$customer_details = $query->result_array();
 		return $customer_details;
@@ -459,7 +459,7 @@ class Customer extends Person
 
 	public function overall_customer_sales($id)
 	{ 
-		$this->db->select('SUM(sales_amount) as purchased_amount')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id);
+		$this->db->select('SUM(sales_amount) as purchased_amount')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id)->where('type!=3');
 		$query = $this->db->get();			
 		$customer_details = $query->result_array();
 		return $customer_details;
@@ -470,6 +470,7 @@ class Customer extends Person
 	$this->db->select('SUM(paid_amount) as paid_amount');
 	$this->db->from('ospos_ro_sales');
 	$this->db->where('payment_type="Cheque" and customer_id='.$id);
+	$this->db->where('type!=3 ');
 	$query = $this->db->get();			
 	$cheque= $query->result_array();
     return $cheque;
@@ -481,6 +482,7 @@ class Customer extends Person
 	$this->db->select('SUM(paid_amount) as paid_amount');
 	$this->db->from('ospos_ro_sales');
 	$this->db->where('payment_type="Cash" and customer_id='.$id);
+	$this->db->where('type!=3');
 	$query = $this->db->get();			
 	$cheque= $query->result_array();
     return $cheque;
@@ -511,6 +513,16 @@ class Customer extends Person
 		 return $close_bal;
 		
 	}
+	// public function payment_return($customer_id)
+	// {
+	// 	$this->db->select('SUM(sales_amount) as sale_amount');
+	// $this->db->from('ospos_ro_sales');
+	// $this->db->where('customer_id='.$id);
+	// $this->db->where('type ==3');
+	// $query = $this->db->get();			
+	// $return_amt= $query->result_array();
+    // return $return_amt;
+	// }
 	
 }
 ?>

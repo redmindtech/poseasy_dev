@@ -134,7 +134,7 @@
 				</div>
 
 				<div class="navbar-center" style="text-align:center">
-					<strong><?php echo $this->config->item('company'); ?></strong>
+					<strong><?php echo "Redmind Technologies"; ?></strong>
 				</div>
 			</div>
 		</div>

@@ -37,7 +37,7 @@ $(document).ready(function()
 	<a href="javascript:printdoc();"><div class="btn btn-info btn-sm", id="show_print_button"><?php echo '<span class="glyphicon glyphicon-print">&nbsp</span>' . $this->lang->line('common_print'); ?></div></a>
 	<?php /* this line will allow to print and go back to sales automatically.... echo anchor("sales", '<span class="glyphicon glyphicon-print">&nbsp</span>' . $this->lang->line('common_print'), array('class'=>'btn btn-info btn-sm', 'id'=>'show_print_button', 'onclick'=>'window.print();')); */ ?>
 	<?php if(isset($customer_email) && !empty($customer_email)): ?>
-		<a href="javascript:void(0);"><div class="btn btn-info btn-sm", id="show_email_button"><?php echo '<span class="glyphicon glyphicon-envelope">&nbsp</span>' . $this->lang->line('sales_send_invoice'); ?></div></a>
+		<!-- <a href="javascript:void(0);"><div class="btn btn-info btn-sm", id="show_email_button"><?php echo '<span class="glyphicon glyphicon-envelope">&nbsp</span>' . $this->lang->line('sales_send_invoice'); ?></div></a> -->
 	<?php endif; ?>
 	<?php echo anchor("sales", '<span class="glyphicon glyphicon-shopping-cart">&nbsp</span>' . $this->lang->line('sales_register'), array('class'=>'btn btn-info btn-sm', 'id'=>'show_sales_button')); ?>
 	<?php echo anchor("sales/manage", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . $this->lang->line('sales_takings'), array('class'=>'btn btn-info btn-sm', 'id'=>'show_takings_button')); ?>
@@ -47,8 +47,19 @@ $(document).ready(function()
 
 <div id="page-wrap">
 <div id="header">
-		<?php echo $this->lang->line('sales_cash_bill'); ?></div>		
+	<?php if($sale_type =='5')
+	{?>
+		<?php echo $this->lang->line('sales_cash_bill'); ?>
+		<?php
+	}
+	else
+	{?>	
+		
+		<?php echo "Return Bill" ;?>
 
+	<?php
+	}	?>
+</div>	
 	<table id="items">
 
 		<tr>
@@ -154,10 +165,26 @@ $(document).ready(function()
 					
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['is_serialized'] || $item['allow_alt_description']) && !empty($item['description']) ? $item['description'] : $item['name'] . ' ' . $item['attribute_values']; ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo $item['hsn_code']; ?></td>
-					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_quantity_decimals($item['quantity']); ?></td>
+					<?php 
+					if($sale_type =='5')
+					{
+					?>	
+						<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_quantity_decimals($item['quantity']); ?></td>
+					<?php
+					}
+					else
+					{
+					?>
+						<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_quantity_decimals(-$item['quantity']); ?></td>
+					<?php
+					}
+					?>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['price']); ?></td>
 					<!-- <td style='text-align:center;border-bottom:none;border-top:none;'><?php //echo ($item['tax']) . '%'; ?></td> -->
+					
+					
 					<td style='text-align:center;border-bottom:none;border-top:none;' id="subtotal"><?php echo to_currency($item['discounted_total']); ?></td>
+					
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['discount_type']==FIXED)?to_currency($item['discount']):to_decimals($item['discount']) ;?></td>
 					<?php if($discount > 0): ?>
 					<?php endif; ?>
@@ -186,9 +213,22 @@ $(document).ready(function()
 			
 
 		<tr>
+
 			<td colspan="8" style='text-align:right;'><?php echo $this->lang->line('sales_sub_total'); ?> </td>
-			
+			<?php 
+			if($sale_type =='5')
+					{
+					?>	
 			<td style='text-align:center;' class="total-value" id="subtotal"><?php echo to_currency($prediscount_subtotal); ?></td>
+			<?php
+					}
+					else
+					{
+					?>
+					<td style='text-align:center;' class="total-value" id="subtotal"><?php echo to_currency(-$prediscount_subtotal); ?></td>
+					<?php
+					}
+					?>
 		</tr>
 
 		<?php
@@ -207,7 +247,21 @@ $(document).ready(function()
 		<tr>
 			
 			<td colspan="8"  style='text-align:right;'><?php echo $this->lang->line('sales_total'); ?></td>
+			<?php
+			if($sale_type =='5')
+					{
+					?>	
 			<td id="total" style='text-align:center;'><?php echo to_currency($total); ?></td>
+			<?php
+					}
+					else
+					{
+					?>
+					<td id="total" style='text-align:center;'><?php echo to_currency(-$total); ?></td>
+					<?php
+					}
+					?>
+
 		</tr>
 		
 		<?php
@@ -222,8 +276,8 @@ $(document).ready(function()
 		?>
 			<tr>
 				
-				<td colspan="8" style='text-align:right;'><p>Paid <?php echo $splitpayment[0]; ?></p></td>
-				<td style='text-align:center;' id="paid"><?php echo to_currency( $payment['payment_amount'] * -1 ); ?></td>
+				<td colspan="8" style='text-align:right;'><p>Paid Amount</p></td>
+				<td style='text-align:center;' id="paid"><?php echo to_currency( $payment['payment_amount'] * 1 ); ?></td>
 			</tr>
 		<?php
 		}
@@ -244,8 +298,8 @@ $(document).ready(function()
 		?>
 		<tr>
 			
-			<td colspan="8" style='text-align:right;'><?php echo $this->lang->line($amount_change >= 0 ? ($only_sale_check ? 'sales_check_balance' : 'sales_change_due') : 'sales_amount_due') ; ?></td>
-			<td style='text-align:center;' id="change"><?php echo to_currency($amount_change); ?></td>
+			<!-- <td colspan="8" style='text-align:right;'><?php echo $this->lang->line($amount_change >= 0 ? ($only_sale_check ? 'sales_check_balance' : 'sales_change_due') : 'sales_amount_due') ; ?></td>
+			<td style='text-align:center;' id="change"><?php echo to_currency($amount_change); ?></td> -->
 		</tr>
 		<?php
 		}

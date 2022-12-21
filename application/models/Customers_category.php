@@ -257,8 +257,8 @@ class Customers_category extends CI_Model
 		$this->db->group_start();
 			// $this->db->or_like('first_name', $search);
 			$this->db->or_like('customer_category_price', $search);
-			$this->db->like('customer_category_name', $search);
-			$this->db->like('customer_category_disc', $search);
+			$this->db->or_like('customer_category_name', $search);
+			$this->db->or_like('customer_category_disc', $search);
 		$this->db->group_end();
 		$this->db->where('deleted', 0);
 

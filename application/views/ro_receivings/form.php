@@ -298,6 +298,9 @@
 $('#supplier_name').click(function() {
 		$(this).attr('value', '');
 	});
+	var today = new Date().toISOString().split('T')[0];
+	  document.getElementsByName("cheque_date")[0].setAttribute('min',today);
+	// $('#cheque_date').attr('min',today);
 
 	$('#supplier_name').autocomplete({
 		source: '<?php echo site_url("Items/suggest_supplier"); ?>',

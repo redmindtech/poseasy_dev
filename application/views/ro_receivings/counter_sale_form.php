@@ -5,7 +5,12 @@
 
 <ul id="error_message_box" class="error_message_box"></ul>
 <?php echo form_open('Roreceivings/bulk_entry_save/'.$ro_receivings_info->id, array('id'=>'ro_receivings_edit_form', 'class'=>'form-horizontal')); ?>
-	
+
+<div id="title_bar" class="btn-toolbar">
+<?php echo anchor("Roreceivings", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . "Purchase Details",
+			array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('sales_takings'))); ?>
+					
+</div>
 <fieldset id="item_basic_info">
 
 

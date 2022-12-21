@@ -1072,7 +1072,7 @@ class Sale_lib
 		return -1;
 	}
 
-	public function edit_item($line, $description, $serialnumber, $quantity, $discount, $discount_type, $price, $discounted_total=NULL,$other_cost,$tax,$comments)
+	public function edit_item($line, $description, $serialnumber, $quantity, $discount, $discount_type, $price, $discounted_total=NULL,$other_cost,$tax,$comments,$mode)
 	{ 		
 		$items = $this->get_cart();
 		
@@ -1111,7 +1111,12 @@ class Sale_lib
 			// $line['item_comments']=$comments;
 
 			$line['total']= $this->get_net_amount($discount_totals,$other_cost);
-			
+			if($mode=='return')
+			{
+				$line['discounted_total']=-$line['discounted_total'];
+				$line['total']=-$line['total'];
+
+			}
 			$this->set_cart($items);
 		}
 

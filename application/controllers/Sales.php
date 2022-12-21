@@ -583,7 +583,11 @@ class Sales extends Secure_Controller
 		$other_cost=parse_decimals($this->input->post('other_cost'));
 		$item_comment=$this->input->post('item_comments');
 		$tax=$this->input->post('tax');
-		$quantity = parse_quantity($this->input->post('quantity'));
+		$quantity_1 = parse_quantity($this->input->post('quantity'));
+		$mode = $this->sale_lib->get_mode();
+		
+		$quantity = ($mode == 'return') ? -$quantity_1:$quantity_1 ;
+		
 		$discount_type = $this->input->post('discount_type');
 		$discount = $discount_type ? parse_quantity($this->input->post('discount')) : parse_decimals($this->input->post('discount'));
 
@@ -592,7 +596,7 @@ class Sales extends Secure_Controller
 	
 		if($this->form_validation->run() != FALSE)
 		{
-			$this->sale_lib->edit_item($item_id, $description, $serialnumber, $quantity, $discount, $discount_type, $price, $discounted_total,$other_cost,$tax,$item_comment);
+			$this->sale_lib->edit_item($item_id, $description, $serialnumber, $quantity, $discount, $discount_type, $price, $discounted_total,$other_cost,$tax,$item_comment,$mode);
 			
 			$this->sale_lib->empty_payments();
 		}
@@ -796,7 +800,7 @@ class Sales extends Secure_Controller
 				}
 				$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
 				$data['state_gst'] = bcdiv($data['subtotal'], -2);
-				$data['sale_id'] = 'POS ' . $data['sale_id_num'];
+				$data['sale_id'] = 'ROYAL OPTICALS' . $data['sale_id_num'];
 				// Resort and filter cart lines for printing
 				$data['cart'] = $this->sale_lib->sort_and_filter_cart($data['cart']);
 
@@ -880,9 +884,10 @@ class Sales extends Secure_Controller
 				$data['sale_status'] = SUSPENDED;
 				$sale_type = SALE_TYPE_QUOTE;
 				
-				$opening_bal=0.00;
-				$total_bal=0.00;
-
+				// $opening_bal=0.00;
+				// $total_bal=0.00;
+				$opening_bal=$this->Sale->opening_bal($customer_id);
+				$total_bal=$opening_bal;
 				$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
 				$this->sale_lib->set_suspended_id($data['sale_id_num']);
 
@@ -990,10 +995,14 @@ class Sales extends Secure_Controller
 			
 						
 			}
-			$sale_type='5';
+			if($sale_type == SALE_TYPE_POS)
+			{
+				$sale_type='5';
+			}
 			$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
 
-			$data['sale_id'] = 'POS ' . $data['sale_id_num'];
+			$data['sale_id'] = 'ROYAL OPTICALS' . $data['sale_id_num'];
+			$data['sale_type']=$sale_type;
 			
 			$data['cart'] = $this->sale_lib->sort_and_filter_cart($data['cart']);
 			$data = $this->xss_clean($data);
