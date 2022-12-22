@@ -397,7 +397,17 @@ class Customers extends Persons
 		 $data['cheque']=$this->Customer->cheque($customer_id);
 		 $data['new_open_bal']=$this->Customer->new_open_bal($customer_id);
 		 $data['new_close_bal']=$this->Customer->new_close_bal($customer_id);
-		
+		 $data['customer_sales_return']=$this->Customer->customer_sales_return($customer_id);
+		 $data['pending_cheque']=$this->Customer->pending_cheque($customer_id);
+		 $data['upi']=$this->Customer->upi($customer_id);
+		 $data['neft']=$this->Customer->neft($customer_id);
+		 $data['return_cash']=$this->Customer->return_cash($customer_id);
+		//  $data['return_cheque']=$this->Customer->return_cheque($customer_id);
+		//  $data['return_cheque_pending']=$this->Customer->return_cheque_pending($customer_id);
+		 $data['overall_customer_return_sales']=$this->Customer->overall_customer_return_sales($customer_id);
+		 $data['return_upi']=$this->Customer->return_upi($customer_id);
+		 $data['return_neft']=$this->Customer->return_neft($customer_id);
+				
 		 $this->load->view('customers/popup_form',$data);
 
 	}

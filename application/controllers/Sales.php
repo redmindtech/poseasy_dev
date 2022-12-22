@@ -423,7 +423,7 @@ class Sales extends Secure_Controller
 				$sales_total = $this->sale_lib->get_total(FALSE);
 
 				$amount_tendered = $this->input->post('amount_tendered');
-				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL,NULL);
+				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL);
 				// $cash_adjustment_amount = $amount_due - $sales_total;
 				// if($cash_adjustment_amount <> 0)
 				// {
@@ -434,18 +434,19 @@ class Sales extends Secure_Controller
 			}
 			elseif($payment_type === $this->lang->line("sales_check"))
 			{  	
-				$is_adjust=$this->input->post('cheque_processing');	
+				// $is_adjust=$this->input->post('cheque_processing');	
 				// log_message('debug',print_r('add_payment',true));
-				// log_message('debug',print_r($is_adjust,true));
+				//  log_message('debug',print_r('check',true));
+
 				$check_date=$this->input->post('cheque_date');
 				$check_number=$this->input->post('cheque_number');
 				$amount_tendered = $this->input->post('amount_tendered');
-				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,$check_date,$check_number,$is_adjust);
+				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,$check_date,$check_number);
 			}
 			else
 			{
 				$amount_tendered = $this->input->post('amount_tendered');
-				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL,NULL);
+				$this->sale_lib->add_payment($payment_type, $amount_tendered,NULL,NULL,NULL);
 			}
 		}		
 		$this->_reload($data);
@@ -688,6 +689,8 @@ class Sales extends Secure_Controller
 		$data['taxes'] = $tax_details[0];
 		$data['discount'] = $this->sale_lib->get_discount();
 		$data['payments'] = $this->sale_lib->get_payments();
+		
+		// log_message('debug',print_r($data['payments'],TRUE));
 	
 		// Returns 'subtotal', 'total', 'cash_total', 'payment_total', 'amount_due', 'cash_amount_due', 'payments_cover_total'
 		$totals = $this->sale_lib->get_totals($tax_details[0]);
@@ -716,23 +719,25 @@ class Sales extends Secure_Controller
 
 		$data['amount_change'] = $data['amount_due'] * -1;
 
-		if($data['amount_change'] > 0)
-		{
-			// Save cash refund to the cash payment transaction if found, if not then add as new Cash transaction
+		// if($data['amount_change'] > 0)
+		// {
+		// 	// Save cash refund to the cash payment transaction if found, if not then add as new Cash transaction
 
-			if(array_key_exists($this->lang->line('sales_cash'), $data['payments']))
-			{
-				$data['payments'][$this->lang->line('sales_cash')]['cash_refund'] = $data['amount_change'];
-			}
-			else
-			{
-				$payment = array($this->lang->line('sales_cash') => array('payment_type' => $this->lang->line('sales_cash'), 'payment_amount' => 0, 'cash_refund' => $data['amount_change']));
-				$data['payments'] += $payment;
-			}
-		}
+		// 	if(array_key_exists($this->lang->line('sales_cash'), $data['payments']))
+		// 	{
+		// 		$data['payments'][$this->lang->line('sales_cash')]['cash_refund'] = $data['amount_change'];
+		// 	}
+		// 	else
+		// 	{
+		// 		$payment = array($this->lang->line('sales_cash') => array('payment_type' => $this->lang->line('sales_cash'), 'payment_amount' => 0, 'cash_refund' => $data['amount_change']));
+		// 		$data['payments'] += $payment;
+		// 	}
+		// }
 
 		$data['print_price_info'] = TRUE;
-		
+		// log_message('debug',print_r('$data',TRUE));
+	
+		// log_message('debug',print_r($data['payments'],TRUE));
 		//tax Invoice
 		if($this->sale_lib->is_invoice_mode())
 		{
@@ -772,7 +777,7 @@ class Sales extends Secure_Controller
 						// log_message('debug',print_r($row,true));			
 						$payed_amount=$row['payment_amount'];
 						$payment_type=$row['payment_type'];
-						$isadjust=$row['isadjust'];
+						// $isadjust=$row['isadjust'];
 						
 						
 					}	
@@ -781,16 +786,16 @@ class Sales extends Secure_Controller
 				
 				if($payment_type =='Cheque' )	
 				{
-					if($isadjust =='true'){
-						$closing=bcadd($opening_bal,$sale);
-						$total_bal=bcsub($closing,$payed_amount);
-					}
-					else
-					{
+					// if($isadjust =='true'){
+					// 	$closing=bcadd($opening_bal,$sale);
+					// 	$total_bal=bcsub($closing,$payed_amount);
+					// }
+					// else
+					// {
 						
 					$closing=bcadd($opening_bal,$sale);
 					$total_bal=$closing;
-					}
+					// }
 					
 				}			
 				else
@@ -921,24 +926,26 @@ class Sales extends Secure_Controller
 					// $total_bal=bcadd($opening_bal,$sale);
 					// $opening_bal=$this->Sale->opening_bal($customer_id);
 					$sale= $data['total'];	
-
+					// log_message('debug',print_r($data['payments'],TRUE));
 				foreach( $data['payments'] as $row)
 				{				
 					$payed_amount=$row['payment_amount'];
 					$payment_type=$row['payment_type'];
-					$isadjust=$row['isadjust'];
+					// $isadjust=$row['isadjust'];
 				}	
+    //   log_message('debug',print_r('complete',TRUE));
+	//   log_message('debug',print_r($data['payments'],TRUE));
 
 				if($payment_type =='Cheque')	
-				{
-					if($isadjust =='true'){
-						$closing=bcsub($opening_bal,$sale);
-						$total_bal=bcsub($closing,$payed_amount);	
-					}
-					else{
+				 {
+				// 	if($isadjust =='true'){
+				// 		$closing=bcsub($opening_bal,$sale);
+				// 		$total_bal=bcsub($closing,$payed_amount);	
+				// 	}
+				// 	else{
 					$closing=bcadd($opening_bal,$sale);
 					$total_bal=$closing;
-					}
+					// }
 					
 				}	
 				else{			
@@ -966,7 +973,7 @@ class Sales extends Secure_Controller
 						// log_message('debug',print_r($row,true));			
 						$payed_amount=$row['payment_amount'];
 						$payment_type=$row['payment_type'];
-						$isadjust=$row['isadjust'];
+						// $isadjust=$row['isadjust'];
 						
 						
 					}	
@@ -975,16 +982,16 @@ class Sales extends Secure_Controller
 				
 				if($payment_type =='Cheque' )	
 				{
-					if($isadjust =='true'){
-						$closing=bcadd($opening_bal,$sale);
-						$total_bal=bcsub($closing,$payed_amount);
-					}
-					else
-					{
+					// if($isadjust =='true'){
+					// 	$closing=bcadd($opening_bal,$sale);
+					// 	$total_bal=bcsub($closing,$payed_amount);
+					// }
+					// else
+					// {
 						
 					$closing=bcadd($opening_bal,$sale);
 					$total_bal=$closing;
-					}
+					// }
 					
 				}			
 				else

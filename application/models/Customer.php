@@ -451,7 +451,14 @@ class Customer extends Person
 
 	public function customer_sales($id)
 	{ 
-		$this->db->select('*')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id)->where('type!=3');
+		$this->db->select('*')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id)->where('type!=3 and type!=4');
+		$query = $this->db->get();			
+		$customer_details = $query->result_array();
+		return $customer_details;
+	}
+	public function customer_sales_return($id)
+	{ 
+		$this->db->select('*')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id)->where('type = 4');
 		$query = $this->db->get();			
 		$customer_details = $query->result_array();
 		return $customer_details;
@@ -459,7 +466,7 @@ class Customer extends Person
 
 	public function overall_customer_sales($id)
 	{ 
-		$this->db->select('SUM(sales_amount) as purchased_amount')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id)->where('type!=3');
+		$this->db->select('SUM(sales_amount) as sales_amount')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id)->where('type!=3 and type!=4');
 		$query = $this->db->get();			
 		$customer_details = $query->result_array();
 		return $customer_details;
@@ -470,7 +477,19 @@ class Customer extends Person
 	$this->db->select('SUM(paid_amount) as paid_amount');
 	$this->db->from('ospos_ro_sales');
 	$this->db->where('payment_type="Cheque" and customer_id='.$id);
-	$this->db->where('type!=3 ');
+	$this->db->where('type!=3 and type!=4 and status = "complete"');
+	// $this->db->where('status != pending');
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+    return $cheque;
+
+	}
+	public function pending_cheque($id)
+	{
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ospos_ro_sales');
+	$this->db->where('payment_type="Cheque" and customer_id='.$id);
+	 $this->db->where('type!=3 and type!=4 and status = "pending"');
 	$query = $this->db->get();			
 	$cheque= $query->result_array();
     return $cheque;
@@ -482,10 +501,95 @@ class Customer extends Person
 	$this->db->select('SUM(paid_amount) as paid_amount');
 	$this->db->from('ospos_ro_sales');
 	$this->db->where('payment_type="Cash" and customer_id='.$id);
-	$this->db->where('type!=3');
+	$this->db->where('type!=3 and type!=4');
 	$query = $this->db->get();			
 	$cheque= $query->result_array();
     return $cheque;
+	}
+	public function upi($id)
+	{
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ospos_ro_sales');
+	$this->db->where('payment_type="UPI" and customer_id='.$id);
+	$this->db->where('type!=3 and type!=4');
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+    return $cheque;
+	}
+	public function neft($id)
+	{
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ospos_ro_sales');
+	$this->db->where('payment_type="NEFT" and customer_id='.$id);
+	$this->db->where('type!=3 and type!=4');
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+    return $cheque;
+	}
+	public function overall_customer_return_sales($id)
+	{ 
+		$this->db->select('SUM(sales_amount) as sales_amount')->from('ospos_ro_sales')->where('ospos_ro_sales.customer_id',$id)->where('type = 4');
+		$query = $this->db->get();			
+		$customer_details = $query->result_array();
+		return $customer_details;
+	}
+	public function return_cash($id)
+	{
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ospos_ro_sales');
+	$this->db->where('payment_type="Cash" and customer_id='.$id);
+	$this->db->where('type =4');
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+    return $cheque;
+	}
+	public function return_cheque($id)
+	{
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ospos_ro_sales');
+	$this->db->where('payment_type="Cheque" and customer_id='.$id);
+	$this->db->where('type=4 and status = "complete"');
+	// $this->db->where('status != pending');
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+    return $cheque;
+
+	}
+	public function return_cheque_pending($id)
+	{
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ospos_ro_sales');
+	$this->db->where('payment_type="Cheque" and customer_id='.$id);
+	$this->db->where('type=4 and status = "pending"');
+	// $this->db->where('status != pending');
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+    return $cheque;
+
+	}
+	public function return_upi($id)
+	{
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ospos_ro_sales');
+	$this->db->where('payment_type="UPI" and customer_id='.$id);
+	$this->db->where('type = 4 ');
+	// $this->db->where('status != pending');
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+    return $cheque;
+
+	}
+	public function return_neft($id)
+	{
+	$this->db->select('SUM(paid_amount) as paid_amount');
+	$this->db->from('ospos_ro_sales');
+	$this->db->where('payment_type="NEFT" and customer_id='.$id);
+	$this->db->where('type = 4 ');
+	// $this->db->where('status != pending');
+	$query = $this->db->get();			
+	$cheque= $query->result_array();
+    return $cheque;
+
 	}
 
 	public function new_open_bal($customer_id)

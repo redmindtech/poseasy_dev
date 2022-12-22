@@ -970,6 +970,7 @@ $(document).ready(function()
 	{
 		$("input[name='discount']").attr('disabled', true);
 		$("input[name='other_cost']").attr('disabled', true);
+		 $("#payment_types option[value='Cheque']").attr("disabled","disabled");
 	}
 	
 	// var mode= $('#mode option:selected').text();

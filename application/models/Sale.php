@@ -587,7 +587,10 @@ class Sale extends CI_Model
 		{
 			return -1;
 		}
-
+		if($sale_type =='4')
+		{
+			$total=-$total;
+		}
 		$sales_data = array(
 			'date_added'			=> date('Y-m-d H:i:s'),
 			'customer_id'		=> $this->Customer->exists($customer_id) ? $customer_id : NULL,
@@ -648,14 +651,14 @@ class Sale extends CI_Model
 			$status='complete';
 
 			if($payment['payment_type']=='Cheque'){
-                if($payment['isadjust'] == 'true')
-				{
-					$status='complete';
+                // if($payment['isadjust'] == 'true')
+				// {
+				// 	$status='complete';
 				
-				}
-				else{
+				// }
+				// else{
 				$status='pending';
-				}
+				// }
 				$cheque_number=$payment['sales_cheque_no'];
 				$cheque_date=$payment['sales_cheque_date'];
 				

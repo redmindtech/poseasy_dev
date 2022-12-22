@@ -281,7 +281,8 @@ class Sale_lib
 	}
 
 	public function is_return_mode()
-	{
+	{ 
+		
 		return ($this->CI->session->userdata('sales_mode') == 'return');
 	}
 
@@ -355,16 +356,18 @@ class Sale_lib
 	{
 		if(!$this->CI->session->userdata('sales_payments'))
 		{ 
-
+			
 			$this->set_payments(array());
 		}
-
+		
+		
 		return $this->CI->session->userdata('sales_payments');
 	}
 
 	// Multiple Payments
 	public function set_payments($payments_data)
-	{  				
+	{  			 
+		
 		$this->CI->session->set_userdata('sales_payments', $payments_data);
 	}
 
@@ -375,10 +378,10 @@ class Sale_lib
 	 * @param $payment_amount
 	 * @param int $cash_adjustment
 	 */
-	public function add_payment($payment_id, $payment_amount, $cash_adjustment = CASH_ADJUSTMENT_FALSE,$check_date,$check_number,$isadjust)
+	public function add_payment($payment_id, $payment_amount, $cash_adjustment = CASH_ADJUSTMENT_FALSE,$check_date,$check_number)
 	{	
 		
-		$payments = $this->get_payments();
+		 $payments = $this->get_payments();
 		if(isset($payments[$payment_id]))
 		{
 			//payment_method already exists, add to payment_amount
@@ -389,7 +392,7 @@ class Sale_lib
 		{
 			//add to existing array
 			$payment = array($payment_id => array('payment_type' => $payment_id, 'payment_amount' => $payment_amount,
-				'cash_refund' => 0, 'cash_adjustment' => $cash_adjustment,'sales_cheque_date'=>$check_date,'sales_cheque_no'=>$check_number,'isadjust'=>$isadjust));
+				'cash_refund' => 0, 'cash_adjustment' => $cash_adjustment,'sales_cheque_date'=>$check_date,'sales_cheque_no'=>$check_number));
 			
 			$payments += $payment;
 		}
@@ -773,7 +776,7 @@ class Sale_lib
 		
 		$item_info = $this->CI->Item->get_info_by_id_or_number($item_id, $include_deleted);
 		//make sure item exists
-				log_message('debug',print_r($item_info,TRUE));
+				
 		if(empty($item_info))
 		{
 			$item_id = -1;
@@ -794,8 +797,7 @@ class Sale_lib
 		$item_type = $item_info->item_type;
 		$stock_type = $item_info->stock_type;
 
-		// $price =$sale_price;
-		log_message('debug',print_r($sale_price,TRUE));
+		
 		if($sale_price == ""|| $sale_price == 0)
 		{
 			$price=$item_info->unit_price;
@@ -803,7 +805,7 @@ class Sale_lib
 		else{
 			$price =$sale_price;
 		}
-		log_message('debug',print_r($price,TRUE));
+		
 		$cost_price = $item_info->cost_price;
 		if($price_override != NULL)
 		{
@@ -1227,7 +1229,7 @@ class Sale_lib
 		// Now load payments
 		foreach($this->CI->Sale->get_sale_payments($sale_id)->result() as $row)
 		{
-			$this->add_payment($row->payment_type, $row->payment_amount, $row->cash_adjustment,NULL,NULL);
+			$this->add_payment($row->payment_type, $row->payment_amount, $row->cash_adjustment,NULL);
 		}
 
 		$this->set_customer($this->CI->Sale->get_customer($sale_id)->person_id);

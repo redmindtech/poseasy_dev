@@ -68,5 +68,14 @@ $lang["customers_phone_number_duplicate"] = "Your Phone No is already exists.";
 $lang['customers_phone_number_valid']="Please Enter the valid Phone No";
 $lang['company_name']="Company Name";
 $lang['customer_category_name_valid']= "Please Select the category";
-
+$lang['total_cheque_pending']="Total Pending cheque";
+$lang['total_upi']="Total UPI";
+$lang['total_neft']="Total NEFT";
+$lang['total_return_cheque']="Total Return cheque";
+$lang['total_return_cash']="Total Return cash";
+$lang['total_return_cheque_pending']="Total Return Cheque Pending";
+$lang['total_sale']="Total sale";
+$lang['overall_customer_return_sales']= "Total Return Sales";
+$lang['total_return_upi']="Total Return UPI";
+$lang['total_return_neft']="Total Return NEFT";
 
