@@ -47,7 +47,7 @@ $lang["ro_receivings_cannot_be_deleted"]="Could not delete selected Roreceiving(
 $lang["Roreceivings_confirm_delete"] = "Are you sure you want to delete selected Roreceiving(s)?";
 $lang["ro_receivings_date_required"]="Please select the date";
 $lang["ro_receivings_supplier_name_required"]="Please select supplier name";
-$lang['ro_receivings_purchase_amount_required']="Please enter purchase amount or return amount";
+$lang['ro_receivings_purchase_amount_required']="Enter Purchase amount (or) enter minimum amount 0";
 $lang['ro_receivings_payment_mode_required']="Please select payment mode";
 $lang['supplier_none']="None";
 
@@ -63,9 +63,10 @@ $lang["Roreceivings_save"]="Bulk save";
 $lang["Roreceivings_cheque_no_Roreceivings_cheque_to_display"] = "No records found";
 $lang["ro_receivings_total_neft"]  = "Total NEFT";
 $lang["ro_receivings_total_upi"]  = "Total UPI";
-$lang["ro_receivings_paid_amount_required"] = "Paid amount is required for cheque transactions";
+$lang["ro_receivings_paid_amount_required"] = "Enter paid amount (or) enter minimum amount 0";
 $lang["cheque_number_required"] = "Please enter Cheque number";
 $lang["ro_receivings_purchase_return_amount_required"]="Enter purchase return amount (or) enter minimum amount 0";
 $lang["ro_receivings_discount_required"]="Enter discount amount (or) enter minimum amount 0";
-$lang["paid_amount_required"]="Please enter paid amount";
+$lang["paid_amount_required"]="Please enter  Purchase amount or Paid amount or Purchase Return amount";
+$lang["ro_receivings_ purchase_return_amount_required"]="Enter Purchase Return amount (or) enter minimum amount 0";
 

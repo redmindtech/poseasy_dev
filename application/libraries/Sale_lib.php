@@ -503,6 +503,7 @@ class Sale_lib
 		$other_cost=0.0;
 		$other_cost_total=0.0;
 		$net_amt=0.0;
+		$state_gst=0.00;
 		foreach($this->get_cart() as $item)
 		{
 			
@@ -531,6 +532,7 @@ class Sale_lib
 			$extended_amount = $this->get_extended_amount($item['quantity'], $item['price']);
 			$extended_discounted_amount = $this->get_extended_amount($item['quantity'], $item['price'], $price_tax);
 			$prediscount_subtotal= bcadd($prediscount_subtotal, $extended_amount);
+			$state_gst= bcdiv($subtotal, -2);
 			$total = bcadd($total, $extended_discounted_amount);
 		
 			$subtotal = bcadd($subtotal, $extended_discounted_amount);
@@ -949,7 +951,7 @@ class Sale_lib
 			$item = array($insertkey => array(
 					'item_id' => $item_id,
 					'item_location' => $item_location,
-					'stock_name' => $this->CI->Stock_location->get_location_name($item_location),
+					// 'stock_name' => $this->CI->Stock_location->get_location_name($item_location),
 					'line' => $insertkey,
 					'name' => $item_info->name,
 					'item_number' => $item_info->item_number,
@@ -1199,9 +1201,9 @@ class Sale_lib
 
 		foreach($this->CI->Sale->get_sale_items_ordered($sale_id)->result() as $row)
 		{
-			$this->add_item($row->item_id, $row->quantity_purchased, $row->item_location, $row->discount, $row->discount_type, PRICE_MODE_STANDARD, NULL, NULL, $row->item_unit_price, $row->description, $row->serialnumber, $sale_id, TRUE, $row->print_option,NULL);
-		}
-
+			$this->add_item($row->item_id, $row->qty, null, $row->discount, null, PRICE_MODE_STANDARD, NULL, NULL, $row->unit_price,null, null, $sale_id, TRUE, null,NULL,null,null);
+		}					                           									
+		
 		$this->CI->session->set_userdata('cash_mode', CASH_MODE_FALSE);
 
 		// Establish cash_mode for this sale by inspecting the payments
@@ -1238,7 +1240,7 @@ class Sale_lib
 		$this->set_work_order_number($this->CI->Sale->get_work_order_number($sale_id));
 		$this->set_sale_type($this->CI->Sale->get_sale_type($sale_id));
 		$this->set_comment($this->CI->Sale->get_comment($sale_id));
-		$this->set_dinner_table($this->CI->Sale->get_dinner_table($sale_id));
+		// $this->set_dinner_table($this->CI->Sale->get_dinner_table($sale_id));
 		$this->CI->session->set_userdata('sale_id', $sale_id);
 	}
 
@@ -1337,7 +1339,7 @@ class Sale_lib
 				$discount = bcadd($discount, $item_discount);
 			}
 		}
-
+		
 		return $discount;
 	}
 

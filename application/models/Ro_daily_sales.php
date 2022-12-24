@@ -54,7 +54,7 @@ class Ro_daily_sales extends CI_Model
 
 		$this->db->from('ro_sales AS ro_sales');
 		$this->db->join('people AS customer_p', 'ro_sales.customer_id = customer_p.person_id', 'LEFT');
-		// $this->db->join('sales_payments AS payments', 'ro_sales.id = payments.sale_id', 'LEFT OUTER');
+		//  $this->db->join('sales_payments AS payments', 'ro_sales.id = payments.sale_id', 'LEFT OUTER');
 		$this->db->join('people', 'ro_sales.customer_id = people.person_id');
 		$this->db->where('id', $id );
 
@@ -240,15 +240,27 @@ class Ro_daily_sales extends CI_Model
 		$this->db->join('people AS customer_p', 'ro_sales.customer_id = customer_p.person_id', 'LEFT');
 		// $this->db->join('sales_payments AS payments', 'ro_sales.id = payments.sale_id', 'LEFT OUTER');
 		$this->db->group_start();
-		$this->db->like('date_added', $search);
+		$this->db->or_like('date_added', $search);
 		$this->db->or_like('voucher_no', $search);
 		// $this->db->or_like('sales_cheque_no', $search);
 		$this->db->or_like('customer_p.first_name', $search);
 		$this->db->or_like('customer_p.last_name', $search);
+		$this->db->or_like('paid_amount', $search);
+		//  $this->db->or_like('sales_amount', $search);
+		 $this->db->or_like('payment_type', $search);
+		$this->db->or_like('closing_balance', $search);
+		$this->db->or_like('date_added', $search);
+		
+		
+		
+		
+
+
+
 
 		$this->db->group_end();
 		
-		// $this->db->where('id', $id);
+		//  $this->db->where('id', $id);
 
 		$this->db->group_by('ro_sales.id');
 		$this->db->order_by('ro_sales.date_added', 'asc');

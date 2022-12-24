@@ -71,7 +71,7 @@ class Ro_sale extends CI_Model
 			$this->db->from('ro_sales');
 			$this->db->where('customer_id',$customer_id);
 			$this->db->group_by('customer_id');
-			// log_message('debug',print_r($row,TRUE));
+
 			$sub_query = $this->db->get_compiled_select();
 			$this->db->select('closing_balance');
 			$this->db->from('ro_sales');
@@ -133,7 +133,7 @@ class Ro_sale extends CI_Model
 			foreach($save_bulk_entry as $row)
 			{
 				
-				 log_message('debug',print_r($row,TRUE));
+				
 				$query=$this->db->insert('ro_sales', $row);
 			}
 			

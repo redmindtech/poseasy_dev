@@ -129,7 +129,7 @@ function get_sales_daily_manage_table_headers()
 		array('sales_customer_name' => $CI->lang->line('customers_customer')),
 		
 		array('ro_sales_opening_balance' => $CI->lang->line('ro_sales_opening_balance'),'sortable' => FALSE),
-		array('ro_sales_sales_amt' => $CI->lang->line('ro_sales_sales_amt')),
+		array('ro_sales_sales_amt' => $CI->lang->line('ro_sales_sales_amt'),'sortable' => FALSE),
 		array('ro_sales_paid_amount' => $CI->lang->line('ro_sales_paid_amount'),'sortable' => FALSE),
 		
 		array('ro_sales_closing_balance' => $CI->lang->line('ro_sales_closing_balance'),'sortable' => FALSE),
@@ -139,7 +139,7 @@ function get_sales_daily_manage_table_headers()
 
 	if($CI->config->item('invoice_enable') == TRUE)
 	{
-		// $headers[] = array('invoice_number' => $CI->lang->line('sales_invoice_number'));
+		//  $headers[] = array('invoice_number' => $CI->lang->line('sales_invoice_number'));
 		$headers[] = array('invoice' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
 	}
 
@@ -168,15 +168,15 @@ function get_sale_daily_data_row($daily_sale)
 		'sale_time' => to_datetime(strtotime($daily_sale->date_added)),
 	);
 
-	// if($CI->config->item('invoice_enable'))
-	// {
-	// 	$row['voucher_no'] = $daily_sale->voucher_no;
-	// 	$row['invoice'] = empty($daily_sale->voucher_no) ? '' : anchor($controller_name."/invoice/$daily_sale->id", '<span class="glyphicon glyphicon-list-alt"></span>',
-	// 		array('title'=>$CI->lang->line('sales_show_invoice'))
-	// 	);
-	// }
+	if($CI->config->item('invoice_enable'))
+	{
+		$row['voucher_no'] = $daily_sale->voucher_no;
+		$row['invoice'] = empty($daily_sale->voucher_no) ? '' : anchor("Sales/invoice/$daily_sale->id", '<span class="glyphicon glyphicon-list-alt"></span>',
+			array('title'=>$CI->lang->line('sales_show_invoice'))
+		);
+	}
 
-	$row['receipt'] = anchor($controller_name."/receipt/$daily_sale->id", '<span class="glyphicon glyphicon-usd"></span>',
+	$row['receipt'] = anchor("Sales/receipt/$daily_sale->id", '<span class="glyphicon glyphicon-registration-mark"></span>',
 		array('title' => $CI->lang->line('sales_show_receipt'))
 	);
 	// $row['edit'] = anchor($controller_name."/edit/$daily_sale->id", '<span class="glyphicon glyphicon-edit"></span>',

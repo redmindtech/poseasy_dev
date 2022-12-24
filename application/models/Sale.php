@@ -7,67 +7,66 @@ class Sale extends CI_Model
 	/**
 	 * Get sale info
 	 */
-	public function get_info($sale_id)
+	public function get_info($id)
 	{
-		$this->create_temp_table(array('sale_id' => $sale_id));
+		// $this->create_temp_table(array('sale_id' => $sale_id));
 
-		$decimals = totals_decimals();
-		$sales_tax = 'IFNULL(SUM(sales_items_taxes.sales_tax), 0)';
-		$cash_adjustment = 'IFNULL(SUM(payments.sale_cash_adjustment), 0)';
-		$sale_price = 'CASE WHEN sales_items.discount_type = ' . PERCENT
-			. " THEN sales_items.quantity_purchased * sales_items.item_unit_price - ROUND(sales_items.quantity_purchased * sales_items.item_unit_price * sales_items.discount / 100, $decimals) "
-			. 'ELSE sales_items.quantity_purchased * (sales_items.item_unit_price - sales_items.discount) END';
+		// $decimals = totals_decimals();
+		//  $sales_tax = 'IFNULL(SUM(sales_items_taxes.sales_tax), 0)';
+		//  $cash_adjustment = 'IFNULL(SUM(payments.sale_cash_adjustment), 0)';
+		// $sale_price = 'CASE WHEN sales_items.discount_type = ' . PERCENT
+		// 	. " THEN sales_items.quantity_purchased * sales_items.item_unit_price - ROUND(sales_items.quantity_purchased * sales_items.item_unit_price * sales_items.discount / 100, $decimals) "
+		// 	. 'ELSE sales_items.quantity_purchased * (sales_items.item_unit_price - sales_items.discount) END';
 
-		if($this->config->item('tax_included'))
-		{
-			$sale_total = "ROUND(SUM($sale_price), $decimals) + $cash_adjustment";
-		}
-		else
-		{
-			$sale_total = "ROUND(SUM($sale_price), $decimals) + $sales_tax + $cash_adjustment";
-		}
+		// if($this->config->item('tax_included'))
+		// {
+		// 	$sale_total = "ROUND(SUM($sale_price), $decimals) + $cash_adjustment";
+		// }
+		// else
+		// {
+		// 	$sale_total = "ROUND(SUM($sale_price), $decimals) + $sales_tax + $cash_adjustment";
+		// }
 
 		$this->db->select('
-				sales.sale_id AS sale_id,
-				MAX(DATE(sales.sale_time)) AS sale_date,
-				MAX(sales.sale_time) AS sale_time,
-				MAX(sales.comment) AS comment,
-				MAX(sales.sale_status) AS sale_status,
-				MAX(sales.invoice_number) AS invoice_number,
-				MAX(sales.quote_number) AS quote_number,
-				MAX(sales.employee_id) AS employee_id,
-				MAX(sales.customer_id) AS customer_id,
-				MAX(CONCAT(customer_p.first_name, " ", customer_p.last_name)) AS customer_name,
-				MAX(customer_p.first_name) AS first_name,
-				MAX(customer_p.last_name) AS last_name,
-				MAX(customer_p.email) AS email,
-				MAX(customer_p.comments) AS comments,
-				MAX(IFNULL(payments.sale_cash_adjustment, 0)) AS cash_adjustment,
-				MAX(IFNULL(payments.sale_cash_refund, 0)) AS cash_refund,
-				' . "
-				$sale_total AS amount_due,
-				MAX(IFNULL(payments.sale_payment_amount, 0)) AS amount_tendered,
-				(MAX(payments.sale_payment_amount)) - ($sale_total) AS change_due,
-				" . '
-				MAX(payments.payment_type) AS payment_type
+		ro_sales.id AS id,
+		MAX(DATE(ro_sales.date_added)) AS sale_date,
+		MAX(ro_sales.date_added) AS date_added,
+		MAX(ro_sales.voucher_no) AS invoice_number,
+		MAX(ro_sales.quote_no) AS quote_number,
+		
+		MAX(CONCAT(customer_p.first_name, " ", customer_p.last_name)) AS customer_name,
+		MAX(ro_sales.opening_balance) AS opening_balance,
+		MAX(ro_sales.closing_balance) AS closing_balance,
+		MAX(ro_sales.paid_amount) AS paid_amount,
+		MAX(ro_sales.sales_amount) AS sales_amount,
+		MAX(ro_sales.payment_type) AS payment_type,
+		MAX(ro_sales.status) AS sale_status,
+		MAX(ro_sales.comments) AS comment,
+		
+		
+				
 		');
 
-		$this->db->from('sales_items AS sales_items');
-		$this->db->join('sales AS sales', 'sales_items.sale_id = sales.sale_id', 'inner');
-		$this->db->join('people AS customer_p', 'sales.customer_id = customer_p.person_id', 'LEFT');
-		$this->db->join('customers AS customer', 'sales.customer_id = customer.person_id', 'LEFT');
-		$this->db->join('sales_payments_temp AS payments', 'sales.sale_id = payments.sale_id', 'LEFT OUTER');
-		$this->db->join('sales_items_taxes_temp AS sales_items_taxes',
-			'sales_items.sale_id = sales_items_taxes.sale_id AND sales_items.item_id = sales_items_taxes.item_id AND sales_items.line = sales_items_taxes.line',
-			'LEFT OUTER');
+		$this->db->from('ro_sales_items AS ro_sales_items');
+		$this->db->join('ro_sales AS ro_sales', 'ro_sales.id = ro_sales_items.sales_id', 'inner');
+		$this->db->join('people AS customer_p', 'ro_sales.customer_id = customer_p.person_id', 'LEFT');
+		 $this->db->join('people', 'ro_sales.customer_id = people.person_id');
+		// $this->db->join('ro_sales_items_tax AS ro_sales_items_tax',
+		// 	'sales_items.sales_id = ro_sales_items_tax.sales_id AND sales_items.item_id = ro_sales_items_tax.item_id ',
+		// 	'LEFT OUTER');
+		$this->db->where('ro_sales.id', $id);
 
-		$this->db->where('sales.sale_id', $sale_id);
+		// $this->db->group_by('ro_sales.id');
+		// $this->db->order_by('ro_sales.date_added', 'asc');
+		// $this->db->where('ro_sales.id', $id);
 
-		$this->db->group_by('sales.sale_id');
-		$this->db->order_by('sales.sale_time', 'asc');
+		$this->db->group_by('ro_sales.id');
+		$this->db->order_by('ro_sales.date_added', 'asc');
 
 		return $this->db->get();
+	
 	}
+	
 
 	/**
 	 * Get number of rows for the takings (sales/manage) view
@@ -967,30 +966,25 @@ class Sale extends CI_Model
 	public function get_sale_items_ordered($sale_id)
 	{
 		$this->db->select('
-			sales_items.sale_id,
-			sales_items.item_id,
-			sales_items.description,
-			serialnumber,
-			line,
-			quantity_purchased,
-			item_cost_price,
-			item_unit_price,
-			discount,
-			discount_type,
-			item_location,
-			print_option,
-			' . $this->Item->get_item_name('name') . ',
-			category,
-			item_type,
-			stock_type');
-		$this->db->from('sales_items AS sales_items');
-		$this->db->join('items AS items', 'sales_items.item_id = items.item_id');
-		$this->db->where('sales_items.sale_id', $sale_id);
+			ro_sales_items.	sales_id ,
+			ro_sales_items.item_id,
+			
+			ro_sales_items.qty,
+			
+			
+			ro_sales_items.unit_price,
+			ro_sales_items.discount,
+			
+			' . $this->Item->get_item_name('name') . '',
+			);
+		$this->db->from('ro_sales_items AS ro_sales_items');
+		$this->db->join('items AS items', 'ro_sales_items.item_id = items.item_id');
+		$this->db->where('ro_sales_items.sales_id', $sale_id);
 
 		// Entry sequence (this will render kits in the expected sequence)
 		if($this->config->item('line_sequence') == '0')
 		{
-			$this->db->order_by('line', 'asc');
+			$this->db->order_by('id', 'asc');
 		}
 		// Group by Stock Type (nonstock first - type 1, stock next - type 0)
 		elseif($this->config->item('line_sequence') == '1')
@@ -1011,7 +1005,7 @@ class Sale extends CI_Model
 		// Group by entry sequence in descending sequence (the Standard)
 		else
 		{
-			$this->db->order_by('line', 'desc');
+			$this->db->order_by('id', 'desc');
 		}
 
 		return $this->db->get();
@@ -1060,8 +1054,8 @@ class Sale extends CI_Model
 	 */
 	public function get_customer($sale_id)
 	{
-		$this->db->from('sales');
-		$this->db->where('sale_id', $sale_id);
+		$this->db->from('ro_sales');
+		$this->db->where('id', $sale_id);
 
 		return $this->Customer->get_info($this->db->get()->row()->customer_id);
 	}
@@ -1071,8 +1065,8 @@ class Sale extends CI_Model
 	 */
 	public function get_employee($sale_id)
 	{
-		$this->db->from('sales');
-		$this->db->where('sale_id', $sale_id);
+		$this->db->from('ro_sales');
+		$this->db->where('id', $sale_id);
 
 		return $this->Employee->get_info($this->db->get()->row()->employee_id);
 	}
@@ -1329,10 +1323,10 @@ class Sale extends CI_Model
 	 */
 	public function get_sale_type($sale_id)
 	{
-		$this->db->from('sales');
-		$this->db->where('sale_id', $sale_id);
+		$this->db->from('ro_sales');
+		$this->db->where('id', $sale_id);
 
-		return $this->db->get()->row()->sale_type;
+		return $this->db->get()->row()->type;
 	}
 
 	/**

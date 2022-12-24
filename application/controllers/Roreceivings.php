@@ -40,14 +40,6 @@ class Roreceivings extends Secure_Controller
 		$data_row_cheque['table_headers'] = $this->xss_clean(get_ro_cheque_manage_table_headers());
 		$row=$this->Ro_receiving->cheque_get_info();
 
-
-		
-		
-
-		
-
-
-
 		foreach( $row as $row){
 
 			$data = $this->Ro_receiving->agency_name(29);
@@ -89,24 +81,25 @@ class Roreceivings extends Secure_Controller
    }
 
 
-//    public function payment_mode_validate(){
-// 	$paid_amt = $this->input->post('paid_amount');
-// 	$payment_mode = $this->input->post('payment_mode');
-// 	//log_message("paid",$paid_amt);
-// 	$purchase_amt = $this->input->post('purchase_amount');
-// 	$mode = false;
-// 	//if($payment_mode == "--Select Payment Mode--" || $payment_mode == "Cash" || $payment_mode == "Cheque" || $payment_mode == "NEFT" || $payment_mode == "UPI"){
-// 		//$mode=true;
-// 		if($paid_amt < 1 && $purchase_amt>0 && $payment_mode== "Cash"){
+   public function payment_mode_validate()
+   {
+	$paid_amt = $this->input->post('paid_amount');
+	$purchase_return = $this->input->post('purchase_return_amount');
+	//log_message("paid",$paid_amt);
+	$purchase_amt = $this->input->post('purchase_amount');
+	$mode = false;
+	//if($payment_mode == "--Select Payment Mode--" || $payment_mode == "Cash" || $payment_mode == "Cheque" || $payment_mode == "NEFT" || $payment_mode == "UPI"){
+		//$mode=true;
+		if($paid_amt >= 1 || $purchase_amt >= 1 || $purchase_return >=1){
 
-// 			echo "true";
-// 		}else{
-// 			echo "false";
-// 		}
-// 	//}
+			echo "true";
+		}else{
+			echo "false";
+		}
+	//}
 	
 	
-//    }
+   }
 		
 
 	/*

@@ -46,10 +46,10 @@ class Ro_daily_sale extends Secure_Controller
 						//  'is_valid_receipt' => $this->Ro_daily_sales->is_valid_receipt($search)
 						);
 
-		$filledup = array_fill_keys($this->input->get('filters'), TRUE);
-		$filters = array_merge($filters, $filledup);
+		// $filledup = array_fill_keys($this->input->get('filters'), TRUE);
+		$filters = array_merge($filters);
 		// check if any filter is set in the multiselect dropdown
-		
+	
 		$daily_sale = $this->Ro_daily_sales->search($search, $filters, $limit, $offset, $sort, $order);
 		$total_rows = $this->Ro_daily_sales->get_found_rows($search, $filters);
 		
@@ -175,5 +175,6 @@ class Ro_daily_sale extends Secure_Controller
 // 		 }
 // 		 }
 // }
+
 }
 ?>

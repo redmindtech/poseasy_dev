@@ -119,7 +119,7 @@ class Sales extends Secure_Controller
 					
 				);
 		}
-		//log_message('debug',print_r($pending_pay,TRUE));
+		
 		$this->Ro_sale->save_sales($save_bulk_entry, $id);
 	}
 	public function search()
@@ -435,8 +435,7 @@ class Sales extends Secure_Controller
 			elseif($payment_type === $this->lang->line("sales_check"))
 			{  	
 				// $is_adjust=$this->input->post('cheque_processing');	
-				// log_message('debug',print_r('add_payment',true));
-				//  log_message('debug',print_r('check',true));
+				
 
 				$check_date=$this->input->post('cheque_date');
 				$check_number=$this->input->post('cheque_number');
@@ -690,7 +689,7 @@ class Sales extends Secure_Controller
 		$data['discount'] = $this->sale_lib->get_discount();
 		$data['payments'] = $this->sale_lib->get_payments();
 		
-		// log_message('debug',print_r($data['payments'],TRUE));
+		
 	
 		// Returns 'subtotal', 'total', 'cash_total', 'payment_total', 'amount_due', 'cash_amount_due', 'payments_cover_total'
 		$totals = $this->sale_lib->get_totals($tax_details[0]);
@@ -735,9 +734,7 @@ class Sales extends Secure_Controller
 		// }
 
 		$data['print_price_info'] = TRUE;
-		// log_message('debug',print_r('$data',TRUE));
-	
-		// log_message('debug',print_r($data['payments'],TRUE));
+		
 		//tax Invoice
 		if($this->sale_lib->is_invoice_mode())
 		{
@@ -774,7 +771,7 @@ class Sales extends Secure_Controller
 			   {
 					foreach( $data['payments'] as $row)
 					{	
-						// log_message('debug',print_r($row,true));			
+								
 						$payed_amount=$row['payment_amount'];
 						$payment_type=$row['payment_type'];
 						// $isadjust=$row['isadjust'];
@@ -926,15 +923,14 @@ class Sales extends Secure_Controller
 					// $total_bal=bcadd($opening_bal,$sale);
 					// $opening_bal=$this->Sale->opening_bal($customer_id);
 					$sale= $data['total'];	
-					// log_message('debug',print_r($data['payments'],TRUE));
+					
 				foreach( $data['payments'] as $row)
 				{				
 					$payed_amount=$row['payment_amount'];
 					$payment_type=$row['payment_type'];
 					// $isadjust=$row['isadjust'];
 				}	
-    //   log_message('debug',print_r('complete',TRUE));
-	//   log_message('debug',print_r($data['payments'],TRUE));
+    
 
 				if($payment_type =='Cheque')	
 				 {
@@ -970,7 +966,7 @@ class Sales extends Secure_Controller
 			   {
 					foreach( $data['payments'] as $row)
 					{	
-						// log_message('debug',print_r($row,true));			
+								
 						$payed_amount=$row['payment_amount'];
 						$payment_type=$row['payment_type'];
 						// $isadjust=$row['isadjust'];
@@ -1002,10 +998,7 @@ class Sales extends Secure_Controller
 			
 						
 			}
-			if($sale_type == SALE_TYPE_POS)
-			{
-				$sale_type='5';
-			}
+			
 			$data['sale_id_num'] = $this->Sale->save($sale_id, $data['sale_status'], $data['cart'], $customer_id, $employee_id, $data['comments'], $invoice_number, $work_order_number, $quote_number, $sale_type, $data['payments'], $data['dinner_table'], $tax_details,$sale_item_id,$sale_tax_id,$data['total'],$opening_bal, $total_bal);
 
 			$data['sale_id'] = 'ROYAL OPTICALS' . $data['sale_id_num'];
@@ -1173,20 +1166,24 @@ class Sales extends Secure_Controller
 		$this->sale_lib->copy_entire_sale($sale_id);
 		$data = array();
 		$data['cart'] = $this->sale_lib->get_cart();
+		
+
 		$data['payments'] = $this->sale_lib->get_payments();
 		$data['selected_payment_type'] = $this->sale_lib->get_payment_type();
 
 		$tax_details = $this->tax_lib->get_taxes($data['cart'], $sale_id);
 		$data['taxes'] = $this->Sale->get_sales_taxes($sale_id);
 		$data['discount'] = $this->sale_lib->get_discount();
-		$data['transaction_time'] = to_datetime(strtotime($sale_info['sale_time']));
-		$data['transaction_date'] = to_date(strtotime($sale_info['sale_time']));
+		 $data['transaction_time'] = to_datetime(strtotime($sale_info['date_added']));
+		 $data['transaction_date'] = to_date(strtotime($sale_info['date_added']));
 		$data['show_stock_locations'] = $this->Stock_location->show_locations('sales');
 
 		$data['include_hsn'] = ($this->config->item('include_hsn') == '1');
 
 		// Returns 'subtotal', 'total', 'cash_total', 'payment_total', 'amount_due', 'cash_amount_due', 'payments_cover_total'
 		$totals = $this->sale_lib->get_totals($tax_details[0]);
+		// var_dump($totals);
+		$data["state_gst"]=$totals["state_gst"];
 		$this->session->set_userdata('cash_adjustment_amount', $totals['cash_adjustment_amount']);
 		$data['subtotal'] = $totals['subtotal'];
 		$data['payments_total'] = $totals['payment_total'];
@@ -1243,26 +1240,31 @@ class Sales extends Secure_Controller
 		{
 			$data['mode_label'] = $this->lang->line('sales_invoice');
 			 $data['customer_required'] = $this->lang->line('sales_customer_required');
+			 $data['sale_type']='1';
 		}
 		elseif($this->sale_lib->get_mode() == 'sale_quote')
 		{
 			$data['mode_label'] = $this->lang->line('sales_quote');
 			 $data['customer_required'] = $this->lang->line('sales_customer_required');
+			 $data['sale_type']='3';
 		}
 		elseif($this->sale_lib->get_mode() == 'sale_work_order')
 		{
 			$data['mode_label'] = $this->lang->line('sales_work_order');
 			 $data['customer_required'] = $this->lang->line('sales_customer_required');
+			 $data['sale_type']='2';
 		}
 		elseif($this->sale_lib->get_mode() == 'return')
 		{
 			$data['mode_label'] = $this->lang->line('sales_return');
 			 $data['customer_required'] = $this->lang->line('sales_customer_optional');
+			 $data['sale_type']='4';
 		}
 		else
 		{
 			$data['mode_label'] = $this->lang->line('sales_receipt');
 			 $data['customer_required'] = $this->lang->line('sales_customer_optional');
+			 $data['sale_type']='5';
 		}
 
 		$invoice_type = $this->config->item('invoice_type');

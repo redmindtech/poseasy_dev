@@ -519,66 +519,111 @@ $("form").on("change", "input","click", function(e)
 						
 			company_name:"required",	
 			cheque_number:"required",
-			paid_amount:"required",
+			//  paid_amount:"required",
 			purchase_return_amount:"required",
 			discount:"required",
 
-			paid_amount :
-			{
-				remote: {
-				url: "<?php echo site_url($controller_name . '/paid_amount_validate')?>",
+			
+			paid_amount:
+			{ 
+				 required:true,
+				remote :{
+					url: "<?php echo site_url($controller_name . '/payment_mode_validate')?>",
 				type: 'POST',
 				data: {
 							
-							'payment_mode':function(){
-								return $('#payment_mode').val();
-
-							},
+							
 							'paid_amount' : function()
 							{ 
 								return $('#paid_amount').val();
 							},
+							'purchase_amount' : function()
+							{ 
+								return $('#purchase_amount').val();
+							},
+							'purchase_return_amount':function(){
+								return $('#purchase_return_amount').val();
+
+							},
 					  }
+
 				}
 			},
-			// payment_mode:
-			// {
-			// 	remote :{
-			// 		url: "<?php echo site_url($controller_name . '/payment_mode_validate')?>",
-			// 	type: 'POST',
-			// 	data: {
-							
-							
-			// 				'paid_amount' : function()
-			// 				{ 
-			// 					return $('#paid_amount').val();
-			// 				},
-			// 				'purchase_amount' : function()
-			// 				{ 
-			// 					return $('#purchase_amount').val();
-			// 				},
-			// 				'payment_mode':function(){
-			// 					return $('#payment_mode').val();
-
-			// 				},
-			// 		  }
-
-			// 	}
-			// }
 				
 			
-		},
+	
+			purchase_amount:
+			{
+				required:true,
+				remote :{
+					url: "<?php echo site_url($controller_name . '/payment_mode_validate')?>",
+				type: 'POST',
+				data: {
+							
+							
+							'paid_amount' : function()
+							{ 
+								return $('#paid_amount').val();
+							},
+							'purchase_amount' : function()
+							{ 
+								return $('#purchase_amount').val();
+							},
+							'purchase_return_amount':function(){
+								return $('#purchase_return_amount').val();
+
+							},
+					  }
+
+				}
+			},
+			purchase_return_amount:
+			{
+				required:true,
+				remote :{
+					url: "<?php echo site_url($controller_name . '/payment_mode_validate')?>",
+				type: 'POST',
+				data: {
+							
+							
+							'paid_amount' : function()
+							{ 
+								return $('#paid_amount').val();
+							},
+							'purchase_amount' : function()
+							{ 
+								return $('#purchase_amount').val();
+							},
+							'purchase_return_amount':function(){
+								return $('#purchase_return_amount').val();
+
+							},
+					  }
+
+				}
+			}},
 		messages:
-	{ 	 
+	{ 	
+	  
 		paid_amount :
 			{
+				required:"<?php echo $this->lang->line('ro_receivings_paid_amount_required'); ?>",
 				remote:"<?php echo $this->lang->line('paid_amount_required'); ?>"
 			},
 		company_name: "<?php echo $this->lang->line('supplier_name_required'); ?>",		
 		 payment_mode:"<?php echo $this->lang->line('ro_receivings_payment_mode_required'); ?>",
 		 cheque_number:	"<?php echo $this->lang->line('cheque_number_required'); ?>",	
-		 paid_amount: "<?php echo $this->lang->line('ro_receivings_paid_amount_required'); ?>",
-		 purchase_return_amount: "<?php echo $this->lang->line('ro_receivings_purchase_return_amount_required'); ?>",
+		 purchase_amount:
+		 {
+			required:"<?php echo $this->lang->line('ro_receivings_purchase_amount_required'); ?>",
+			remote:"<?php echo $this->lang->line('paid_amount_required'); ?>"
+		 } ,
+		 purchase_return_amount:
+		 {
+			required:"<?php echo $this->lang->line('ro_receivings_ purchase_return_amount_required'); ?>",
+			remote:"<?php echo $this->lang->line('paid_amount_required'); ?>"
+		 } ,
+
 		 discount: "<?php echo $this->lang->line('ro_receivings_discount_required'); ?>"
 
 	}	
