@@ -124,9 +124,10 @@ function get_sales_daily_manage_table_headers()
 	$CI =& get_instance();
 
 	$headers = array(
-		array('sale_id' => $CI->lang->line('ro_sales_id')),
-		array('ro_sales_invoice_no' => $CI->lang->line('ro_sales_invoice_no')),
-		array('sales_customer_name' => $CI->lang->line('customers_customer')),
+		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
+		array('id' => $CI->lang->line('ro_sales_id')),
+		array('voucher_no' => $CI->lang->line('ro_sales_invoice_no')),
+		array('customer_name' => $CI->lang->line('customers_customer')),
 		
 		array('ro_sales_opening_balance' => $CI->lang->line('ro_sales_opening_balance'),'sortable' => FALSE),
 		array('ro_sales_sales_amt' => $CI->lang->line('ro_sales_sales_amt'),'sortable' => FALSE),
@@ -134,7 +135,7 @@ function get_sales_daily_manage_table_headers()
 		
 		array('ro_sales_closing_balance' => $CI->lang->line('ro_sales_closing_balance'),'sortable' => FALSE),
 		array('payment_type' => $CI->lang->line('sales_payment_type')),
-		array('sale_time' => $CI->lang->line('sales_sale_time')),
+		array('date_added' => $CI->lang->line('sales_sale_time')),
 	);
 
 	if($CI->config->item('invoice_enable') == TRUE)
@@ -148,24 +149,25 @@ function get_sales_daily_manage_table_headers()
 	return transform_headers($headers);
 }
 
-function get_sale_daily_data_row($daily_sale)
+function get_sale_daily_data_row($daily_sale, $count)
 {
 	$CI =& get_instance();
 
 	$controller_name = $CI->uri->segment(1);
 
 	$row = array (
-		'sale_id' => $daily_sale->id,
-		'ro_sales_invoice_no' => $daily_sale->voucher_no,
+		'serial_number' => $count,
+		'id' => $daily_sale->id,
+		'voucher_no' => $daily_sale->voucher_no,
 		
-		'sales_customer_name' => $daily_sale->customer_name,
+		'customer_name' => $daily_sale->customer_name,
 		
 		'ro_sales_opening_balance' => to_currency($daily_sale->opening_balance),
 		'ro_sales_closing_balance' => to_currency($daily_sale->closing_balance),
 		'ro_sales_paid_amount' => to_currency($daily_sale->paid_amount),
 		'ro_sales_sales_amt' => to_currency($daily_sale->sales_amount),
 		'payment_type' => $daily_sale->payment_type,	
-		'sale_time' => to_datetime(strtotime($daily_sale->date_added)),
+		'date_added' => to_datetime(strtotime($daily_sale->date_added)),
 	);
 
 	if($CI->config->item('invoice_enable'))

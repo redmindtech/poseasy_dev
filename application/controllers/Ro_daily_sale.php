@@ -66,19 +66,22 @@ class Ro_daily_sale extends Secure_Controller
 		
 		// if($total_rows > 0)
 		// {
-		// 	$data_rows[] = $this->xss_clean(get_sale_data_last_row($daily_sale));
+		// 	$data_rows[] = $this->xss_clean(get_sale_data_last_row($sales));
 		// }
 
 		echo json_encode(array('total' => $total_rows, 'rows' => $data_rows));
 	}
    
 	//Get row
+	     
 	public function get_row($row_id)
-	{ 
-		$data_row = $this->xss_clean(get_sale_daily_data_row($this->Ro_daily_sales->get_info($row_id)));
+	{
+		$sale_info = $this->Ro_daily_sales->get_info($row_id)->row();
+		$data_row = $this->xss_clean(get_sale_daily_data_row($sale_info));
+
 		echo json_encode($data_row);
 	}
-     
+
 
 	// Cheque Reject
 

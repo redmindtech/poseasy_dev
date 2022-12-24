@@ -23,7 +23,7 @@ class Ro_daily_sales extends CI_Model
 	public function get_total_rows()
 	{
 		$this->db->from('ro_sales');
-		// $this->db->where('deleted', 0);
+		// $this->db->where('date_added', $curr_date);
 
 		return $this->db->count_all_results();
 	}
@@ -56,31 +56,14 @@ class Ro_daily_sales extends CI_Model
 		$this->db->join('people AS customer_p', 'ro_sales.customer_id = customer_p.person_id', 'LEFT');
 		//  $this->db->join('sales_payments AS payments', 'ro_sales.id = payments.sale_id', 'LEFT OUTER');
 		$this->db->join('people', 'ro_sales.customer_id = people.person_id');
-		$this->db->where('id', $id );
+		
+		
+		$this->db->where('ro_sales.id', $id);
 
 		$this->db->group_by('ro_sales.id');
 		$this->db->order_by('ro_sales.date_added', 'asc');
-		// $this->db->where('payment_type', 'Cheque');
-		// $this->db->where('status', 'pending');
-		$query = $this->db->get();
 
-		if($query->num_rows()==1)
-		{
-			return $query->row();
-		}
-		// else
-		// {
-		// 	//Get empty base parent object, as $item_kit_id is NOT an item kit
-		// 	$ro_sales_obj = new stdClass();
-
-		// 	//Get all the fields from items table
-		// 	foreach($this->db->list_fields('ro_sales') as $field)
-		// 	{
-		// 		$ro_sales_obj->$field = '';
-		// 	}
-
-		// 	return $ro_sales_obj;
-		// }
+		return $this->db->get();
 	}
  
 
@@ -235,10 +218,13 @@ class Ro_daily_sales extends CI_Model
 		');
 		}
 		$this->db->from('ro_sales AS ro_sales');
-		$this->db->join('ro_sales_items', 'ro_sales.id = ro_sales_items.sales_id');
+		// $this->db->join('ro_sales_items', 'ro_sales.id = ro_sales_items.sales_id');
 		$this->db->join('people', 'ro_sales.customer_id = people.person_id');
 		$this->db->join('people AS customer_p', 'ro_sales.customer_id = customer_p.person_id', 'LEFT');
 		// $this->db->join('sales_payments AS payments', 'ro_sales.id = payments.sale_id', 'LEFT OUTER');
+		$this->db->where($where);
+		// $this->db->where('date_added >=', 'CURDATE()', FALSE);
+
 		$this->db->group_start();
 		$this->db->or_like('date_added', $search);
 		$this->db->or_like('voucher_no', $search);
@@ -252,26 +238,16 @@ class Ro_daily_sales extends CI_Model
 		$this->db->or_like('date_added', $search);
 		
 		
-		
-		
-
-
-
-
 		$this->db->group_end();
 		
-		//  $this->db->where('id', $id);
-
-		$this->db->group_by('ro_sales.id');
-		$this->db->order_by('ro_sales.date_added', 'asc');
-		
-		$this->db->where($where);
-		// get_found_rows case
 		if($count_only == TRUE)
 		{
 			return $this->db->get()->row()->count;
 		}
 
+		$this->db->group_by('ro_sales.id');
+
+		// order by sale time by default
 		$this->db->order_by($sort, $order);
 
 		if($rows > 0)
@@ -281,5 +257,7 @@ class Ro_daily_sales extends CI_Model
 
 		return $this->db->get();
 	}
+
+	
 }
 ?>
