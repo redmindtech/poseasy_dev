@@ -862,7 +862,7 @@ $(document).ready(function()
 			window.location.reload();
 		}
 		else{
-		if(confirm("Are sure want to start new sale ?"))
+		if(confirm("Do you want to start new sale ?"))
 		{
 			
 			$('#buttons_form').attr('action', "<?php echo site_url($controller_name.'/cancel'); ?>");
