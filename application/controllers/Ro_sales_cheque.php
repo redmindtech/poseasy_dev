@@ -132,7 +132,7 @@ class Ro_sales_cheque extends Secure_Controller
 			if($value->payment_type=="Cheque")
 			{
 				$open_bal=$open_bal;
-				$closing_bal=$open_bal;
+				$closing_bal=$open_bal+($value->sales_amount);
 			//	$pending_pay=$open_bal;
 				
 				$this->Ro_sales_cheques->after_cheque_pass_ids($id,$open_bal,$closing_bal);

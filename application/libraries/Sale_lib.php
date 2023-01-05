@@ -967,7 +967,7 @@ class Sale_lib
 					'in_stock' => $this->CI->Item_quantity->get_item_quantity($item_id, $item_location)->quantity,
 					 'price' => $price,
 					 'cost_price' => $cost_price,
-					 'unit_price'=>$item_info->unit_price,
+					 'unit_price'=>$price,
 					'total' => $net_amt,
 					'discounted_total' => $price_tax,
 					'print_option' => $print_option_selected,

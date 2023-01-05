@@ -20,7 +20,10 @@
 <div id="title_bar" class="btn-toolbar ">
 <?php echo anchor("sales", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . "Single Sale Entry",
 			array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('ro_sales_register'))); ?>
-					
+		
+		<?php echo anchor("Ro_daily_sale/manage", '<span class="glyphicon glyphicon-tags">&nbsp</span>' . $this->lang->line('sales_takings'),
+									array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('sales_takings'))); ?>
+						
 </div>
 <fieldset id="sales_basic_info">
 

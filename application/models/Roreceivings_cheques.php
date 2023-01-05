@@ -185,7 +185,7 @@ class Roreceivings_cheques extends CI_Model
 			 'opening_balance' =>$open_bal,
 			'closing_balance'=>$closing_bal,
 			'pending_payables'=>$pending_pay,
-			 'status'=>'complete'
+			//  'status'=>'complete'
 			);
 			log_message('debug',print_r($data,TRUE));
 		$this->db->where('id', $id);		

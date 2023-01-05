@@ -71,7 +71,17 @@ $(document).ready(function()
 	<button onclick="javascript:printdoc()" class='btn btn-info btn-sm pull-right'>
 		<span class="glyphicon glyphicon-print">&nbsp</span><?php echo $this->lang->line('common_print'); ?>
 	</button>
+
+	<?php echo anchor("Ro_sales_cheque/manage", '<span class="glyphicon glyphicon-check">&nbsp</span>' . $this->lang->line('ro_checque_approve'),
+					array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('ro_checque_approve'))); ?>
+		
+		<?php echo anchor($controller_name."/bulk_entry_view", '<span class="glyphicon glyphicon-book">&nbsp</span>' . $this->lang->line('sales_bulk_entry'),
+					array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('sales_bulk_entry'))); ?>
+			
+
 	<?php echo anchor("sales", '<span class="glyphicon glyphicon-shopping-cart">&nbsp</span>' . $this->lang->line('sales_register'), array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'show_sales_button')); ?>
+
+	
 </div>
 
 <div id="toolbar">

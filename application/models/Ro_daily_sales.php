@@ -50,6 +50,7 @@ class Ro_daily_sales extends CI_Model
 		MAX(ro_sales.sales_amount) AS sales_amount,
 		MAX(ro_sales.payment_type) AS payment_type,
 		MAX(ro_sales.status) AS status,
+		MAX(ro_sales.type) AS type,
 		');
 
 		$this->db->from('ro_sales AS ro_sales');
@@ -215,6 +216,7 @@ class Ro_daily_sales extends CI_Model
 		MAX(ro_sales.sales_amount) AS sales_amount,
 		MAX(ro_sales.payment_type) AS payment_type,
 		MAX(ro_sales.status) AS status,
+		MAX(ro_sales.type) AS type,
 		');
 		}
 		$this->db->from('ro_sales AS ro_sales');

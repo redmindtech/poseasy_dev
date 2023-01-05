@@ -86,10 +86,17 @@ $(document).ready(function()
 			<td style='border:none;'></td>
 			<td style='border:none; text-align:right;' colspan="7"><?php echo "E-mail : royalopticalstrichy@gmail.com";  ?></td>
 		</tr>
-		
+		<?php if($sale_type =='5')
+	{?>
 		<tr>
 			<th colspan="9"><?php echo $this->lang->line('sales_cash_bill'); ?></th>
 		</tr>
+	<?php } else { ?>
+		<tr>
+		<th colspan="9"><?php echo "Return Bill" ; ?></th>
+	</tr>
+	<?php } ?>
+	
 
 		<tr>
 			<td colspan="7" rowspan="4" style='border:none;'><?php echo nl2br($customer_info) ?></td>

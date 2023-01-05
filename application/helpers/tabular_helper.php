@@ -135,14 +135,15 @@ function get_sales_daily_manage_table_headers()
 		
 		array('ro_sales_closing_balance' => $CI->lang->line('ro_sales_closing_balance'),'sortable' => FALSE),
 		array('payment_type' => $CI->lang->line('sales_payment_type')),
+		array('type' => $CI->lang->line('sales_type')),
 		array('date_added' => $CI->lang->line('sales_sale_time')),
 	);
 
-	if($CI->config->item('invoice_enable') == TRUE)
-	{
-		//  $headers[] = array('invoice_number' => $CI->lang->line('sales_invoice_number'));
-		$headers[] = array('invoice' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
-	}
+	// if($CI->config->item('invoice_enable') == TRUE)
+	// {
+	// 	//  $headers[] = array('invoice_number' => $CI->lang->line('sales_invoice_number'));
+	// 	$headers[] = array('invoice' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
+	// }
 
 	$headers[] = array('receipt' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
 
@@ -152,6 +153,20 @@ function get_sales_daily_manage_table_headers()
 function get_sale_daily_data_row($daily_sale, $count)
 {
 	$CI =& get_instance();
+$type="No Mode Found";
+	if($daily_sale->type == 4)
+	{
+		$type="Return";
+	}
+	else if ($daily_sale->type == 5) {
+		$type="Cash Bill";
+	}
+	else if ($daily_sale->type == 3) {
+		$type="Estimate";
+	}
+	else if ($daily_sale->type == 1) {
+		$type="Tax Invoice";
+	}
 
 	$controller_name = $CI->uri->segment(1);
 
@@ -161,7 +176,7 @@ function get_sale_daily_data_row($daily_sale, $count)
 		'voucher_no' => $daily_sale->voucher_no,
 		
 		'customer_name' => $daily_sale->customer_name,
-		
+		'type'=>$type,
 		'ro_sales_opening_balance' => to_currency($daily_sale->opening_balance),
 		'ro_sales_closing_balance' => to_currency($daily_sale->closing_balance),
 		'ro_sales_paid_amount' => to_currency($daily_sale->paid_amount),
@@ -178,7 +193,7 @@ function get_sale_daily_data_row($daily_sale, $count)
 		);
 	}
 
-	$row['receipt'] = anchor("Sales/receipt/$daily_sale->id", '<span class="glyphicon glyphicon-registration-mark"></span>',
+	$row['receipt'] = anchor("Sales/receipt/$daily_sale->id", '<span class="glyphicon glyphicon-list-alt"></span>',
 		array('title' => $CI->lang->line('sales_show_receipt'))
 	);
 	// $row['edit'] = anchor($controller_name."/edit/$daily_sale->id", '<span class="glyphicon glyphicon-edit"></span>',
@@ -1215,11 +1230,7 @@ function get_ro_receivings_data_row_search($ro_receivings_accounts,$data,$count)
 		$agency_name=$data[0]->agency_name;
 		
 	}
-	// $id=$ro_receivings_accounts['id'];
-	// $id=$ro_receivings_accounts['id']->id;
-//   var_dump($id);
-//   var_dump($ro_receivings_accounts,);
-// /var_dump('###############################################');
+	
 	$controller_name = strtolower(get_class($CI));
 
 	return array (

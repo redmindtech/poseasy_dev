@@ -40,7 +40,7 @@ if (isset($error_message))
 	<?php endif; ?>
 	<?php echo anchor("sales", '<span class="glyphicon glyphicon-shopping-cart">&nbsp</span>' . $this->lang->line('sales_register'), array('class'=>'btn btn-info btn-sm', 'id'=>'show_sales_button')); ?>
 	<?php if($this->Employee->has_grant('reports_sales', $this->session->userdata('person_id'))): ?>
-		<?php echo anchor("sales/manage", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . $this->lang->line('sales_takings'), array('class'=>'btn btn-info btn-sm', 'id'=>'show_takings_button')); ?>
+		<?php echo anchor("Ro_daily_sale/manage", '<span class="glyphicon glyphicon-list-alt">&nbsp</span>' . $this->lang->line('sales_takings'), array('class'=>'btn btn-info btn-sm', 'id'=>'show_takings_button')); ?>
 	<?php endif; ?>
 </div>
 
@@ -87,20 +87,7 @@ if (isset($error_message))
 <div id="page-wrap">
 	<div id="header"><?php echo $this->lang->line('sales_estimate'); ?></div>
 	
-		
-
-		
-			
-			
-			
-			
-			
-		
-	
-
-	
-
-	<table id="items">
+		<table id="items">
 
 
 		<tr>
@@ -160,8 +147,8 @@ if (isset($error_message))
 
 		<tr>
 			<th width="10px"><?php echo $this->lang->line('sales_s_no'); ?></th>
-			<th><?php echo $this->lang->line('sales_price'); ?></th>
 			<th><?php echo $this->lang->line('sales_item_name'); ?></th>
+			<th><?php echo $this->lang->line('sales_price'); ?></th>
 			<th><?php echo $this->lang->line('sales_quantity'); ?></th>
 			
 			
@@ -186,14 +173,15 @@ if (isset($error_message))
 			?>
 				<tr>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo $s_no_counter ?></td>
-					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo "₹".$item['price']; ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;' class="item-name"><?php echo $item['name']; ?></td>
+					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['price']); ?></td>
+					
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_quantity_decimals($item['quantity']);
 														$price_item = $item['price'];														
 														$total_item_price = $price_item*to_quantity_decimals($item['quantity']);  ?></td>
 					
 					
-					<td style='border-right: solid 1px; text-align:right;border-bottom:none;border-top:none;'><?php echo "₹".$total_item_price;					
+					<td style='border-right: solid 1px; text-align:right;border-bottom:none;border-top:none;'><?php echo to_currency($total_item_price);					
 																			$total_amount = $total_amount + $total_item_price; ?></td>
 				</tr>
 
@@ -219,14 +207,14 @@ if (isset($error_message))
 
 		<tr>
 			<td colspan="<?php echo $quote_columns-1; ?>" style='text-align:right;'><?php echo $this->lang->line('net_gross'); ?> </td>
-			<td id="subtotal" style='text-align:right;'><?php echo "₹".$total_amount; ?></td>
+			<td id="subtotal" style='text-align:right;'><?php echo to_currency($total_amount); ?></td>
 		</tr>
 
 
-		<tr>
+		<!-- <tr>
 			<td colspan="<?php echo $quote_columns-1; ?>" style='text-align:right;'> <?php echo $this->lang->line('opening_bal'); ?></td>
-			<td id="total" style='text-align:right;'><?php echo "₹".$cus_opening_bal; ?></td>
-		</tr>
+			<td id="total" style='text-align:right;'><?php echo to_currency($cus_opening_bal); ?></td>
+		</tr> -->
 
 		<?php
 		$only_sale_check = FALSE;
@@ -235,9 +223,9 @@ if (isset($error_message))
 		?>
 			<tr>
 				<td colspan="<?php echo $quote_columns-1; ?>" style='text-align:right;'> <?php echo $this->lang->line('total_amount');
-																$total_bal = $total_amount+$cus_opening_bal; ?></td>
+																$total_bal = $total_amount; ?></td>
 				
-				<td id="paid" style='text-align:right;'><?php echo "₹".$total_bal; ?></td>
+				<td id="paid" style='text-align:right;'><?php echo to_currency($total_bal); ?></td>
 			</tr>
 		
 	</table>

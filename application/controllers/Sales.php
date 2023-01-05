@@ -946,8 +946,9 @@ class Sales extends Secure_Controller
 				}	
 				else{			
 			
-				$closing=bcadd($opening_bal,$sale);
-				$total_bal=bcadd($closing,$payed_amount);	
+					$total_sale=bcadd($sale,$payed_amount);
+					$closing=bcadd($opening_bal,$total_sale);
+					$total_bal=$closing;
 				}	
 			}
 			//cash bill
@@ -1194,6 +1195,8 @@ class Sales extends Secure_Controller
 		$data['non_cash_total'] = $totals['total'];
 		$data['cash_amount_due'] = $totals['cash_amount_due'];
 		$data['non_cash_amount_due'] = $totals['amount_due'];
+		//  $data['cus_opening_bal'] = $closing;
+		// $data['total_bal'] = bcadd($opening_bal,$total_amount);
 
 		if($data['cash_mode'] && ($data['selected_payment_type'] === $this->lang->line('sales_cash') || $data['payments_total'] > 0))
 		{
@@ -1403,7 +1406,7 @@ class Sales extends Secure_Controller
 	public function receipt($sale_id)
 	{
 		$data = $this->_load_sale_data($sale_id);
-		$this->load->view('sales/receipt', $data);
+		$this->load->view('sales/quote', $data);
 		$this->sale_lib->clear_all();
 	}
 

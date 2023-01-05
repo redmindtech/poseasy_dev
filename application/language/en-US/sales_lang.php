@@ -311,6 +311,9 @@ $lang['Ro_daily_sale_no_Ro_daily_sale_to_display']= "No records found";
 $lang['sales_cgst_1']= "CGST";
 $lang['sales_sgst_1']= "SGST";
 $lang['new_sale']= "New Sale";
+$lang['sales_type']= "Sales Mode";
+
+
 
 
 
