@@ -55,6 +55,7 @@ $lang["module_masters"]="Item Category";
 $lang["module_customer_category"]="Customer Category";
 $lang["module_roreceivings"]="Purchase Accounts";
 $lang["module_dashboards"] = "Dashboard";
+$lang["module_item_hsn_codes"] = "HSN Code";
 
 
 

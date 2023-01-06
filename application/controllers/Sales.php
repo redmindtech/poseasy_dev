@@ -602,7 +602,10 @@ class Sales extends Secure_Controller
 		}
 		else
 		{
-			$data['error'] = $this->lang->line('sales_error_editing_item');
+			$this->sale_lib->edit_item($item_id, $description, $serialnumber, $quantity, $discount, $discount_type, $price, $discounted_total,$other_cost,$tax,$item_comment,$mode);
+			
+			$this->sale_lib->empty_payments();
+			// $data['error'] = $this->lang->line('sales_error_editing_item');
 		}
 
 		$data['warning'] = $this->sale_lib->out_of_stock($this->sale_lib->get_item_id($item_id), $item_location);

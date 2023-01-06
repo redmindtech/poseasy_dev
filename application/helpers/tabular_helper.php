@@ -1406,4 +1406,43 @@ function get_ro_sales_manage_table_headers()
 				
 			);
 }
+
+// HSN Code tabular view
+
+function get_hsn_codes_manage_table_headers()
+{
+	$CI =& get_instance();
+
+	$headers = array(
+		array('serial_number' => $CI->lang->line('common_serial_number'), 'sortable' => FALSE),
+		array('id' => $CI->lang->line('item_category_id')),
+		array('hsn_code' => $CI->lang->line('Item_hsn_codes_no')),
+		array('tax_percentage' => $CI->lang->line('Item_hsn_codes_tax')),
+		array('description' => $CI->lang->line('Item_hsn_codes_tax_description')),
+	);
+
+	return transform_headers($headers);
+}
+
+/*
+Gets the html data row for the HSN Code
+*/
+function get_hsn_codes_data_row($hsn_codes, $count)
+{
+	$CI =& get_instance();
+
+	$controller_name = strtolower(get_class($CI));
+
+	return array (
+		'serial_number'=>$count,
+		'id' => $hsn_codes->id,
+		'hsn_code' => $hsn_codes->hsn_code,
+		'tax_percentage' => $hsn_codes->tax_percentage,
+		'description' =>$hsn_codes->description,
+		'edit' => anchor($controller_name."/view/$hsn_codes->id", '<span class="glyphicon glyphicon-edit"></span>',
+			array('class'=>'modal-dlg', 'data-btn-submit' => $CI->lang->line('common_submit'), 'title'=>$CI->lang->line($controller_name.'_update'))
+		)
+	);
+}
+
 ?>

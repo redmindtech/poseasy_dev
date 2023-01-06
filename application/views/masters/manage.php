@@ -41,6 +41,12 @@ $(document).ready(function()
                 $('ul li:contains(TXT)').first().remove();
                 $('ul li:contains(CSV)').first().remove();
                 $('ul li:contains(SQL)').first().remove();
+
+				$('[data-type="pdf"]').click(function(event) {
+                        window.location.reload();
+                        console.log('[data-type="pdf"]');
+                });
+
 });
 
 </script>

@@ -169,7 +169,8 @@ $autoload['model'] = array(
 	'Dashboard',
 	'Ro_sale',
 	'Ro_sales_cheques',
-	'Ro_daily_sales'
+	'Ro_daily_sales',
+	'Item_hsn_code'
 	
 
 );
