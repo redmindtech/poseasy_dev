@@ -1061,7 +1061,7 @@ class Items extends Secure_Controller
 							//'item_type'=>$row['Item type'],
 							'cost_price' => $row['Purchase Price'],
 							'unit_price' => $row['Sales Price'],
-							'supplier_id'=>$row['SUPPLIER NAME'],
+							'supplier_id'=>$row['Supplier Name'],
 							'receiving_quantity'=>$row['Stock Qty'],
 							'branch'=>$row['Branch'],
 							'hsn_code'=>$row['HSN CODE'],
@@ -1140,7 +1140,7 @@ class Items extends Secure_Controller
 						
 						if($is_failed_row == FALSE && $this->Item->csvsave($item_data, $item_name))
 						{    
-							if(!empty($item_data['name']) and !empty($item_data['supplier_id']) and !empty($item_data['hsn_code']))
+							if(!empty($item_data['name']) and !empty($item_data['hsn_code']))
 							{
 							
 								for($i=1; $i<=$counter_flag;$i++)
@@ -1223,7 +1223,7 @@ class Items extends Secure_Controller
 		$check_for_empty = array(
 			'name' => $item_data['name'],			
 			'hsn_code' => $item_data['hsn_code'],
-			'supplier_id'=>$item_data['supplier_id']					
+			// 'supplier_id'=>$item_data['supplier_id']					
 		);        
 				 
 		foreach($check_for_empty as $key => $val)
@@ -1249,15 +1249,15 @@ class Items extends Secure_Controller
 			return TRUE;
 		}	
 				 	
-	    $check_supplier_name=strtolower(str_replace(" ","",$item_data['supplier_id']));
+	    // $check_supplier_name=strtolower(str_replace(" ","",$item_data['supplier_id']));
 		
-		$supplier_name_db=$this->Item->supplier_name_exists( $check_supplier_name);
+		// $supplier_name_db=$this->Item->supplier_name_exists( $check_supplier_name);
 		
-		if($supplier_name_db == "true")
-		{
-			log_message('Error',"supplier name doesn't exist in supplier table.");
-			return TRUE;
-		}
+		// if($supplier_name_db == "true")
+		// {
+		// 	log_message('Error',"supplier name doesn't exist in supplier table.");
+		// 	return TRUE;
+		// }
 		$j =0;
 		for($i=1; $i<=5 ;$i++)
 		{   
