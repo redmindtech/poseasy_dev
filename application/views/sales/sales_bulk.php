@@ -125,7 +125,7 @@
 								'name'=>'payment_type',
 								'id'=>'payment_type',
 								'class'=>'form-control input-sm',
-								'value'=>'0')
+								'value'=>'Cash')
 								); ?>
 					</div>
                 </div>  </td>
@@ -260,7 +260,7 @@ $(document).ready(function(){
 		html += '<td><input type="text" id="customer_name_'+count+'" data-customer_id='+count+' class="form-control input-sm customer_name" name="customer_name[]" placeholder="Start Typing customer name..." required=""></td>';
 		html += '<td><input type="text" id="towards_vno_'+count+'" class="form-control input-sm data-id" name="towards_vno_'+count+'" ></td>';
 		html += '<td><input type="text" id="opening_balance_'+count+'" class="form-control input-sm" name="opening_balance_'+count+'" value="0" ></td>';
-		html += '<td><input type="text" id="payment_type_'+count+'" class="form-control input-sm" value="" placeholder="Cash or UPI" name="payment_type_'+count+'" ></td>';
+		html += '<td><input type="text" id="payment_type_'+count+'" class="form-control input-sm" value="Cash" placeholder="Cash or UPI" name="payment_type_'+count+'" ></td>';
 		html += '<td><input type="text" id="gst_slab_'+count+'" value="0.00" class="form-control input-sm" name="gst_slab[]" ></td>';
 		html += '<td><input type="text" id="gst_amt_'+count+'" value="0.00" class="form-control input-sm" name="gst_amt_'+count+'"></td>';
 		html += '<td><input type="text" id="narration_'+count+'" class="form-control input-sm" name="narration_'+count+'" ></td>';

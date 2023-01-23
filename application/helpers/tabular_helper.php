@@ -145,7 +145,7 @@ function get_sales_daily_manage_table_headers()
 	// 	$headers[] = array('invoice' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
 	// }
 
-	$headers[] = array('receipt' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
+	// $headers[] = array('receipt' => '&nbsp', 'sortable' => FALSE, 'escape' => FALSE);
 
 	return transform_headers($headers);
 }

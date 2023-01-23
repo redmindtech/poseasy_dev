@@ -75,7 +75,7 @@ $(document).ready(function()
 	<?php echo anchor("Ro_sales_cheque/manage", '<span class="glyphicon glyphicon-check">&nbsp</span>' . $this->lang->line('ro_checque_approve'),
 					array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('ro_checque_approve'))); ?>
 		
-		<?php echo anchor($controller_name."/bulk_entry_view", '<span class="glyphicon glyphicon-book">&nbsp</span>' . $this->lang->line('sales_bulk_entry'),
+		<?php echo anchor("Sales/bulk_entry_view", '<span class="glyphicon glyphicon-book">&nbsp</span>' . $this->lang->line('sales_bulk_entry'),
 					array('class'=>'btn btn-info btn-sm pull-right', 'id'=>'sales_takings_button', 'title'=>$this->lang->line('sales_bulk_entry'))); ?>
 			
 

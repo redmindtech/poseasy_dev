@@ -982,7 +982,7 @@ messages:
 	hsn_code:
 	{
 		required: "<?php echo $this->lang->line('hsn_code_required'); ?>",
-		remote:"Your hsn code  is not in database please add this hsn code in database or enter other hsn code"
+		remote:"Your hsn code is not in HSN master please update your HSN code in HSN master "
 
 	},
 	supplier_id:

@@ -980,7 +980,7 @@ class Sale extends CI_Model
 		$this->db->from('ro_sales_items AS ro_sales_items');
 		$this->db->join('items AS items', 'ro_sales_items.item_id = items.item_id');
 		$this->db->where('ro_sales_items.sales_id', $sale_id);
-
+		$this->db->group_by('items.item_id');
 		// Entry sequence (this will render kits in the expected sequence)
 		if($this->config->item('line_sequence') == '0')
 		{

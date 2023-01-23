@@ -105,7 +105,7 @@ class Sales extends Secure_Controller
 					'voucher_no' => $row[1],
 					'paid_amount'=>$row[5],
 					'payment_type'=>$row[6],
-					// 'cheque_date'=>"00.00.00",
+					'sales_cheque_date'=>NULL,
 					// 'cheque_number'=>"0",
 					'closing_balance'=>$pending_pay,
 					//'pending_payables'=> $pending_pay,
