@@ -24,17 +24,17 @@
 			</div>
 		</div>
 
-		<div class="form-group form-group-sm">	
-			<?php echo form_label($this->lang->line('suppliers_agency_name'), 'agency_name', array('class'=>'control-label col-xs-3')); ?>
+		<!-- <div class="form-group form-group-sm">	
+			<?php //echo form_label($this->lang->line('suppliers_agency_name'), 'agency_name', array('class'=>'control-label col-xs-3')); ?>
 			<div class='col-xs-8'>
-				<?php echo form_input(array(
-					'name'=>'agency_name',
-					'id'=>'agency_name_input',
-					'class'=>'form-control input-sm',
-					'value'=>$person_info->agency_name)
-					);?>
+				<?php //echo form_input(array(
+					// 'name'=>'agency_name',
+					// 'id'=>'agency_name_input',
+					// 'class'=>'form-control input-sm',
+					// 'value'=>$person_info->agency_name)
+					//);?>
 			</div>
-		</div>
+		</div> -->
 
 		<?php $this->load->view("people/form_basic_info"); ?>
 
@@ -96,7 +96,7 @@ $(document).ready(function()
 			
 			company_name: 'required',
 			first_name: 'required',
-			last_name: 'required',
+			// last_name: 'required',
 			email: 'email',
 			phone_number:{
 				remote:
@@ -174,7 +174,7 @@ $(document).ready(function()
 		{
 			company_name: "<?php echo $this->lang->line('suppliers_company_name_required'); ?>",
 			first_name: "<?php echo $this->lang->line('common_first_name_required'); ?>",
-			last_name: "<?php echo $this->lang->line('common_last_name_required'); ?>",
+			// last_name: "<?php echo $this->lang->line('common_last_name_required'); ?>",
 			email: "<?php echo $this->lang->line('common_email_invalid_format'); ?>",
 			phone_number:"<?php echo $this->lang->line('invalid_phone_number'); ?>",
 			account_number:"<?php echo $this->lang->line('invalid_account_number'); ?>",

@@ -544,10 +544,16 @@ if(isset($success))
 									</label>
 								</div>
 
+								<?php
+								$date = date('Y-m-d\TH:i');
+								//$randam=rand(1, $count);
+								$newDate = date("Ymd", strtotime($date));
+
+								?>
 								<div class="col-xs-6">
 									<div class="input-group input-group-sm">
-										<span class="input-group-addon input-sm">#</span>
-										<?php echo form_input(array('name'=>'sales_invoice_number', 'id'=>'sales_invoice_number', 'class'=>'form-control input-sm', 'value'=>$invoice_number)); ?>
+										<!-- <span class="input-group-addon input-sm"></span> -->
+										<?php echo form_input(array('name'=>'sales_invoice_number', 'readonly'=>'readonly','id'=>'sales_invoice_number', 'class'=>'form-control input-sm', 'value'=>'POS '.$newDate.round(bcadd($voucher_no[0]['maxid'],1)))); ?>
 									</div>
 								</div>
 							</div>

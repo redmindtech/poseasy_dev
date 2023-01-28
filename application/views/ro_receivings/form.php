@@ -11,6 +11,18 @@
 			$companyname[$row->person_id] = $row->company_name;
 		
  }  
+ 
+	?>
+
+	<?php 
+	
+	// var_dump($voucher_no[0]['maxid']+1);
+$date = date('Y-m-d\TH:i');
+//$randam=rand(1, $count);
+$newDate = date("Ymd", strtotime($date));
+
+// echo $newDate;
+
 	?>
 	
 
@@ -67,8 +79,10 @@
 						<?php echo form_input(array(
 								'name'=>'voucher_no',
 								'id'=>'voucher_no',
+								'readonly'=>'readonly',
 								'class'=>'form-control input-sm',
-								'value'=>$ro_receivings_info->voucher_no)
+								'value'=>'POS '.$newDate.round(bcadd($voucher_no[0]['maxid'],1)))
+								// 'value'=>$newDate)
 								); ?>
 					  </div>
         </div>
@@ -338,9 +352,17 @@ $('#supplier_name').click(function() {
 	<?php
 	}
 	?>
+
+
 	
 $(document).ready(function()
 {
+
+	// alert('1');
+	// $('#voucher_no').val('<?php echo $ro_receivings_info->voucher_no ?>');
+
+	// alert(<?php echo $ro_receivings_info->voucher_no ?>);
+
 	// var today = new Date().toISOString().slice(0, 10);
 	var today = new Date().toISOString().split('T')[0];
 	//  document.getElementsByName("cheque_date")[0].setAttribute('min',today);
@@ -378,7 +400,29 @@ $(document).ready(function()
 	}
 });
 
-	$('#supplier_company_id').change(function()
+// 	$('#supplier_company_id').change(function()
+// {	
+// 	alert('ho');
+//  	$var= $('#supplier_company_id option:selected').text();
+//     $supplier_id= $('#supplier_company_id option:selected').val();
+//     $('#supplier_id').val($supplier_id);  
+// 	alert($supplier_id);
+//  	 $.ajax({
+// 		// alert('1');
+// 			type: 'POST',
+// 			url: "<?php echo site_url('Roreceivings/check_invoice_number/'); ?>" + $supplier_id,   
+//             datatype : 'json',            
+//             }).done(function (msg) {
+                
+// 				$('#voucher_no').val(msg);                
+//             }).fail(function (errorMsg)
+// 			{            
+// 			   $('#voucher_no').val($supplier_id);
+//         });
+// });		
+
+
+$('#supplier_company_id').change(function()
 {	
  	$var= $('#supplier_company_id option:selected').text();
     $supplier_id= $('#supplier_company_id option:selected').val();
@@ -395,6 +439,8 @@ $(document).ready(function()
 			   $('#opening_balance').val('0');
         });
 });		
+
+
 	$('#paid_amount,#purchase_return_amount').change(function(){
 		if($('#paid_amount').val() ==0.00 && $('#purchase_return_amount').val()==0.00)
 		{

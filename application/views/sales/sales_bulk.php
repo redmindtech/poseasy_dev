@@ -26,6 +26,12 @@
 						
 </div>
 <fieldset id="sales_basic_info">
+<?php
+	$date = date('Y-m-d\TH:i');
+	//$randam=rand(1, $count);
+	$newDate = date("Ymd", strtotime($date));
+
+	?>
 
 	
 	<div class="form-group form-group-sm">
@@ -46,8 +52,9 @@
 				<?php echo form_input(array(
 						'name'=>'voucher_no',
 						'id'=>'voucher_no',
+						'readonly'=>'readonly',
 						'class'=>'form-control input-sm',
-						'value'=>$ro_sale_info->voucher_no)
+						'value'=>'POS '.$newDate.round(bcadd($voucher_no[0]['maxid'],1)))
 						);?>
 			</div>
 			<div class="form-group form-group-sm">

@@ -549,7 +549,7 @@ $(document).ready(function()
 		{
 			customer_category_id: 'required',
 			first_name: 'required',
-			last_name: 'required',
+			// last_name: 'required',
 			consent: 'required',
 			email:
 			{
@@ -604,7 +604,7 @@ $(document).ready(function()
 	},
 			
 			first_name: "<?php echo $this->lang->line('common_first_name_required'); ?>",
-			last_name: "<?php echo $this->lang->line('common_last_name_required'); ?>",
+			// last_name: "<?php echo $this->lang->line('common_last_name_required'); ?>",
 			consent: "<?php echo $this->lang->line('customers_consent_required'); ?>",
 			email: "<?php echo $this->lang->line('customers_email_duplicate'); ?>",
 			// phone_number: "<?php echo $this->lang->line('customers_phone_number_duplicate'); ?>",

@@ -55,7 +55,8 @@ class Sales extends Secure_Controller
 
 
 	public function bulk_entry_view($id = -1)
-	{			
+	{		
+		$data['voucher_no'] = $this->Ro_sale->invoice_no_autogenerate();	
 		$data['ro_sale_info'] = $this->Ro_sale->get_info($id);
 		$data['employees'] = array();
 		foreach($this->Employee->get_all()->result() as $employee)
@@ -1400,7 +1401,7 @@ class Sales extends Secure_Controller
 			$data['mode_label'] = $this->lang->line('sales_receipt');
 			$data['customer_required'] = $this->lang->line('sales_customer_optional');
 		}
-		
+		$data['voucher_no'] = $this->Ro_sale->invoice_no_autogenerate();
 		$data = $this->xss_clean($data);
 		
 		$this->load->view("sales/register", $data);

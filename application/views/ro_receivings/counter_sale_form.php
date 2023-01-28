@@ -14,8 +14,12 @@
 <fieldset id="item_basic_info">
 
 
-	
-	
+	<?php
+	$date = date('Y-m-d\TH:i');
+	//$randam=rand(1, $count);
+	$newDate = date("Ymd", strtotime($date));
+
+	?>
 
 	<div class="form-group form-group-sm">
 			<?php echo form_label($this->lang->line('receivings_cash_date'), 'receivings_cash_date', array('class'=>'control-label col-xs-3' )); ?>
@@ -35,8 +39,9 @@
 				<?php echo form_input(array(
 						'name'=>'voucher_no',
 						'id'=>'voucher_no',
+						'readonly'=>'readonly',
 						'class'=>'form-control input-sm',
-						'value'=>$ro_receivings_info->voucher_no)
+						'value'=>'POS '.$newDate.round(bcadd($voucher_no[0]['maxid'],1)))
 						);?>
 			</div>
 			<div class="form-group form-group-sm">
@@ -210,6 +215,13 @@ $(document).on('click',"#supplier_name",function() {
 		$(this).attr('value',"<?php echo $this->lang->line('expenses_start_typing_supplier_name'); ?>");
 	});
 
+	$("table").on("change", "input","click", function(e)
+{ 
+alert("hi");
+
+var	open_bal=parseFloat($('#opening_balance').val());
+
+});
 	
 
 	$('#remove_supplier_button').click(function() {

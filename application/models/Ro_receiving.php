@@ -295,6 +295,7 @@ class Ro_receiving extends CI_Model
 			$this->db->or_like('discount', $search);
 			 
 			$this->db->group_end();	
+			
 
 		// get_found_rows case
 		if($count_only == TRUE)
@@ -342,6 +343,7 @@ class Ro_receiving extends CI_Model
 		 return $supplier_total_open_balance;
 	}
 
+	
 	public function open_close_bal($id)
 	{
 		$this->db->select('	opening_balance,pending_payables');
@@ -418,6 +420,20 @@ class Ro_receiving extends CI_Model
 			}
 			
 	}
+
+	public function invoice_no_autogenerate()
+	{
+			$this->db->select ('MAX(id) AS maxid') ;
+			$this->db->from ('ro_receivings_accounts'); 
+			// $this->db->where('ro_receivings_accounts.id',$id);
+			// $query=$this->db->get();		
+			$voucher_no=$this->db->get()->result_array();
+			// var_dump('hi',$voucher_no);
+	    	return  $voucher_no;
+	}
+
+
+	
 	// SELECT pending_payables FROM ospos_ro_receivings_accounts 
 	// WHERE id IN ( SELECT MAX(id) FROM ospos_ro_receivings_accounts 
 	// WHERE supplier_id=62  GROUP BY supplier_id   );

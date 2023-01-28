@@ -28,6 +28,17 @@ class Ro_sale extends CI_Model
 		return $this->db->count_all_results();
 	}
 
+	public function invoice_no_autogenerate()
+	{
+			$this->db->select ('MAX(id) AS maxid') ;
+			$this->db->from ('ro_sales'); 
+			// $this->db->where('ro_receivings_accounts.id',$id);
+			// $query=$this->db->get();		
+			$voucher_no=$this->db->get()->result_array();
+			// var_dump('hi',$voucher_no);
+	    	return  $voucher_no;
+	}
+
 	/*
 	Gets information about a particular category
 	*/

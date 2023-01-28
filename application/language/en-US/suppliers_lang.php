@@ -20,6 +20,7 @@ $lang["suppliers_successful_updating"] = "You have successfully updated Supplier
 $lang["suppliers_supplier"] = "Supplier";
 $lang["suppliers_id"] = "Supplier Id";
 $lang["suppliers_tax_id"] = "GST No";
+$lang["suppliers_location_city"] = "Location";
 
 $lang["suppliers_update"] = "Update Supplier";
 $lang["suppliers_name"] = "Supplier Name";

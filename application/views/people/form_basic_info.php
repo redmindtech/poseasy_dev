@@ -11,7 +11,7 @@
 </div>
 
 <div class="form-group form-group-sm">	
-	<?php echo form_label($this->lang->line('common_last_name'), 'last_name', array('class'=>'required control-label col-xs-3')); ?>
+	<?php echo form_label($this->lang->line('common_last_name'), 'last_name', array('class'=>'control-label col-xs-3')); ?>
 	<div class='col-xs-8'>
 		<?php echo form_input(array(
 				'name'=>'last_name',
