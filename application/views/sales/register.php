@@ -553,9 +553,19 @@ if(isset($success))
 								<div class="col-xs-6">
 									<div class="input-group input-group-sm">
 										<!-- <span class="input-group-addon input-sm"></span> -->
-										<?php echo form_input(array('name'=>'sales_invoice_number', 'readonly'=>'readonly','id'=>'sales_invoice_number', 'class'=>'form-control input-sm', 'value'=>'POS '.$newDate.round(bcadd($voucher_no[0]['maxid'],1)))); ?>
+										<?php echo form_input(array('name'=>'sales_invoice_number', 'readonly'=>'readonly','id'=>'sales_invoice_number', 'class'=>'form-control input-sm', 'value'=>'POS '.$invoice_number)); ?>
 									</div>
 								</div>
+
+								<div class="no-gutter row">
+							<div class="form-group form-group-sm">
+							<div class="col-xs-12">
+								<?php echo form_label($this->lang->line('sales_narration'), 'narration', array('class'=>'control-label', 'id'=>'comment_label', 'for'=>'comment')); ?>
+								<?php echo form_textarea(array('name'=>'comment', 'id'=>'comment', 'class'=>'form-control input-sm', 'value'=>$comment, 'rows'=>'2')); ?> 
+							</div>
+						</div>
+					</div>
+
 							</div>
 						</div>
 					<?php

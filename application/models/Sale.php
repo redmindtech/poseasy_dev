@@ -594,7 +594,7 @@ class Sale extends CI_Model
 			'date_added'			=> date('Y-m-d H:i:s'),
 			'customer_id'		=> $this->Customer->exists($customer_id) ? $customer_id : NULL,
 			'employee_id'		=> $employee_id,
-			// 'comments'			=> $item['comment'],
+			'comments'			=> $comment,
 			// 'sale_status'		=> $sale_status,
 			'voucher_no'	=> $invoice_number,
 			'quote_no'		=> $quote_number,
