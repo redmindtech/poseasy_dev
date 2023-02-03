@@ -675,8 +675,18 @@ class Sales extends Secure_Controller
 		$data['price_work_orders'] = $this->sale_lib->is_price_work_orders();
 		$data['email_receipt'] = $this->sale_lib->is_email_receipt();
 		$customer_id = $this->sale_lib->get_customer();
-		$invoice_number = $this->sale_lib->get_invoice_number();
+
+		//$invoice_number = $this->sale_lib->get_invoice_number();
+
+		$voucher_no= $this->Ro_sale->invoice_no_autogenerate();
+		$date = date('Y-m-d\TH:i');
+	
+		$newDate = date("Ymd", strtotime($date));
+
+		$invoice_number='POS '.$newDate.round(bcadd($voucher_no[0]['maxid'],1));
+
 		$data["invoice_number"] = $invoice_number;
+
 		$work_order_number = $this->sale_lib->get_work_order_number();
 		$data["work_order_number"] = $work_order_number;
 		$quote_number = $this->sale_lib->get_quote_number();
@@ -1358,16 +1368,21 @@ class Sales extends Secure_Controller
 		$data['items_module_allowed'] = $this->Employee->has_grant('items', $this->Employee->get_logged_in_employee_info()->person_id);
 		$data['change_price'] = $this->Employee->has_grant('sales_change_price', $this->Employee->get_logged_in_employee_info()->person_id);
 
-		$temp_invoice_number = $this->sale_lib->get_invoice_number();
+		$temp_invoice_number = $this->Ro_sale->invoice_no_autogenerate();
 		$invoice_format = $this->config->item('sales_invoice_format');
 
 		if ($temp_invoice_number == NULL || $temp_invoice_number == '')
 		{
 			$temp_invoice_number = $this->token_lib->render($invoice_format, array(), FALSE);
 		}
+		// $data['voucher_no'] = 
+		
+		$date = date('Y-m-d\TH:i');
+		//$randam=rand(1, $count);
+		$newDate = date("Ymd", strtotime($date));
 
-		$data['invoice_number'] = $temp_invoice_number;
-
+		$data['invoice_number'] =$newDate.round(bcadd($temp_invoice_number[0]['maxid'],1));
+		
 		$data['print_after_sale'] = $this->sale_lib->is_print_after_sale();
 		$data['price_work_orders'] = $this->sale_lib->is_price_work_orders();
 

@@ -86,7 +86,7 @@ $(document).ready(function()
 			</tr><tr>
 			<td colspan="2" style='border:none; text-align:left;'><?php echo "GSTIN : 33AHVPM5189L1ZG"; ?></td>			
 			
-			<td colspan="5" style='border:none; text-align:center;'><?php echo $this->lang->line('sales_invoice_number');?><?php echo "  :  " .  $invoice_number; ?></td>
+			<td colspan="5" style='border:none; text-align:center;'><?php echo $this->lang->line('sales_invoice_number');?><?php echo "  :  " . $invoice_number ?></td>
 		
 			<td style='border:none;'></td>
 			<td style='border:none; text-align:right;' colspan="8"><?php echo "E-mail : royalopticalstrichy@gmail.com";  ?></td>
@@ -115,9 +115,14 @@ $(document).ready(function()
 		<td style='border:none; text-align:right;'></td>
 		</tr>
 		<tr>
-			
-			<td style='border:none; text-align:right;'></td>
-			<td style='border:none; text-align:right;'><?php echo $this->lang->line('common_date'); ?><?php echo ":".$transaction_date; ?></td>
+		<td style='border:none; text-align:right;'></td>
+		<td style='border:none; text-align:right;'></td>
+		</tr>
+		<tr>
+		<td colspan="8" style='border:none; text-align:left;'><?php echo $this->lang->line('sales_narration'); ?><?php echo ' : '.$comments; ?></td>
+
+			<!-- <td style='border:none; text-align:right;'></td> -->
+			<td colspan="2" style='border:none; text-align:right;'><?php echo $this->lang->line('common_date'); ?><?php echo ":".$transaction_date; ?></td>
 		</tr>
 
 		</tr>
