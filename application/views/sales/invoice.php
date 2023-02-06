@@ -181,7 +181,7 @@ $(document).ready(function()
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_quantity_decimals($item['quantity']); ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['price']); ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['tax']); ?></td>
-					<td style='text-align:center;border-bottom:none;border-top:none;' id="subtotal"><?php echo to_currency($item['total']); ?></td>
+					<td style='text-align:center;border-bottom:none;border-top:none;' id="subtotal"><?php echo to_currency($item['discounted_total']); ?></td>
 					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo ($item['discount_type']==FIXED)?to_currency($item['discount']):to_decimals($item['discount']) . '%';?></td>
 					<?php if($discount > 0): ?>
 					<?php endif; ?>
@@ -189,7 +189,7 @@ $(document).ready(function()
 					
 				
 					
-					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['discounted_total']); ?></td>
+					<td style='text-align:center;border-bottom:none;border-top:none;'><?php echo to_currency($item['total']); ?></td>
 					
 				</tr>
 				<?php

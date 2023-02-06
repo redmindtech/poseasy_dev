@@ -519,7 +519,7 @@ class Sale_lib
 
 			
 			//  $discount_amount = $this->get_item_discount($item['quantity'], $item['price'], $item['discount'], $item['discount_type']);
-			 $discount_totals=$this->get_discount_total($price_tax,$item['discount']);
+			 $discount_totals=$this->get_discount_total($price_tax,$item['discount'],$item['discount_type']);
 			$total_discount = bcadd($total_discount,$discount_totals);
 			
 			$other_cost=bcadd($discount_totals,$item['other_cost']);
@@ -1103,7 +1103,7 @@ class Sale_lib
 			
 			//  $line['total'] = $this->get_item_total($quantity, $price, $discount, $line['discount_type']);
 			$line['discounted_total'] = $this->get_price_tax($quantity, $price, $tax);
-			$discount_totals=$this->get_discount_total($line['discounted_total'],$discount);
+			$discount_totals=$this->get_discount_total($line['discounted_total'],$discount,$line['discount_type']);
 			
 			// $discount_totals=$this->get_item_total($quantity, $price, $discount, $line['discount_type'], TRUE);
 			
@@ -1134,11 +1134,18 @@ class Sale_lib
 		return round($net_amount, totals_decimals(), PHP_ROUND_HALF_UP);
 		
 	 }
-	 public function get_discount_total($discounted_total,$discount)
+	 public function get_discount_total($discounted_total,$discount,$discount_type)
 	 {
 		
-		$discount_cal=bcmul($discounted_total, bcdiv($discount, 100));
-		$discount_amt=bcsub($discounted_total,$discount_cal );
+		if($discount_type == PERCENT)
+		{
+			$discount_cal=bcmul($discounted_total, bcdiv($discount, 100));
+			$discount_amt=bcsub($discounted_total,$discount_cal );
+		}
+		else
+		{ 
+			$discount_amt = bcsub($discounted_total, $discount);
+		}
 		
 		return round($discount_amt, totals_decimals(), PHP_ROUND_HALF_UP);
 	 }
